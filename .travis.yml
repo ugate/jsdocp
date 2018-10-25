@@ -1,0 +1,36 @@
+# deploy from dev/local machine via (which will create git tag):
+# npm version patch -m "%s release"
+language: node_js
+node_js:
+  - "10"
+branches:
+  only:
+    - master
+    - "/v*/"
+script:
+# - printenv
+  - "npm test"
+#before_deploy:
+#  - "npm run gen-docs"
+deploy:
+#  - provider: pages
+#    skip-cleanup: true
+#    github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+#    keep-history: true
+#    target-branch: gh-pages
+#    local-dir: docs
+#    on:
+#      tags: true # only on tagging commit
+#      all_branches: true
+  - provider: script
+    skip_cleanup: true
+    script: bash ./travis_pages
+    on:
+      tags: true # only on tagging commit
+      all_branches: true
+  - provider: npm
+    email: "ugate.public@gmail.com"
+    api_key: $NPM_TOKEN  # Set in the settings page of your repository, as a secure variable
+    on:
+      tags: true # only on tagging commit
+      all_branches: true

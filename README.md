@@ -1,2 +1,2 @@
 # jspub
-Simplified JSDoc and changelog deployment using Travis-CI and GitHub pages
+Simplified JSDoc and CHANGELOG publishing using git, travis-ci and GitHub pages

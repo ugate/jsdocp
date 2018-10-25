@@ -1,0 +1,66 @@
+{
+  "templates": {
+    "default": {
+      "layoutFile": "./jsdoc/tmpl/layout.tmpl",
+      "staticFiles": {
+        "include": [
+          "./jsdoc/static"
+        ]
+      }
+    }
+  },
+  "opts": {
+    "destination": "./docs",
+    "template": "./jsdoc",
+    "travis": {
+      "pages": {
+        "branch": "gh-pages",
+        "cloneToPath": "publish",
+        "user": {
+          "name": "Travis",
+          "email": "travis@travis-ci.org"
+        },
+        "script": {
+          "destination": "./.travis_pages"
+        }
+      }
+    },
+    "versions": {
+      "from": "",
+      "include": "minor"
+    },
+    "changelog": {
+      "header": "## [${package.version}](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version}) (${publish.date})",
+      "line": "* [%s](${publish.moduleURL}/commit/%H)",
+      "sections": {
+        "breaks": {
+          "grep": {
+            "regexp": "\\[BREAK\\]",
+            "ignoreCase": true,
+            "extendedRegexp": false,
+            "allMatch": false
+          },
+          "header": "__Breaking Changes:__"
+        },
+        "features": {
+          "grep": {
+            "regexp": "\\[FEATURE\\]",
+            "ignoreCase": true,
+            "extendedRegexp": false,
+            "allMatch": false
+          },
+          "header": "__Features:__"
+        },
+        "fixes": {
+          "grep": {
+            "regexp": "\\[FIX\\]",
+            "ignoreCase": true,
+            "extendedRegexp": false,
+            "allMatch": false
+          },
+          "header": "__Fixes:__"
+        }
+      }
+    }
+  }
+}

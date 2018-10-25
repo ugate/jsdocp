@@ -1,0 +1,36 @@
+{
+  "source": {
+    "include": ["index.js", "README.md"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": true,
+    "showInheritedInNav": true,
+    "default": {
+      "useLongnameInNav": false,
+      "includeDate": false,
+      "staticFiles": {
+        "include": [
+          "./node_modules/minami/static"
+        ]
+      }
+    }
+  },
+  "opts": {
+    "template": "./node_modules/minami",
+    "tutorials": "./publish/tutorial",
+    "encoding": "utf8",
+    "private": false,
+    "recurse": true,
+    "versions": {
+      "from": "1.0.0",
+      "include": ""
+    }
+  }
+}
