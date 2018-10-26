@@ -17,17 +17,26 @@
       "includeDate": false,
       "staticFiles": {
         "include": [
-          "./node_modules/minami/static"
+          "./jsdoc/jsdoc-defaults.json",
+          "./jspub/jsdoc.json"
         ]
       }
     }
   },
   "opts": {
     "template": "./node_modules/minami",
-    "tutorials": "./publish/tutorial",
+    "tutorials": "./jspub/tutorial",
     "encoding": "utf8",
     "private": false,
     "recurse": true,
+    "deploy": {
+      "pages": {
+        "user": {
+          "name": "Travis",
+          "email": "travis@travis-ci.org"
+        }
+      }
+    },
     "versions": {
       "from": "1.0.0",
       "include": ""

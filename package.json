@@ -1,11 +1,12 @@
 {
   "name": "jspub",
   "version": "1.0.0",
-  "description": "Simplified JSDoc and CHANGELOG publishing using git, travis-ci and GitHub pages",
+  "description": "Simplified JSDoc publishing using git",
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "jspub": "jspub ./jspub/conf.json"
+    "jspub": "jspub ./jspub/jsdoc.json",
+    "jspub-deploy": "jspub-deploy ./jspub/jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -34,11 +35,14 @@
     "lab": "^16.1.0",
     "minami": "^1.2.3"
   },
-  "bin": "./cli.js",
+  "bin": {
+    "jspub": "./cli.js",
+    "jspub-deploy": "./deploy/pages.js"
+  },
   "files": [
-    "/cli.js",
     "/index.js",
-    "/jsdoc/**/*",
-    ".travis_pages"
+    "/cli.js",
+    "/deploy/**/*",
+    "/jsdoc/**/*"
   ]
 }

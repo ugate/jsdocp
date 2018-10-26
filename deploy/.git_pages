@@ -1,5 +1,5 @@
 #!/bin/bash
-PUBLICATION_BRANCH={{opts.travis.pages.branch}}
+PUBLICATION_BRANCH=$1{{opts.travis.pages.branch}}
 REPO_PATH=$PWD
 # current package.json version/name
 NPM_PACKAGE_VERSION=$(npm run env | sed -n 's/^npm_package_version=//p')

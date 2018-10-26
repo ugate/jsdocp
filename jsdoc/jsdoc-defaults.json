@@ -1,7 +1,6 @@
 {
   "templates": {
     "default": {
-      "layoutFile": "./jsdoc/tmpl/layout.tmpl",
       "staticFiles": {
         "include": [
           "./jsdoc/static"
@@ -12,16 +11,18 @@
   "opts": {
     "destination": "./docs",
     "template": "./jsdoc",
-    "travis": {
+    "layoutFrags": {
+      "head": "./jsdoc/tmpl/head.tmpl",
+      "nav": "/jsdoc/tmpl/nav.tmpl",
+      "foot": "./jsdoc/tmpl/foot.tmpl"
+    },
+    "deploy": {
       "pages": {
         "branch": "gh-pages",
         "cloneToPath": "publish",
         "user": {
-          "name": "Travis",
-          "email": "travis@travis-ci.org"
-        },
-        "script": {
-          "destination": "./.travis_pages"
+          "name": "${package.author.name}",
+          "email": "${package.author.email}"
         }
       }
     },
