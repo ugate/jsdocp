@@ -1,23 +1,26 @@
-<div id="topNav">
+<div id="jspubTopNav" style="<?js= env.conf.opts.pages.menu.style ?>">
   <a href="index.html" id="source" title="Source Code">
-    <b class="theme-color">&#8669;</b> <?js= env.meta.package.name ?>
+    <?js if (env.conf.opts.pages.menu.icon) { ?>
+      <img src="<?js= env.conf.opts.pages.menu.icon ?>" class="jspub-logo" /> 
+    <?js } ?>
+    <?js= env.meta.package.name ?>
   </a>
   <!-- versions.json should point to the latest list -->
-  <select id="versions" onchange="window.location='/<?js= env.meta.package.name ?>/' + this.value" data-json-url="/<?js= env.meta.package.name ?>/versions.json"
+  <select id="jspubVersions" onchange="window.location='/<?js= env.meta.package.name ?>/' + this.value" data-json-url="/<?js= env.meta.package.name ?>/versions.json"
     data-include="<?js= (env.conf.opts.versions && env.conf.opts.versions.include) || '' ?>"
     data-from="<?js= (env.conf.opts.versions && env.conf.opts.versions.from) || '' ?>"
     data-version="<?js= env.meta.package.version ?>">
     <option value="" selected><?js= env.meta.package.version ?></option>
   </select>
   <span class="sep">|</span>
-  <a href="https://www.npmjs.com/package/<?js= env.meta.package.name ?>" id="module" title="npm" class="icon">
+  <a href="https://www.npmjs.com/package/<?js= env.meta.package.name ?>" id="module" title="npm" class="jspub-icon">
     <svg version="1.1" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" height="24" width="24">
       <g stroke="none" fill="#000000" transform="translate(0,24) scale(0.1,-0.1)">
         <path d="M 0,120 0,0 l 120,0 120,0 0,120 0,120 -120,0 -120,0 z m 200,0 c 0,-73 0.23256,-80 0.23256,-80 0,0 -27.97435,0.741211 -40.61273,0.707427 C 159.61983,67.551504 160,70.949947 160,100 c 0,53 -2,60 -20,60 -18,0 -20,-7 -20,-60 l 0,-60 -40,0 -40,0 0,80 0,80 80,0 80,0 z"/>
       </g>
     </svg>
   </a>
-  <a href="CHANGELOG.html" id="module" title="Changelog" class="icon" data-root-href="<?js= env.meta.publish.moduleURL ?>/CHANGELOG.html">
+  <a href="CHANGELOG.html" id="module" title="Changelog" class="jspub-icon" data-root-href="<?js= env.meta.publish.moduleURL ?>/CHANGELOG.html">
     <svg version="1.1" viewBox="0 0 64 64" height="24" width="24">
       <g>
         <path d="M 54.18252,31.999999 C 54.182518,44.803351 43.803352,55.182519 31,55.182519 18.196648,55.182519 7.8174806,44.803351 7.8174806,31.999999 7.8174807,19.196647 18.196648,8.8174794 31,8.8174793" style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:7.63496113;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
@@ -27,7 +30,7 @@
       </g>
     </svg>
   </a>
-  <a href="<?js= env.meta.package.homepage ?>" id="source" title="Source Code" class="icon">
+  <a href="<?js= env.meta.package.homepage ?>" id="source" title="Source Code" class="jspub-icon">
     <svg version="1.1" viewBox="0 0 10 16" width="24" height="24">
       <path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path>
     </svg>

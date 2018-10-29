@@ -21,7 +21,7 @@ const pkg = require(Path.join(process.env.JSPUB_MODULE_PATH, 'package.json'));
  * @param {Object} opts The JSDoc options
  * @param {Tutorial} tutorials The turtorials
  */
-exports.publish = function(taffyData, opts, tutorials) {//console.dir(opts, {depth:100});
+exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials, {depth:100});
   // console.dir(opts, {depth:10});
   const thiz = this, args = arguments;
   return new Promise(async (resolve, reject) => {
@@ -86,6 +86,9 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(opts, {dep
         return reject(err);
       }
       opts.template = opts.templateProxy; // use the actual template
+
+      logger.debug(`Running markdown extensions on tutorials...`);
+      await tutorialExts(tutorials);
       
       // transfer control over to template engine
       const Engine = require(`${Path.parse(opts.template).name}/publish`);
@@ -95,3 +98,39 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(opts, {dep
     }
   });
 };
+
+/**
+ * Parses/sets the tutorial content that matches any of the markdown extensions
+ * @private
+ * @param {Object[]} tuts The tutorial object
+ * @param {String} tuts[].content The content of the tutorial
+ */
+async function tutorialExts(tuts) {
+  if (!tuts) return;
+  if (tuts.content) tutorialExt(tuts);
+  const prms = [];
+  for (let tut of tuts.children) {
+    prms.push(tutorialExt(tut));
+  }
+  await Promise.all(prms);
+}
+
+/**
+ * Parses/sets the tutorial content that matches any of the markdown extensions
+ * @private
+ * @param {Object} tut The tutorial object
+ * @param {String} tut.content The content of the tutorial
+ */
+async function tutorialExt(tut) {
+  if (!tut.content) return;
+  const rx = /```jspub\s*?([^\s]+)[\r\n]*([\s\S]*)```/ig, prms = [];
+  tut.content.replace(rx, (mtch, pth) => {
+    if (pth) prms.push(Fs.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
+    return mtch;
+  });
+  let vals = await Promise.all(prms), idx = -1;
+  tut.content = tut.content.replace(rx, (mtch, pth, cnt) => {
+    const lang = pth.split('.').pop();
+    return `\`\`\`${lang}\n${vals[++idx].toString()}\n${cnt}\n\`\`\``;
+  });
+}

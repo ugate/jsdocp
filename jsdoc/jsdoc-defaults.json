@@ -1,4 +1,7 @@
 {
+  "plugins": [
+    "plugins/markdown"
+  ],
   "templates": {
     "default": {
       "staticFiles": {
@@ -13,7 +16,7 @@
     "template": "./jsdoc",
     "layoutFrags": {
       "head": "./jsdoc/tmpl/head.tmpl",
-      "nav": "/jsdoc/tmpl/nav.tmpl",
+      "nav": "./jsdoc/tmpl/nav.tmpl",
       "foot": "./jsdoc/tmpl/foot.tmpl"
     },
     "deploy": {
@@ -25,6 +28,15 @@
           "email": "${package.author.email}"
         }
       }
+    },
+    "pages": {
+      "menu": {
+        "icon": "",
+        "style": ""
+      },
+      "links": [],
+      "meta": [],
+      "scripts": []
     },
     "versions": {
       "from": "",

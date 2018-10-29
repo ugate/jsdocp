@@ -18,7 +18,8 @@
       "staticFiles": {
         "include": [
           "./jsdoc/jsdoc-defaults.json",
-          "./jspub/jsdoc.json"
+          "./jspub/jsdoc.json",
+          "./jspub/static"
         ]
       }
     }
@@ -29,6 +30,62 @@
     "encoding": "utf8",
     "private": false,
     "recurse": true,
+    "pages": {
+      "menu": {
+        "icon": "favicon-32x32.png",
+        "style": "background-color: #E0E0E0"
+      },
+      "links": [
+        {
+          "rel": "apple-touch-icon",
+          "sizes": "180x180",
+          "href": "apple-touch-icon.png"
+        },
+        {
+          "rel": "icon",
+          "type": "image/png",
+          "sizes": "32x32",
+          "href": "favicon-32x32.png"
+        },
+        {
+          "rel": "icon",
+          "type": "image/png",
+          "sizes": "16x16",
+          "href": "favicon-16x16.png"
+        },
+        {
+          "rel": "manifest",
+          "href": "site.webmanifest"
+        },
+        {
+          "rel": "mask-icon",
+          "type": "image/png",
+          "sizes": "16x16",
+          "href": "safari-pinned-tab.svg",
+          "color": "#ffab40"
+        },
+        {
+          "type": "text/css",
+          "rel": "stylesheet",
+          "href": "my-styles/my-style.css"
+        }
+      ],
+      "metas": [
+        {
+          "name": "msapplication-TileColor",
+          "content": "#da532c"
+        },
+        {
+          "name": "theme-color",
+          "content": "#546e7a"
+        }
+      ],
+      "scripts": [
+        {
+          "src": "my-scripts/my-script.js"
+        }
+      ]
+    },
     "deploy": {
       "pages": {
         "user": {

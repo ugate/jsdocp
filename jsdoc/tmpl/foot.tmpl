@@ -1,1 +1,9 @@
+<?js for (let scrpt of env.conf.opts.pages.scripts) { ?>
+  <script
+    <?js for (let scrptAttr in scrpt) { ?>
+    <?js= scrptAttr ?>="<?js= scrpt[scrptAttr] ?>" 
+    <?js } ?>
+  ></script>
+<?js } ?>
+
 <script src="jspub/scripts/index.js"></script>

@@ -1,6 +1,6 @@
 // handles loading of versions.json and populates the version drop-down select
 window.addEventListener('load', function loadVersions(event) {
-  var sel = document.querySelector('#versions');
+  var sel = document.querySelector('#jspubVersions');
   if (!sel) return;
   var versioned = function(ver) {
     var parts = String(ver).split('.');

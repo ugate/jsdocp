@@ -67,7 +67,17 @@ module.exports = publicize;
  * @param {String} [conf.opts.changelog.sections.fixes.grep.ignoreCase] `true` for case-insensitive `git log -i` for fixes
  * @param {String} [conf.opts.changelog.sections.fixes.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for fixes
  * @param {String} [conf.opts.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
- * @param {Object} [conf.opts.layoutFrags] The layout fragments used. __Typically, none of the fragment values will be set since they are handled
+ * @param {Object} [conf.opts.pages] The options for the generated pages
+ * @param {Object} [conf.opts.pages.menu] The options for the generated pages top naviagation menu
+ * @param {String} [conf.opts.pages.menu.icon] The icon `src` used in the main menu `img`
+ * @param {String} [conf.opts.pages.menu.style] The `style` applied to the main menu
+ * @param {Object[]} [conf.opts.pages.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
+ * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.
+ * @param {Object[]} [conf.opts.pages.metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of
+ * properties/values that will get translated to an attribute on the `meta` tag matching the property name and an attribute value for the value.
+ * @param {Object[]} [conf.opts.pages.scripts] The definitions used to generate `script` tags in the `head` element. Each object can have any number of
+ * properties/values that will get translated to an attribute on the `script` tag matching the property name and an attribute value for the value.
+ * @param {Object} [conf.opts.layoutFrags] The layout fragments used. __Typically, none of the fragment values will be overridden since they are handled
  * internally__
  * @param {String} [conf.opts.layoutFrags.head] The path to the template fragment that will be inserted at the __end__ of the `head` section
  * @param {String} [conf.opts.layoutFrags.nav] The path to the template fragment that will be inserted at the __beginning__ of the `body` section
@@ -158,9 +168,9 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
   conf.opts.templateProxy = conf.opts.template;
   conf.opts.template = Path.resolve(jspubPath, jpConf.opts.template);
 
-  // requires at least the markdown plugin
-  conf.plugins = conf.plugins || [];
-  if (!conf.plugins.includes('plugins/markdown')) conf.plugins.push('plugins/markdown');
+  // TODO : require the markdown extension plugin?
+  //conf.plugins = conf.plugins || [];
+  //if (!conf.plugins.includes('plugins/markdown')) conf.plugins.push('plugins/markdown');
 
   // need the following
   conf.templates = conf.templates || {};
@@ -202,9 +212,11 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
         template(conf, meta);
 
         // merge layout parts
-        mergeLayout(conf, modulePath, jspubTmpdir);
+        await mergeLayout(conf, modulePath, jspubPath, jspubTmpdir);
 
         // set private meta after merge takes place
+        // private since versions could be published after the current versions is published
+        // should be captured on the client to get the latest copy at the root dir
         meta.publish.versions = versions;
 
         // write require files/dirs
@@ -229,26 +241,26 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
  * @async
  * @param {Object} conf The module JSDoc configuration
  * @param {String} modulePath The JSDoc configuration path
+ * @param {String} jspubPath The path to the `jspub` module
  * @param {String} jspubTmpdir The temporary working directory where the parsed layout will be saved/set to
  */
-async function mergeLayout(conf, modulePath, jspubTmpdir) {
-  var mdlPath;
+async function mergeLayout(conf, modulePath, jspubPath, jspubTmpdir) {
+  var lyt, mdlPath;
   if (conf.templates.default.layoutFile) {
     mdlPath = Path.resolve(modulePath, conf.templates.default.layoutFile);
   } else {
     mdlPath = Path.resolve(modulePath, conf.opts.templateProxy, 'tmpl');
   }
-  const hdPath = Path.resolve(modulePath, conf.opts.layoutFrags.head), nvPath = Path.resolve(modulePath, conf.opts.layoutFrags.nav);
-  const ftPath = Path.resolve(modulePath, conf.opts.layoutFrags.foot);
-  var lyt = Fs.readFile(mdlPath), hd = Fs.readFile(hdPath), nv = Fs.readFile(nvPath), ft = Fs.readFile(ftPath), mdlAltPath;
   try {
-    lyt = (await lyt).toString();
+    lyt = await Fs.stat(mdlPath);
+    if (!lyt.isDirectory()) throw new Error(`Layout is not a valid directory: ${mdlPath} stats: ${JSON.stringify(lyt)}`);
   } catch (err) {
-    var error = err;
+    var error = err, mdlAltPath;
     try {
       if (!conf.templates.default.layoutFile) {
         mdlAltPath = Path.resolve(modulePath, conf.opts.templateProxy, 'template');
-        lyt = (await Fs.readFile(mdlAltPath)).toString();
+        lyt = await Fs.stat(mdlAltPath);
+        if (!lyt.isDirectory()) throw new Error(`Layout is not a valid directory: ${mdlAltPath} stats: ${JSON.stringify(lyt)}`);
         error = null;
       }
     } catch (altErr) {
@@ -260,16 +272,52 @@ async function mergeLayout(conf, modulePath, jspubTmpdir) {
       error.conf = conf;
       throw error;
     }
+    mdlPath = mdlAltPath;
   }
-  hd = (await hd).toString();
-  nv = (await nv).toString();
-  ft = (await ft).toString();
+  mdlPath = Path.resolve(mdlPath, 'layout.tmpl');
+  try {
+    lyt = (await Fs.readFile(mdlPath)).toString();
+  } catch (err) {
+    err.message += ` (Unable to find template at "${mdlPath}")`;
+    err.conf = conf;
+    throw err;
+  }
+
+  // extract jspub template fragments
+  var hd, nv, ft, error; 
+  const hdPath = Path.resolve(jspubPath, conf.opts.layoutFrags.head), nvPath = Path.resolve(jspubPath, conf.opts.layoutFrags.nav);
+  const ftPath = Path.resolve(jspubPath, conf.opts.layoutFrags.foot);
+  var error;
+  try {
+    hd = (await Fs.readFile(hdPath)).toString();
+  } catch (err) {
+    err.message += ` (Unable to find opts.layoutFrags.head at "${hdPath}")`;
+    err.conf = conf;
+    error = err;
+    error.head = err;
+  }
+  try {
+    nv = (await Fs.readFile(nvPath)).toString();
+  } catch (err) {
+    err.message += ` (Unable to find opts.layoutFrags.nav at "${nvPath}")`;
+    err.conf = conf;
+    if (error) error.nav = err;
+    else error = err;
+  }
+  try {
+    ft = (await Fs.readFile(ftPath)).toString();
+  } catch (err) {
+    err.message += ` (Unable to find opts.layoutFrags.foot at "${ftPath}")`;
+    err.conf = conf;
+    if (error) error.foot = err;
+    else error = err;
+  }
+  if (error) throw error;
   conf.opts.layoutFrags.head = hdPath;
   conf.opts.layoutFrags.nav = nvPath;
   conf.opts.layoutFrags.foot = ftPath;
-
   // merge the template layout with the jspub layout
-  lyt = lyt.replace(/(<\s*head[^>]*>)([\s\S]*?)(<\s*\/\s*head>)/ig, (mtch, open, content, close) => {
+  lyt = lyt.replace(/(<\s*head[^>]*>)([\s\S]*?)(<\s*\/\s*head>)/ig, (mtch, open, content, close) =>  {
     return `${open}${content}${hd}${close}`;
   }).replace(/(<\s*body[^>]*>)([\s\S]*?)(<\s*\/\s*body>)/ig, (mtch, open, content, close) => {
     return `${open}${nv}${content}${ft}${close}`;
