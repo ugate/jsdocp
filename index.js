@@ -68,8 +68,14 @@ module.exports = publicize;
  * @param {String} [conf.opts.changelog.sections.fixes.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for fixes
  * @param {String} [conf.opts.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
  * @param {Object} [conf.opts.pages] The options for the generated pages
- * @param {Object} [conf.opts.pages.menu] The options for the generated pages top naviagation menu
- * @param {String} [conf.opts.pages.menu.icon] The icon `src` used in the main menu `img`
+ * @param {Object} [conf.opts.pages.menu] The options for the generated pages naviagation menu
+ * @param {String} [conf.opts.pages.menu.logo] The logo `src` used on the `img` in the navigation menu
+ * @param {String} [conf.opts.pages.menu.package] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
+ * default icon or set to `none` to hide the icon)
+ * @param {String} [conf.opts.pages.menu.changelog] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
+ * version (omit to use the default icon or set to `none` to hide the icon)
+ * @param {String} [conf.opts.pages.menu.source] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
+ * default icon or set to `none` to hide the icon)
  * @param {String} [conf.opts.pages.menu.style] The `style` applied to the main menu
  * @param {Object[]} [conf.opts.pages.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
  * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.

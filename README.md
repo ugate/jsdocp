@@ -29,7 +29,7 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 > __Page customizations:__
 &nbsp;
 
-- Use virtually any [JSDoc supported template](https://github.com/jsdoc3/jsdoc#templates)- adds a banner to the top of the page with icons linking to the `npm` module (optional), CHANGELOG (optional) and doc version selection
+- Use virtually any [JSDoc supported template](https://github.com/jsdoc3/jsdoc#templates)- adds a responsive navigation bar to the doc pages that contains icons/links to the `npm` module (optional), CHANGELOG (optional), source code (optional) and doc version selection
 - Branded documentation using your own logo
 - Add your own `CSS`, `JavaScript` and `meta` to the documentation pages without altering the chosen template
 

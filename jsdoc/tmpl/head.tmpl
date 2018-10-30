@@ -1,11 +1,3 @@
-  <script>
-    // optionally remove any elements (e.g. readme headers that are duplicated in the menu)
-    window.addEventListener('load', function(event) {
-      var els = document.querySelectorAll('.remove-me');
-      for (var i = 0, ln = els && els.length; i < ln; i++) els[i].parentElement.removeChild(els[i]);
-    });
-  </script>
-  
   <!-- https://realfavicongenerator.net/ -->
   <?js for (let lnk of env.conf.opts.pages.links) { ?>
     <link

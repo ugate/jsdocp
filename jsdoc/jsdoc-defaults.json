@@ -31,7 +31,10 @@
     },
     "pages": {
       "menu": {
-        "icon": "",
+        "logo": "",
+        "package": "",
+        "changelog": "",
+        "source": "",
         "style": ""
       },
       "links": [],

@@ -30,7 +30,7 @@
     "recurse": true,
     "pages": {
       "menu": {
-        "icon": "favicon-32x32.png",
+        "logo": "favicon-32x32.png",
         "style": "background-color: #E0E0E0"
       },
       "links": [
