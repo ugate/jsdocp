@@ -76,6 +76,10 @@
         {
           "name": "theme-color",
           "content": "#546e7a"
+        },
+        {
+          "name": "viewport",
+          "content": "width=device-width, initial-scale=1"
         }
       ],
       "scripts": [
