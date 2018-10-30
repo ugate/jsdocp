@@ -35,8 +35,11 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
       }
     };
     try {
-      logger.debug(`mkdir on opts.destination = ${opts.destination}`);
-      await Fs.mkdir(opts.destination, { recursive: true });
+      const destStat = await Fs.stat(opts.destination);
+      if (!destStat.isDirectory()) {
+        logger.debug(`mkdir on opts.destination = ${opts.destination}`);
+        await Fs.mkdir(opts.destination, { recursive: true });
+      }
       const chglogPath = Path.join(opts.destination, 'CHANGELOG.html'), verPath = Path.join(opts.destination, 'versions.json');
       logger.debug(`Writting ${verPath}`);
       const wrVerProm = Fs.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
