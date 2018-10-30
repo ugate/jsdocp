@@ -1,6 +1,6 @@
 {
   "source": {
-    "include": ["index.js", "README.md"],
+    "include": ["index.js", "cli.js", "README.md"],
     "includePattern": ".js$",
     "excludePattern": "(node_modules/|docs)"
   },
@@ -17,8 +17,6 @@
       "includeDate": false,
       "staticFiles": {
         "include": [
-          "./jsdoc/jsdoc-defaults.json",
-          "./jspub/jsdoc.json",
           "./jspub/static"
         ]
       }
