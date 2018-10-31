@@ -37,7 +37,7 @@ module.exports = publicize;
  * @param {Object} [conf.opts.versions] The versions options used to generate links to previously published version docs
  * @param {String} [conf.opts.versions.from] A Semantic Versioning compliant version that designates the first version to show
  * in the version drop-down selection for different docs (omit to list all of them)
- * @param {String} [conf.opts.versions.include] A designation that inidcates what doc versions to show in the drop-down selection.
+ * @param {String} [conf.opts.versions.type] A designation that inidcates what doc versions to show in the drop-down selection.
  * A designation of `major` will only show versions that have been released for __major___ version tags (i.e. the _first_
  * number in the version). A designation of `minor` will only show versions that have been released for __minor__ version
  * tags (i.e. the _second_ number in the version). `undefined` will cause the default value to be used. Any other value, or blank value will cause
@@ -69,14 +69,21 @@ module.exports = publicize;
  * @param {String} [conf.opts.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
  * @param {Object} [conf.opts.pages] The options for the generated pages
  * @param {Object} [conf.opts.pages.menu] The options for the generated pages naviagation menu
- * @param {String} [conf.opts.pages.menu.logo] The logo `src` used on the `img` in the navigation menu
+ * @param {String} [conf.opts.pages.menu.className] The CSS class applied to the main menu
+ * @param {Object} [conf.opts.pages.menu.logo] The options for the logo displayed in the navigation menu
+ * @param {String} [conf.opts.pages.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu
+ * @param {String} [conf.opts.pages.menu.logo.anchorclassName] The CSS class name assigned to the logo icon's anchor tag
+ * @param {String} [conf.opts.pages.menu.logo.className] The CSS class name assigned to the logo icon loaded from the `src`
+ * @param {Boolean} [conf.opts.pages.menu.logo.inline] `true` when using an `svg` source and it's content should be displayed inline (allows for flexible
+ * styling of the `svg` content)
  * @param {String} [conf.opts.pages.menu.package] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
  * default icon or set to `none` to hide the icon)
  * @param {String} [conf.opts.pages.menu.changelog] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
  * version (omit to use the default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.pages.menu.source] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
+ * @param {String} [conf.opts.pages.menu.sourceCode] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
  * default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.pages.menu.style] The `style` applied to the main menu
+ * @param {Object} [conf.opts.pages.menu.icons] The package, change log and source code icon options
+ * @param {String} [conf.opts.pages.menu.icons.className] The CSS class name applied to the package, change log and source code icon options
  * @param {Object[]} [conf.opts.pages.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
  * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.
  * @param {Object[]} [conf.opts.pages.metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of
@@ -174,9 +181,10 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
   conf.opts.templateProxy = conf.opts.template;
   conf.opts.template = Path.resolve(jspubPath, jpConf.opts.template);
 
-  // TODO : require the markdown extension plugin?
-  //conf.plugins = conf.plugins || [];
-  //if (!conf.plugins.includes('plugins/markdown')) conf.plugins.push('plugins/markdown');
+  // make sure default plugins are included
+  conf.plugins = conf.plugins || [];
+  if (!conf.plugins) conf.plugins = jpConf.plugins;
+  else if (jpConf.plugins) conf.plugins = [...new Set(jpConf.plugins.concat(...conf.plugins))];
 
   // need the following
   conf.templates = conf.templates || {};
@@ -226,6 +234,7 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
         meta.publish.versions = versions;
 
         // write require files/dirs
+        console.log(`Writting compiled configuration: ${tempConfPath}`);
         const wrConfProm = Fs.writeFile(tempConfPath, JSON.stringify(conf));
         try {
           await wrConfProm;
@@ -346,8 +355,8 @@ function merge(...srcs) {
   let rtn = {};
   for (const src of srcs) {
     if (src instanceof Array) {
-      if (!(rtn instanceof Array)) rtn = [];
-      rtn = [...rtn, ...src];
+      if (!(rtn instanceof Array)) rtn = [...src];
+      else rtn = [...rtn, ...src];
     } else if (src instanceof Object) {
       for (let [key, value] of Object.entries(src)) {
         if (value instanceof Object && key in rtn) value = merge(rtn[key], value);

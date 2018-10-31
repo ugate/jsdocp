@@ -31,11 +31,19 @@
     },
     "pages": {
       "menu": {
-        "logo": "",
         "package": "",
         "changelog": "",
-        "source": "",
-        "style": ""
+        "sourceCode": "",
+        "className": "",
+        "logo": {
+          "src": "",
+          "anchorclassName": "",
+          "className": "",
+          "inline": false
+        },
+        "icons": {
+          "className": ""
+        }
       },
       "links": [],
       "meta": [],
@@ -43,7 +51,7 @@
     },
     "versions": {
       "from": "",
-      "include": "minor"
+      "type": "minor"
     },
     "changelog": {
       "header": "## [${package.version}](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version}) (${publish.date})",

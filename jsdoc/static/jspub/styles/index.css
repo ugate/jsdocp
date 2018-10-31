@@ -36,19 +36,17 @@ body {
   text-decoration: none;
   color: inherit;
 }
-img.jspub-logo, #jspubNav > a.jspub-icon {
-  height: 24px;
-  width: 24px;
+a.jspub-logo, a.jspub-icon {
   margin-right: 12px;
   margin-left: 12px;
   vertical-align: middle;
   display: inline-block;
 }
-#jspubNav > a.jspub-icon img {
+.jspub-logo-svg, .jspub-logo-img, a.jspub-icon, a.jspub-icon img, a.jspub-icon svg {
   height: 24px;
   width: 24px;
 }
-.jspub-icon-blend {
+.jspub-icon-svg-el {
   fill: #000000;
 }
 .jspub-remove-me {

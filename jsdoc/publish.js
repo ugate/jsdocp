@@ -35,8 +35,9 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
       }
     };
     try {
-      const destStat = await Fs.stat(opts.destination);
-      if (!destStat.isDirectory()) {
+      try {
+        await Fs.access(opts.destination, Fs.constants.F_OK);
+      } catch (err) {
         logger.debug(`mkdir on opts.destination = ${opts.destination}`);
         await Fs.mkdir(opts.destination, { recursive: true });
       }
@@ -88,7 +89,9 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
         err.message += ` (Unable to write ${verPath})`;
         return reject(err);
       }
-      opts.template = opts.templateProxy; // use the actual template
+
+      // use the actual template
+      opts.template = opts.templateProxy;
 
       logger.debug(`Running markdown extensions on tutorials...`);
       await tutorialExts(tutorials);

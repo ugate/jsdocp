@@ -28,10 +28,25 @@
     "encoding": "utf8",
     "private": false,
     "recurse": true,
+    "deploy": {
+      "pages": {
+        "user": {
+          "name": "Travis",
+          "email": "travis@travis-ci.org"
+        }
+      }
+    },
     "pages": {
       "menu": {
-        "logo": "favicon-32x32.png",
-        "style": "background-color: #E0E0E0"
+        "className": "pkg-menu",
+        "logo": {
+          "src": "logo.svg",
+          "className": "pkg-logo-svg",
+          "inline": true
+        },
+        "icons": {
+          "className": "pkg-icons"
+        }
       },
       "links": [
         {
@@ -65,17 +80,17 @@
         {
           "type": "text/css",
           "rel": "stylesheet",
-          "href": "my-styles/my-style.css"
+          "href": "pkg-styles/pkg-style.css"
         }
       ],
       "metas": [
         {
           "name": "msapplication-TileColor",
-          "content": "#da532c"
+          "content": "#ffab40"
         },
         {
           "name": "theme-color",
-          "content": "#546e7a"
+          "content": "#bdbdbd"
         },
         {
           "name": "viewport",
@@ -84,21 +99,13 @@
       ],
       "scripts": [
         {
-          "src": "my-scripts/my-script.js"
+          "src": "pkg-scripts/pkg-script.js"
         }
       ]
     },
-    "deploy": {
-      "pages": {
-        "user": {
-          "name": "Travis",
-          "email": "travis@travis-ci.org"
-        }
-      }
-    },
     "versions": {
       "from": "1.0.0",
-      "include": ""
+      "type": ""
     }
   }
 }
