@@ -167,7 +167,7 @@ async function tutorialExts(tuts) {
  */
 async function tutorialExt(tut) {
   if (!tut.content) return;
-  const rx = /```jspub\s*?([^\s]+)[\r\n]*([\s\S]*)```/ig, prms = [];
+  const rx = /\n```jspub\s*?([^\s]+)[\r\n]*([\s\S]*)```/ig, prms = [];
   tut.content.replace(rx, (mtch, pth) => {
     if (pth) prms.push(Fsp.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
     return mtch;
@@ -175,7 +175,7 @@ async function tutorialExt(tut) {
   let vals = await Promise.all(prms), idx = -1;
   tut.content = tut.content.replace(rx, (mtch, pth, cnt) => {
     const lang = pth.split('.').pop();
-    return `\`\`\`${lang}\n${vals[++idx].toString()}\n${cnt}\n\`\`\``;
+    return `\n\`\`\`${lang}\n${vals[++idx].toString()}\n${cnt}\n\`\`\``;
   });
 }
 
