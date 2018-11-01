@@ -4,6 +4,7 @@
   ],
   "templates": {
     "default": {
+      "layoutFile": "layout.tmpl",
       "staticFiles": {
         "include": [
           "./jsdoc/static"
@@ -14,6 +15,11 @@
   "opts": {
     "destination": "./docs",
     "template": "./jsdoc",
+    "layoutCheckTemplateDirs": [
+      "tmpl",
+      "template/tmpl",
+      "template"
+    ],
     "layoutFrags": {
       "head": "./jsdoc/tmpl/head.tmpl",
       "nav": "./jsdoc/tmpl/nav.tmpl",
@@ -54,7 +60,8 @@
       "type": "minor"
     },
     "changelog": {
-      "header": "## [${package.version}](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version}) (${publish.date})",
+      "title": "CHANGELOG v${package.version}",
+      "header": "## [${package.version}](${publish.moduleURL}/tree/${package.version}) (${publish.date})\n[Full Changelog](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version})",
       "line": "* [%s](${publish.moduleURL}/commit/%H)",
       "sections": {
         "breaks": {
@@ -83,6 +90,15 @@
             "allMatch": false
           },
           "header": "__Fixes:__"
+        },
+        "merges": {
+          "grep": {
+            "regexp": "\\[MERGE\\]",
+            "ignoreCase": true,
+            "extendedRegexp": false,
+            "allMatch": false
+          },
+          "header": "__Merged Pull Requests:__"
         }
       }
     }

@@ -4,7 +4,8 @@ const markdown = require('jsdoc/util/markdown');
 const logger = require('jsdoc/util/logger');
 
 const { exec } = require('child_process');
-const Fs = require('fs').promises;
+const Fs = require('fs');
+const Fsp = Fs.promises;
 const Path = require('path');
 
 const pkg = require(Path.join(process.env.JSPUB_MODULE_PATH, 'package.json'));
@@ -36,24 +37,26 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
     };
     try {
       try {
-        await Fs.access(opts.destination, Fs.constants.F_OK);
+        await Fsp.access(opts.destination, Fs.constants.F_OK);
       } catch (err) {
         logger.debug(`mkdir on opts.destination = ${opts.destination}`);
-        await Fs.mkdir(opts.destination, { recursive: true });
+        await Fsp.mkdir(opts.destination, { recursive: true });
       }
-      const chglogPath = Path.join(opts.destination, 'CHANGELOG.html'), verPath = Path.join(opts.destination, 'versions.json');
+      const chglogPath = Path.join(opts.destination, 'CHANGELOG.md'), verPath = Path.join(opts.destination, 'versions.json');
+      const chglogHtmlFile = 'CHANGELOG.html', chglogHtmlPath = Path.join(opts.destination, chglogHtmlFile);
       logger.debug(`Writting ${verPath}`);
-      const wrVerProm = Fs.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
+      const wrVerProm = Fsp.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
       const span = env.meta.publish.lastVersionPublished ? `v${env.meta.publish.lastVersionPublished}..HEAD ` : '';
       const line = opts.changelog && opts.changelog.line ? opts.changelog.line.replace(/"/g, '\\"') : '* %s';
       const header = opts.changelog && opts.changelog.header ? opts.changelog.header : `## ${env.meta.package.version}`;
-      const gitlog = (grepo) => {
+      const gitlog = (grepo, merges) => {
+        const mrgs = merges ? '--merges --first-parent master' : '--no-merges';
         const grep = grepo && grepo.regexp ? `--grep="${grepo.regexp.replace(/"/g, '\\"')}" ` : '';
         const rxi = grepo && grepo.ignoreCase ? '-i ' : '', rxe = grepo && grepo.extendedRegexp ? '-E ' : '';
         return new Promise((resolve, reject) => {
-          exec(`git --no-pager log ${span}--oneline --no-merges ${rxi}${rxe}${grep}--pretty=format:"${line}" `, async (error, stdout, stderr) => {
+          exec(`git --no-pager log ${span}--oneline ${mrgs} ${rxi}${rxe}${grep}--pretty=format:"${line}" `, async (error, stdout, stderr) => {
             if (error) return reject(error);
-            if (stderr) return reject(new Error(`Failed to generate CHANGELOG: ${stderr}`));
+            if (stderr) return reject(new Error(stderr));
             resolve(stdout || '');
           });
         });
@@ -63,24 +66,34 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
         if (sctns.breaks && sctns.breaks.grep) clps.push({ promise: gitlog(sctns.breaks.grep), opts: sctns.breaks });
         if (sctns.features && sctns.features.grep) clps.push({ promise: gitlog(sctns.features.grep), opts: sctns.features });
         if (sctns.fixes && sctns.fixes.grep) clps.push({ promise: gitlog(sctns.fixes.grep), opts: sctns.fixes });
+        if (sctns.merges && sctns.merges.grep) clps.push({ promise: gitlog(sctns.merges.grep, true), opts: sctns.merges });
       } else chglog += await gitlog();
       for (let cl of clps) {
         try {
           cltxt = await cl.promise;
           if (cltxt) chglog += `\n\n${cl.opts.header}\n${cltxt}`;
         } catch (err) {
-          err.message += ` (Unable to capture CHANGELOG section "${cl.opts.header}" for grep "${cl.opts.grep}")`;
+          err.message += ` (Unable to generate CHANGELOG section "${cl.opts.header}" for grep "${cl.opts.grep}")`;
           return reject(err);
         }
       }
       try {
-        const parse = markdown.getParser();
-        env.meta.changelog = parse(`${header}\n${chglog}`);
+        const mdParse = markdown.getParser();
+        env.meta.changelog = `${header}\n${chglog}`;
+        env.meta.changelogHTML = mdParse(env.meta.changelog);
+
+        // write standalone changelog markdown file
         logger.debug(`Writting ${chglogPath}`);
-        const wrClProm = Fs.writeFile(chglogPath, env.meta.changelog);
+        const wrClProm = Fsp.writeFile(chglogPath, env.meta.changelog);
+
+        // write standalone changelog HTML file
+        logger.debug(`Writting ${chglogHtmlPath}`);
+        const wrClPromHTML = Fsp.writeFile(chglogHtmlPath, env.meta.changelogHTML);
+        
+        await wrClPromHTML;
         await wrClProm;
       } catch(err) {
-        err.message += ` (Unable to write ${chglogPath})`;
+        err.message += ` (Unable to write ${chglogPath} and/or ${chglogHtmlPath})`;
         return reject(err);
       }
       try {
@@ -98,9 +111,17 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
       
       // transfer control over to template engine
       const Engine = require(`${Path.parse(opts.template).name}/publish`);
-      resolve(Engine.publish.apply(thiz, args)); // no need to customize how docs are parsed, jut the layout.tmpl file
+      resolve(Engine.publish.apply(thiz, args)); // no need to customize how docs are parsed
     } catch(err) {
       reject(err);
+    } finally {
+      try {
+        await rmrf(process.env.JSPUB_TMPDIR);
+        logger.info(`Removed ${process.env.JSPUB_TMPDIR}`);
+      } catch (err) {
+        logger.warn(`Unable to cleanup ${process.env.JSPUB_TMPDIR}`);
+        logger.warn(err);
+      }
     }
   });
 };
@@ -131,7 +152,7 @@ async function tutorialExt(tut) {
   if (!tut.content) return;
   const rx = /```jspub\s*?([^\s]+)[\r\n]*([\s\S]*)```/ig, prms = [];
   tut.content.replace(rx, (mtch, pth) => {
-    if (pth) prms.push(Fs.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
+    if (pth) prms.push(Fsp.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
     return mtch;
   });
   let vals = await Promise.all(prms), idx = -1;
@@ -139,4 +160,19 @@ async function tutorialExt(tut) {
     const lang = pth.split('.').pop();
     return `\`\`\`${lang}\n${vals[++idx].toString()}\n${cnt}\n\`\`\``;
   });
+}
+
+/**
+ * Recursively removes the directory and any subdirectories/files
+ * @param {String} dir The path that will be removed
+ */
+async function rmrf(dir) {
+  await Fsp.access(dir, Fs.constants.F_OK);
+  var sdir;
+  for (let entry of await Fsp.readdir(dir)) {
+    sdir = Path.join(dir, entry);
+    if ((await Fsp.lstat(sdir)).isDirectory()) await rmrf(sdir);
+    else await Fsp.unlink(sdir);
+  }
+  await Fsp.rmdir(dir);
 }

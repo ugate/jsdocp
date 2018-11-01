@@ -17,14 +17,14 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 
 - Each time docs are tagged/deployed to GitHub or any other `git` supported documentation hosting service, the old docs are archived in a versioned directory
 - `versions.json` generation for real-time version selections in previously deployed docs (no more wiping out old docs!)
-- Tag filtering option to restrict doc generation for tagged versions that released for `major` or `minor` versions rather than every version that is tagged
+- Tag filtering option to restrict doc generation for tagged versions that are released for `major` or `minor` versions rather than every version that is tagged
 
 > __CHANGELOG generation:__
 &nbsp;
 
-- Each time docs are tagged/deployed a CHANGELOG is generated (optional)
+- Each time docs are tagged/deployed a `CHANGELOG.md` as well as a markdown parsed `CHANGELOG.html` are generated (optional)
 - Customizable CHANGELOG __header__ and __lines__ using markdown, [git formatting](https://git-scm.com/docs/pretty-formats) (e.g. `%h`, etc.) and package/publishing parameter substitutions using [Template Literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) syntax
-- Customizable [grep](https://git-scm.com/docs/git-log#git-log---grepltpatterngt) regular expressions for determining which commit messages will appear in the logs (including support for sub-sectioning into __Breaking Changes__, __Features__ and __Fixes__)
+- Customizable [grep](https://git-scm.com/docs/git-log#git-log---grepltpatterngt) regular expressions for determining which commit messages will appear in the logs (including support for sub-sectioning into __Breaking Changes__, __Features__, __Fixes__ and __Merges/Pull Requests__)
 
 > __Page customizations:__
 &nbsp;
@@ -42,10 +42,10 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 > __Markdown extensions:__
 &nbsp;
 
-- Include source files into any of your tutorial pages by simply adding...
+- Include preprocessed source files into any of your tutorial pages by simply adding...
 <pre>
 ```jspub path/to/my/project/file.js
-// contents of file.js will appear here!
+// contents of file.js will appear here and the language will be set using the file extension!
 ```
 </pre>
 

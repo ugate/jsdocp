@@ -1,7 +1,8 @@
 var jspub = new JSPUB();
 
 function JSPUB() {
-  var py = window.pageYOffset, mobile = window.matchMedia('(max-width: 680px)'), inlineSrcSel = '.jspub-logo-svg', inlineSrcAttr = 'jspub-logo-src';
+  var py = window.pageYOffset, mobile = window.matchMedia('(max-width: 680px)');
+  var inlineSrcSel = '.jspub-logo-svg', inlineSrcAttr = 'jspub-logo-src';
 
   // handles mobile nav menu showing/hiding based upon scrolling direction
   window.addEventListener('scroll', function scroller() {
@@ -15,9 +16,40 @@ function JSPUB() {
 
   // handle loading of versions.json and populates the version drop-down select
   window.addEventListener('load', function loaded() {
+    changelogLink();
     jspub.loadVersions();
     jspub.imgSvgToInline(document.querySelectorAll(inlineSrcSel), inlineSrcAttr);
   });
+
+  /**
+   * Attempt to override the link to the CHANGELOG in order to keep it within the same page wrapper
+   */
+  function changelogLink() {
+    var cla = document.getElementById('jspubChangelog'), cl = document.getElementById('jspubChangelogContent');
+    var clt = document.getElementById('main');
+    if (!clt) clt = querySelectorOne(['.main', '.content']);
+    if (clt && cla && cl) {
+      var original = clt.innerHTML, usingCl;
+      cla.addEventListener('click', function overrideChglogClick(event) {
+        clt.innerHTML = usingCl ? original : cl.innerHTML;
+        usingCl = !usingCl;
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      }, { capture: true });
+    }
+  }
+
+  /**
+   * Finds the first occurance of a selector that has only one element in the document
+   * @param {String[]} sels The CSS selectors
+   */
+  function querySelectorOne(sels) {
+    for (var i = 0, el; i < sels.length; i++) {
+      el = document.querySelectorAll(sels[i]);
+      if (clt.length == 1) return el;
+    }
+  }
 }
 
 /**

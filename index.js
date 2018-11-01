@@ -10,27 +10,9 @@ const tmpdir = Os.tmpdir();
 module.exports = publicize;
 
 /**
- * Generates the JSDoc style results along with previously published `npm` jsdoc by version. How doc versions are displayed in the
- * end result are customizable via the described _options_. A customizable changelog is also generated that contains filtered commit
- * messages since the last tagging of the `git` repository where the package resides.
- * ### Immutable Configuration Options:
- * The configuration options documented here only contain add-on options for JSDoc. See the JSDoc documentation for the full list of
- * configuration options. There are however a few configuration options that cannot be overridden. They include:
- * - `conf.templates.default.layoutFile`: Set to the internal layout file used during execution.
- * 
- * ### Template Requirements:
- * `conf.opts.template` should reference a path to the actual JSDoc template being used (e.g. `./node_modules/minami` would be valid
- * assuming that the `minami` template module is installed).
- * ### Template Literals:
- * All of the add-on configuration values can also contain template literals (i.e. `${}`) that reference paths within the following objects:
- * - `${package}`: The `package.json` object followed by any of it's properties (e.g. `${package.repository.url}/README.md`).
- * - `${publish.lastVersionPublished}`: Will evaluate to the last version published to `npm` or blank when nothing has been published yet.
- * - `${publish.lastVersion}`: Will evaluate to the last version published to `npm` or the current `package.version`when nothing has been published yet.
- * - `${publish.moduleURL}`: Will basically evaluate to the `homepage` in `package.json`, but will also remove any _hashes_ in the URL (e.g.
- * assuming a `homepage` of `https://example.com/username/module#readme` would become `https://example.com/username/module`).
- * - `${publish.date}`: The current date string formatted as `YYYY-MM-DD`
- * 
- * #### See documentation for default values that are ported over from `jspub/jsdoc-defaults.conf`
+ * Generates the JSDoc style results using any number of [template providers](https://github.com/jsdoc3/jsdoc#templates-and-tools). See [`README`](index.html)
+ * for more details.
+ * #### See [Getting Started]{@tutorial 1-start} documentation for default values that are ported over from `jsdoc-defaults.conf`
  * @async
  * @param {(String|Object)} conf Either the path to the JSDoc configuration file or the actual JSDoc configuration itself.
  * @param {Object} [conf.opts] The JSDoc options with some added options
@@ -43,6 +25,7 @@ module.exports = publicize;
  * tags (i.e. the _second_ number in the version). `undefined` will cause the default value to be used. Any other value, or blank value will cause
  * all versions to be included.
  * @param {Object} [conf.opts.changelog] The change log options used to generate the change log file and link
+ * @param {Object} [conf.opts.changelog.title] The change log page `title` of the generated HTML page
  * @param {String} [conf.opts.changelog.line] The _format_ for individual commit lines produced in the change log markdown.
  * @param {String} [conf.opts.changelog.header] The markdown that will be pre-pended to the change log.
  * @param {Object} [conf.opts.changelog.sections] The sections within the change log which organize changes (omit output a list without sections)
@@ -67,6 +50,13 @@ module.exports = publicize;
  * @param {String} [conf.opts.changelog.sections.fixes.grep.ignoreCase] `true` for case-insensitive `git log -i` for fixes
  * @param {String} [conf.opts.changelog.sections.fixes.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for fixes
  * @param {String} [conf.opts.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
+ * @param {String} [conf.opts.changelog.sections.merges] Section options for merged/pull requests
+ * @param {String} [conf.opts.changelog.sections.merges.header] Markdown used as a _header_ when there are change log entries for merges
+ * @param {String} [conf.opts.changelog.sections.merges.grep] Section `grep` options for merges
+ * @param {String} [conf.opts.changelog.sections.merges.grep.regexp] The regular expression used used as filter in the `git log -grep=` for merges
+ * @param {String} [conf.opts.changelog.sections.merges.grep.ignoreCase] `true` for case-insensitive `git log -i` for merges
+ * @param {String} [conf.opts.changelog.sections.merges.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for merges
+ * @param {String} [conf.opts.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
  * @param {Object} [conf.opts.pages] The options for the generated pages
  * @param {Object} [conf.opts.pages.menu] The options for the generated pages naviagation menu
  * @param {String} [conf.opts.pages.menu.className] The CSS class applied to the main menu
@@ -95,6 +85,9 @@ module.exports = publicize;
  * @param {String} [conf.opts.layoutFrags.head] The path to the template fragment that will be inserted at the __end__ of the `head` section
  * @param {String} [conf.opts.layoutFrags.nav] The path to the template fragment that will be inserted at the __beginning__ of the `body` section
  * @param {String} [conf.opts.layoutFrags.foot] The path to the template fragment that will be inserted at the __end__ of the `body` section
+ * @param {String[]} [conf.opts.layoutFrags.layoutCheckTemplateDirs] The directories that the required `conf.templates.default.layoutFile` will be
+ * searched for in the order they are defined. Unfortunately, template implementations may store the `conf.templates.default.layoutFile` in different
+ * locations. By default, the most likley/typlical directories will be checked.
  * @param {Boolean} [deploy] `true` to deploy via `git` after publication
  * @returns {Boolean} `true` when completed successfully
  */
@@ -125,6 +118,7 @@ async function publicize(conf, deploy) {
       JSPUB_TMPDIR: jspubTmpdir,
       JSPUB_CONF_PATH: tempConfPath,
       JSPUB_PATH: jspubPath,
+      JSPUB_LAYOUT_PATH: meta.layout.path,
       JSPUB_PUBLISH_VERSIONS: meta.publish.versions,
       JSPUB_PUBLISH_LAST_VER_PUB: meta.publish.lastVersionPublished,
       JSPUB_PUBLISH_LAST_VER: meta.publish.lastVersion,
@@ -189,6 +183,7 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
   // need the following
   conf.templates = conf.templates || {};
   conf.templates.default = conf.templates.default || {};
+  conf.templates.default.layoutFile = conf.templates.default.layoutFile || jpConf.templates.default.layoutFile;
 
   // ensure include contains the include from jspub
   conf.templates.default.staticFiles = conf.templates.default.staticFiles || {};
@@ -226,7 +221,7 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
         template(conf, meta);
 
         // merge layout parts
-        await mergeLayout(conf, modulePath, jspubPath, jspubTmpdir);
+        await mergeLayout(conf, meta, modulePath, jspubPath, jspubTmpdir);
 
         // set private meta after merge takes place
         // private since versions could be published after the current versions is published
@@ -251,55 +246,28 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
 }
 
 /**
- * Merges the various `layout.tmpl` parts
+ * Merges the various layout template parts
  * @private
  * @async
  * @param {Object} conf The module JSDoc configuration
+ * @param {Object} meta The meta where the `layout` will be stored
  * @param {String} modulePath The JSDoc configuration path
  * @param {String} jspubPath The path to the `jspub` module
  * @param {String} jspubTmpdir The temporary working directory where the parsed layout will be saved/set to
  */
-async function mergeLayout(conf, modulePath, jspubPath, jspubTmpdir) {
-  var lyt, mdlPath;
-  if (conf.templates.default.layoutFile) {
-    mdlPath = Path.resolve(modulePath, conf.templates.default.layoutFile);
-  } else {
-    mdlPath = Path.resolve(modulePath, conf.opts.templateProxy, 'tmpl');
-  }
-  try {
-    lyt = await Fs.stat(mdlPath);
-    if (!lyt.isDirectory()) throw new Error(`Layout is not a valid directory: ${mdlPath} stats: ${JSON.stringify(lyt)}`);
-  } catch (err) {
-    var error = err, mdlAltPath;
-    try {
-      if (!conf.templates.default.layoutFile) {
-        mdlAltPath = Path.resolve(modulePath, conf.opts.templateProxy, 'template');
-        lyt = await Fs.stat(mdlAltPath);
-        if (!lyt.isDirectory()) throw new Error(`Layout is not a valid directory: ${mdlAltPath} stats: ${JSON.stringify(lyt)}`);
-        error = null;
-      }
-    } catch (altErr) {
-      error = altErr;
-    }
-    if (!error && !lyt) error = new Error('Empty layout');
-    if (error) {
-      error.message += ` (Unable to resolve tempalte layout for either "${mdlPath}"${mdlAltPath ? ` or ${mdlAltPath}`: ''})`;
-      error.conf = conf;
-      throw error;
-    }
-    mdlPath = mdlAltPath;
-  }
-  mdlPath = Path.resolve(mdlPath, 'layout.tmpl');
-  try {
-    lyt = (await Fs.readFile(mdlPath)).toString();
-  } catch (err) {
-    err.message += ` (Unable to find template at "${mdlPath}")`;
-    err.conf = conf;
-    throw err;
+async function mergeLayout(conf, meta, modulePath, jspubPath, jspubTmpdir) {
+  // paths should be added from deepest to shallow
+  const dirs = conf.opts.layoutCheckTemplateDirs, base = Path.resolve(modulePath, conf.opts.templateProxy);
+  const lyt = await getLayout(dirs, conf.templates.default.layoutFile, base);
+  if (lyt.errors.length && (!lyt.path || !lyt.content)) {
+    const error = lyt.errors.pop();
+    error.message += ` (Unable to resolve tempalte layout. Checked the following paths under "${base}": ${dirs.join(', ')})`;
+    error.conf = conf;
+    throw error;
   }
 
   // extract jspub template fragments
-  var hd, nv, ft, error; 
+  var hd, nv, ft, error;
   const hdPath = Path.resolve(jspubPath, conf.opts.layoutFrags.head), nvPath = Path.resolve(jspubPath, conf.opts.layoutFrags.nav);
   const ftPath = Path.resolve(jspubPath, conf.opts.layoutFrags.foot);
   var error;
@@ -332,15 +300,56 @@ async function mergeLayout(conf, modulePath, jspubPath, jspubTmpdir) {
   conf.opts.layoutFrags.nav = nvPath;
   conf.opts.layoutFrags.foot = ftPath;
   // merge the template layout with the jspub layout
-  lyt = lyt.replace(/(<\s*head[^>]*>)([\s\S]*?)(<\s*\/\s*head>)/ig, (mtch, open, content, close) =>  {
+  lyt.content = lyt.content.replace(/(<\s*head[^>]*>)([\s\S]*?)(<\s*\/\s*head>)/ig, (mtch, open, content, close) =>  {
     return `${open}${content}${hd}${close}`;
   }).replace(/(<\s*body[^>]*>)([\s\S]*?)(<\s*\/\s*body>)/ig, (mtch, open, content, close) => {
     return `${open}${nv}${content}${ft}${close}`;
   });
+  meta.layout = { path: lyt.path, content: lyt.content };
   
   // write/set merged layout file
   conf.templates.default.layoutFile = Path.resolve(jspubTmpdir, 'layout.tmpl');
-  return Fs.writeFile(conf.templates.default.layoutFile, lyt);
+  return Fs.writeFile(conf.templates.default.layoutFile, lyt.content);
+}
+
+/**
+ * Searches for a layout template in the specified directories in the order they were added. The first diectory that contains
+ * the file name will be read and returned.
+ * @private
+ * @async
+ * @param {String[]} dirs The directory paths to check if the `fileName`
+ * @param {String} fileName The file name that will be checked/read from (using the directory entry from `dirs`)
+ * @param {String} [base] The base path that will be resolved for each of the directories
+ * @returns {Object} `{ errors: [], path: 'path/to/the/layout.tmpl', content: 'the layout content here' }`
+ */
+async function getLayout(dirs, fileName, base) {
+  const rtn = { errors: [] };
+  if (base) dirs = [ ...dirs, '.' ]; // include the base in the search
+  var lyt;
+  for (let dir of dirs) {
+    try {
+      if (base) dir = Path.resolve(base, dir);
+      lyt = await Fs.stat(dir);
+      if (!lyt.isDirectory()) {
+        errors.push(new Error(`Layout is not a valid directory: ${dir} stats: ${JSON.stringify(lyt)}`));
+        continue;
+      }
+      rtn.path = Path.resolve(dir, fileName);;
+      try {
+        rtn.content = (await Fs.readFile(rtn.path)).toString();
+      } catch (err) {
+        err.message += ` (Unable to find layout template at "${rtn.path}")`;
+        errors.push(err);
+        rtn.path = '';
+        continue;
+      }
+      return rtn;
+    } catch (err) {
+      err.message += ` (Unexpected error while looking for layout template at: ${dir})`;
+      rtn.errors.push(err);
+    }
+  }
+  return rtn;
 }
 
 /**
