@@ -42,7 +42,12 @@ a.jspub-logo, a.jspub-icon {
   vertical-align: middle;
   display: inline-block;
 }
-.jspub-logo-svg, .jspub-logo-img, a.jspub-icon, a.jspub-icon img, a.jspub-icon svg {
+a.jspub-logo b, a.jspub-logo svg, a.jspub-logo img {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}
+a.jspub-icon, a.jspub-icon img, a.jspub-icon svg {
   height: 24px;
   width: 24px;
 }

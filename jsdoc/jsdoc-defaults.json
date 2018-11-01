@@ -43,9 +43,9 @@
         "className": "",
         "logo": {
           "src": "",
+          "inlineSvgPath": "",
           "anchorclassName": "",
-          "className": "",
-          "inline": false
+          "className": ""
         },
         "icons": {
           "className": ""

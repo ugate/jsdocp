@@ -1,10 +1,12 @@
 <div id="jspubNav" class="<?js= env.conf.opts.pages.menu.className ?>">
   <a href="index.html" id="jspubLogo" title="Home" class="jspub-logo <?js= env.conf.opts.pages.menu.logo.anchorclassName ?>">
-    <?js if (env.conf.opts.pages.menu.logo.src && env.conf.opts.pages.menu.logo.inline) { ?>
-      <div style="display:none" jspub-logo-src="<?js= env.conf.opts.pages.menu.logo.src ?>" class="jspub-logo-svg <?js= env.conf.opts.pages.menu.logo.className ?>"></div>
+    <b class="<?js= env.conf.opts.pages.menu.logo.className ?>">
+    <?js if (env.meta.logo) { ?>
+      <?js= env.meta.logo ?>
     <?js } else if (env.conf.opts.pages.menu.logo.src) { ?>
-      <img src="<?js= env.conf.opts.pages.menu.logo.src ?>" class="jspub-logo-img <?js= env.conf.opts.pages.menu.logo.className ?>" /> 
+      <img src="<?js= env.conf.opts.pages.menu.logo.src ?>" /> 
     <?js } ?>
+    </b>
     <b id="jspubPkgName"><?js= env.meta.package.name ?></b>
   </a>
   <span class="sep">|</span>
@@ -63,5 +65,5 @@
     data-jspub-version="<?js= env.meta.package.version ?>">
     <option value="" selected><?js= env.meta.package.version ?></option>
   </select>
+  <div id="jspubChangelogContent" style="display:none"><?js= env.meta.changelogHTML ?></div>
 </div>
-<div id="jspubChangelogContent" style="display:none"><?js= env.meta.changelogHTML ?></div>

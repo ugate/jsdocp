@@ -43,7 +43,7 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
         await Fsp.mkdir(opts.destination, { recursive: true });
       }
       const chglogPath = Path.join(opts.destination, 'CHANGELOG.md'), verPath = Path.join(opts.destination, 'versions.json');
-      const chglogHtmlFile = 'CHANGELOG.html', chglogHtmlPath = Path.join(opts.destination, chglogHtmlFile);
+      const chglogHtmlPath = Path.join(opts.destination, 'CHANGELOG.html');
       logger.debug(`Writting ${verPath}`);
       const wrVerProm = Fsp.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
       const span = env.meta.publish.lastVersionPublished ? `v${env.meta.publish.lastVersionPublished}..HEAD ` : '';
@@ -77,6 +77,14 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
           return reject(err);
         }
       }
+      var logoPath;
+      if (opts.pages.menu.logo.inlineSvgPath) {
+        if (!/.svg$/i.test(opts.pages.menu.logo.inlineSvgPath)) {
+          throw new Error(`"conf.opts.pages.menu.logo.inlineSvgPath" must be in SVG format for: ${conf.opts.pages.menu.logo.inlineSvgPath}`);
+        }
+        logoPath = Path.resolve(process.env.JSPUB_MODULE_PATH, opts.pages.menu.logo.inlineSvgPath);
+        env.meta.logo = Fsp.readFile(logoPath);
+      }
       try {
         const mdParse = markdown.getParser();
         env.meta.changelog = `${header}\n${chglog}`;
@@ -101,6 +109,15 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
       } catch (err) {
         err.message += ` (Unable to write ${verPath})`;
         return reject(err);
+      }
+
+      // extract logo inline content
+      try {
+        env.meta.logo = env.meta.logo instanceof Promise ? (await env.meta.logo).toString(): env.meta.logo;
+      } catch (err) {
+        err.message += ` (Unable to extract logo content from ${logoPath}.${opts.pages.menu.logo.src ? ` Falling back on ${opts.pages.menu.logo.src}` : ''})`;
+        logger.warn(err.message);
+        logger.warn(err);
       }
 
       // use the actual template

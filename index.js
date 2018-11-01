@@ -61,7 +61,9 @@ module.exports = publicize;
  * @param {Object} [conf.opts.pages.menu] The options for the generated pages naviagation menu
  * @param {String} [conf.opts.pages.menu.className] The CSS class applied to the main menu
  * @param {Object} [conf.opts.pages.menu.logo] The options for the logo displayed in the navigation menu
- * @param {String} [conf.opts.pages.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu
+ * @param {String} [conf.opts.pages.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu (if not overridden by `inlineSvgPath`)
+ * @param {String} [conf.opts.pages.menu.logo.inlineSvgPath] A path to an `svg` logo that will be inserted inline within the navigation menu display. Will
+ * override the logo `src`, but if present will fall back on the `src` when the `svg` content cannot be extracted.
  * @param {String} [conf.opts.pages.menu.logo.anchorclassName] The CSS class name assigned to the logo icon's anchor tag
  * @param {String} [conf.opts.pages.menu.logo.className] The CSS class name assigned to the logo icon loaded from the `src`
  * @param {Boolean} [conf.opts.pages.menu.logo.inline] `true` when using an `svg` source and it's content should be displayed inline (allows for flexible

@@ -40,9 +40,9 @@
       "menu": {
         "className": "pkg-menu",
         "logo": {
-          "src": "logo.svg",
-          "className": "pkg-logo-svg",
-          "inline": true
+          "src": "favicon-32x32.png",
+          "inlineSvgPath": "./jspub/static/logo.svg",
+          "className": "pkg-logo"
         },
         "icons": {
           "className": "pkg-icons"

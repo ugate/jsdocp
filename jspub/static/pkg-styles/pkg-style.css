@@ -3,6 +3,6 @@
   background-color: #fa8100 !important;
   color: #ffffff !important;
 }
-.pkg-logo-svg, .pkg-icons {
+.pkg-logo, .pkg-logo svg, .pkg-icons {
   fill: #ffffff !important;
 }

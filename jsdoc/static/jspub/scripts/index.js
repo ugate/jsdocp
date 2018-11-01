@@ -1,8 +1,9 @@
 var jspub = new JSPUB();
 
 function JSPUB() {
-  var py = window.pageYOffset, mobile = window.matchMedia('(max-width: 680px)');
-  var inlineSrcSel = '.jspub-logo-svg', inlineSrcAttr = 'jspub-logo-src';
+  var jp = this, py = window.pageYOffset, mobile = window.matchMedia('(max-width: 680px)');
+  var chglogId = 'jspubChangelog', chglogContentId = 'jspubChangelogContent';
+  var logoSrcSel = '.jspub-logo-svg', logoSrcAttr = 'jspub-logo-src';
 
   // handles mobile nav menu showing/hiding based upon scrolling direction
   window.addEventListener('scroll', function scroller() {
@@ -17,15 +18,15 @@ function JSPUB() {
   // handle loading of versions.json and populates the version drop-down select
   window.addEventListener('load', function loaded() {
     changelogLink();
-    jspub.loadVersions();
-    jspub.imgSvgToInline(document.querySelectorAll(inlineSrcSel), inlineSrcAttr);
+    jp.loadVersions();
+    jp.imgSvgToInline(document.querySelectorAll(logoSrcSel), logoSrcAttr);
   });
 
   /**
    * Attempt to override the link to the CHANGELOG in order to keep it within the same page wrapper
    */
   function changelogLink() {
-    var cla = document.getElementById('jspubChangelog'), cl = document.getElementById('jspubChangelogContent');
+    var cla = document.getElementById(chglogId), cl = document.getElementById(chglogContentId);
     var clt = document.getElementById('main');
     if (!clt) clt = querySelectorOne(['.main', '.content']);
     if (clt && cla && cl) {
