@@ -22,7 +22,8 @@ const pkg = require(Path.join(process.env.JSPUB_MODULE_PATH, 'package.json'));
  * @param {Object} opts The JSDoc options
  * @param {Tutorial} tutorials The turtorials
  */
-exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials, {depth:100});
+exports.publish = function(taffyData, opts, tutorials) {
+  //console.dir(tutorials, {depth:100});
   // console.dir(opts, {depth:10});
   const thiz = this, args = arguments;
   return new Promise(async (resolve, reject) => {
@@ -36,15 +37,10 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
       }
     };
     try {
-      try {
-        await Fsp.access(opts.destination, Fs.constants.F_OK);
-      } catch (err) {
-        logger.debug(`mkdir on opts.destination = ${opts.destination}`);
-        await Fsp.mkdir(opts.destination, { recursive: true });
-      }
+      await destination(opts);
       const chglogPath = Path.join(opts.destination, 'CHANGELOG.md'), verPath = Path.join(opts.destination, 'versions.json');
       const chglogHtmlPath = Path.join(opts.destination, 'CHANGELOG.html');
-      logger.debug(`Writting ${verPath}`);
+      logger.info(`Writting ${verPath}`);
       const wrVerProm = Fsp.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
       const span = env.meta.publish.lastVersionPublished ? `v${env.meta.publish.lastVersionPublished}..HEAD ` : '';
       const line = opts.changelog && opts.changelog.line ? opts.changelog.line.replace(/"/g, '\\"') : '* %s';
@@ -91,11 +87,11 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
         env.meta.changelogHTML = mdParse(env.meta.changelog);
 
         // write standalone changelog markdown file
-        logger.debug(`Writting ${chglogPath}`);
+        logger.info(`Writting ${chglogPath}`);
         const wrClProm = Fsp.writeFile(chglogPath, env.meta.changelog);
 
         // write standalone changelog HTML file
-        logger.debug(`Writting ${chglogHtmlPath}`);
+        logger.info(`Writting ${chglogHtmlPath}`);
         const wrClPromHTML = Fsp.writeFile(chglogHtmlPath, env.meta.changelogHTML);
         
         await wrClPromHTML;
@@ -144,6 +140,36 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
 };
 
 /**
+ * Handles the removal/creation of the destination directory
+ * @private
+ * @param {Object} opts The `jsdoc` options
+ */
+async function destination(opts) {
+  var chkdest = !opts.pages || !opts.pages.cleanDestination, mkdest = true;
+  try {
+    if (!chkdest) {
+      logger.info(`Cleaning ${opts.destination}`);
+      await rmrf(opts.destination);
+    }
+  } catch (err) {
+    chkdest = true;
+    logger.warn(`Unable to clean opts.destination: ${opts.destination} ${err.message}`);
+  }
+  try {
+    if (chkdest) {
+      await Fsp.access(opts.destination, Fs.constants.F_OK);
+      mkdest = false;
+    }
+  } catch (err) {
+    logger.debug(`Inaccessible opts.destination: ${opts.destination}`);
+  }
+  if (mkdest) {
+    logger.debug(`mkdir for opts.destination: ${opts.destination}`);
+    return Fsp.mkdir(opts.destination, { recursive: true });
+  }
+}
+
+/**
  * Parses/sets the tutorial content that matches any of the markdown extensions
  * @private
  * @param {Object[]} tuts The tutorial object
@@ -151,45 +177,51 @@ exports.publish = function(taffyData, opts, tutorials) {//console.dir(tutorials,
  */
 async function tutorialExts(tuts) {
   if (!tuts) return;
-  if (tuts.content) tutorialExt(tuts);
+  if (tuts.content) markdownExt(tuts);
   const prms = [];
   for (let tut of tuts.children) {
-    prms.push(tutorialExt(tut));
+    prms.push(markdownExt(tut));
   }
   await Promise.all(prms);
 }
 
 /**
- * Parses/sets the tutorial content that matches any of the markdown extensions
+ * Parses/sets the _markdown_ content for extended features
  * @private
- * @param {Object} tut The tutorial object
- * @param {String} tut.content The content of the tutorial
+ * @param {Object} md The markdown string to parse
+ * @param {String} md.content The markdown content
  */
-async function tutorialExt(tut) {
-  if (!tut.content) return;
-  const rx = /\n```jspub\s*?([^\s]+)[\r\n]*([\s\S]*)```/ig, prms = [];
-  tut.content.replace(rx, (mtch, pth) => {
-    if (pth) prms.push(Fsp.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
+async function markdownExt(md) {
+  if (!md.content) return;
+  // replace all jspub inline code blocks with the actual code blocks unless wrapped in a "pre"
+  const rx = /^\s*(`{3,})jspub\s*(\S+)?\s*[\r\n]([\s\S]*?)[\r\n]?\s*(`{3,})\s*(?:\n+|$)/igm, prms = [];
+  md.content.replace(rx, (mtch, bktckStart, pth, cnt, bktckEnd) => {
+    if (bktckStart.length > 3 && bktckEnd.length > 3) return mtch;
+    prms.push(Fsp.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
     return mtch;
   });
+  if (!prms.length) return;
   let vals = await Promise.all(prms), idx = -1;
-  tut.content = tut.content.replace(rx, (mtch, pth, cnt) => {
+  md.content = md.content.replace(rx, (mtch, bktckStart, pth, cnt, bktckEnd) => {
+    if (bktckStart.length > 3 && bktckEnd.length > 3) return mtch.replace(/`{4,}/g, '```');
     const lang = pth.split('.').pop();
-    return `\n\`\`\`${lang}\n${vals[++idx].toString()}\n${cnt}\n\`\`\``;
+    return `\`\`\`${lang}\n${cnt ? `${cnt}\n` : ''}${vals[++idx].toString()}\n\`\`\`\n`;
   });
 }
 
 /**
  * Recursively removes the directory and any subdirectories/files
+ * @private
  * @param {String} dir The path that will be removed
  */
 async function rmrf(dir) {
-  await Fsp.access(dir, Fs.constants.F_OK);
-  var sdir;
-  for (let entry of await Fsp.readdir(dir)) {
-    sdir = Path.join(dir, entry);
-    if ((await Fsp.lstat(sdir)).isDirectory()) await rmrf(sdir);
-    else await Fsp.unlink(sdir);
+  // TODO : ESM use... export async function rmrf(dir) {
+    await Fsp.access(dir, Fs.constants.F_OK);
+    var sdir;
+    for (let entry of await Fsp.readdir(dir)) {
+      sdir = Path.join(dir, entry);
+      if ((await Fsp.lstat(sdir)).isDirectory()) await rmrf(sdir);
+      else await Fsp.unlink(sdir);
+    }
+    await Fsp.rmdir(dir);
   }
-  await Fsp.rmdir(dir);
-}

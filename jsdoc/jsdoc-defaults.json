@@ -7,7 +7,7 @@
       "layoutFile": "layout.tmpl",
       "staticFiles": {
         "include": [
-          "./jsdoc/static"
+          "./node_modules/jsdoc/static"
         ]
       }
     }
@@ -21,9 +21,9 @@
       "template"
     ],
     "layoutFrags": {
-      "head": "./jsdoc/tmpl/head.tmpl",
-      "nav": "./jsdoc/tmpl/nav.tmpl",
-      "foot": "./jsdoc/tmpl/foot.tmpl"
+      "head": "./node_modules/jsdoc/tmpl/head.tmpl",
+      "nav": "./node_modules/jsdoc/tmpl/nav.tmpl",
+      "foot": "./node_modules/jsdoc/tmpl/foot.tmpl"
     },
     "deploy": {
       "pages": {
@@ -36,6 +36,7 @@
       }
     },
     "pages": {
+      "cleanDestination": true,
       "menu": {
         "package": "",
         "changelog": "",
