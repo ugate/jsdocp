@@ -1,13 +1,22 @@
 "use strict";
 
+
+// TODO : ESM remove the following lines...
 const { exec } = require('child_process');
 const Path = require('path');
 const Fs = require('fs').promises;
 const Os = require('os');
 const tmpdir = Os.tmpdir();
 
-// TODO : ESM remove the following lines...
 module.exports = publicize;
+
+// TODO : ESM uncomment the following lines...
+// import { exec } from 'child_process';
+// import Path from 'path';
+// import { promises } as Fs from 'fs';
+// import Os from 'os';
+// const tmpdir = Os.tmpdir();
+
 
 /**
  * Generates the JSDoc style results using any number of [template providers](https://github.com/jsdoc3/jsdoc#templates-and-tools). See [`README`](index.html)
@@ -58,6 +67,7 @@ module.exports = publicize;
  * @param {String} [conf.opts.changelog.sections.merges.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for merges
  * @param {String} [conf.opts.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
  * @param {Object} [conf.opts.pages] The options for the generated pages
+ * @param {Boolean} [conf.opts.cleanDestination] `true` to remove the `jsdoc` assigned `conf.opts.destination` prior to publishing
  * @param {Object} [conf.opts.pages.menu] The options for the generated pages naviagation menu
  * @param {String} [conf.opts.pages.menu.className] The CSS class applied to the main menu
  * @param {Object} [conf.opts.pages.menu.logo] The options for the logo displayed in the navigation menu
@@ -94,11 +104,10 @@ module.exports = publicize;
  * @returns {Boolean} `true` when completed successfully
  */
 async function publicize(conf, deploy) {
-// TODO : ESM use... export function generateDocs(conf) {
-
+// TODO : ESM use... export async function publicize(conf, deploy) {
   const modulePath = Path.normalize(process.env.INIT_CWD || process.env.PWD); // npm run dir or proccess dir
-  const mwd = Path.parse(modulePath);
-  const jspubPath = mwd.name === 'jspub' ? modulePath : Path.resolve(modulePath, 'node_modules/jspub');
+  const pkgPath = Path.resolve(modulePath, 'package.json'), pkg = JSON.parse((await Fs.readFile(pkgPath)).toString());
+  const jspubPath = pkg.name === 'jspub' ? modulePath : Path.resolve(modulePath, 'node_modules/jspub');
   const jspubConfPath = Path.resolve(jspubPath, 'jsdoc/jsdoc-defaults.json');
   const jsdocPath = Path.resolve(modulePath, 'node_modules/jsdoc');
   const jsdocCliPath = Path.resolve(modulePath, 'node_modules/.bin/jsdoc');
@@ -111,7 +120,7 @@ async function publicize(conf, deploy) {
     const confPath = Path.resolve(modulePath, conf);
     moduleConf = JSON.parse((await Fs.readFile(confPath)).toString());
   }
-  const meta = await writeConf(moduleConf, modulePath, jspubPath, jspubConfPath, tempConfPath, jspubTmpdir);
+  const meta = await writeConf(pkg, moduleConf, modulePath, jspubPath, jspubConfPath, tempConfPath, jspubTmpdir);
   
   const execOpts = {
     env: {
@@ -154,6 +163,7 @@ async function publicize(conf, deploy) {
  * Sanitizes JSDoc configuration options in order for publishing to take place
  * @private
  * @async
+ * @param {Object} pkg The parsed `package.json`
  * @param {Object} conf The JSDoc configuration
  * @param {String} modulePath The path to the module that the configuration is for
  * @param {String} jspubPath The path to the `jspub` module
@@ -162,7 +172,7 @@ async function publicize(conf, deploy) {
  * @param {String} jspubTmpdir The temporary working directory
  * @returns {Object} The _meta_ object that contains the `package` and `publish` objects defined in {@link publicize};
  */
-async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPath, jspubTmpdir) {
+async function writeConf(pkg, conf, modulePath, jspubPath, jspubConfPath, tempConfPath, jspubTmpdir) {
   if (!conf.opts || !conf.opts.template) {
     const error = new Error('JSDoc configuration options must contain an "opts.template" property set to a path '
     + 'to a JSDoc template that will be used. For example, if "minami" is the template it should be a package '
@@ -191,15 +201,14 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
   conf.templates.default.staticFiles = conf.templates.default.staticFiles || {};
   const incls = conf.templates.default.staticFiles.include;
   const jpIncls = jpConf.templates.default.staticFiles.include;
-  for (let i = 0; i < jpIncls.length; i++) jpIncls[i] = Path.resolve(jspubPath, jpIncls[i]);
+  for (let i = 0; i < jpIncls.length; i++) jpIncls[i] = Path.resolve(jspubPath, sanatizePath(pkg, jpIncls[i]));
   conf.templates.default.staticFiles.include = Array.isArray(incls) ? jpIncls.concat(incls) : jpIncls;
 
   // add the static files required by the jspub
   const tmplStaticPath = Path.resolve(conf.opts.template, 'static');
   conf.templates.default.staticFiles.include.push(tmplStaticPath);
 
-  // parse package, capture/write versions and sanitize/write temp conf
-  const pkgPath = Path.resolve(modulePath, 'package.json'), pkg = JSON.parse((await Fs.readFile(pkgPath)).toString());
+  // capture versions and sanitize/write temp conf
   return new Promise((resolve, reject) => {
     exec(`npm view ${pkg.name} versions --json`, async (error, stdout, stderr) => {
       try {
@@ -223,7 +232,7 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
         template(conf, meta);
 
         // merge layout parts
-        await mergeLayout(conf, meta, modulePath, jspubPath, jspubTmpdir);
+        await mergeLayout(pkg, conf, meta, modulePath, jspubPath, jspubTmpdir);
 
         // set private meta after merge takes place
         // private since versions could be published after the current versions is published
@@ -251,13 +260,14 @@ async function writeConf(conf, modulePath, jspubPath, jspubConfPath, tempConfPat
  * Merges the various layout template parts
  * @private
  * @async
+ * @param {Object} pkg The parsed `package.json`
  * @param {Object} conf The module JSDoc configuration
  * @param {Object} meta The meta where the `layout` will be stored
  * @param {String} modulePath The JSDoc configuration path
  * @param {String} jspubPath The path to the `jspub` module
  * @param {String} jspubTmpdir The temporary working directory where the parsed layout will be saved/set to
  */
-async function mergeLayout(conf, meta, modulePath, jspubPath, jspubTmpdir) {
+async function mergeLayout(pkg, conf, meta, modulePath, jspubPath, jspubTmpdir) {
   // paths should be added from deepest to shallow
   const dirs = conf.opts.layoutCheckTemplateDirs, base = Path.resolve(modulePath, conf.opts.templateProxy);
   const lyt = await getLayout(dirs, conf.templates.default.layoutFile, base);
@@ -268,10 +278,11 @@ async function mergeLayout(conf, meta, modulePath, jspubPath, jspubTmpdir) {
     throw error;
   }
 
-  // extract jspub template fragments
-  var hd, nv, ft, error;
-  const hdPath = Path.resolve(jspubPath, conf.opts.layoutFrags.head), nvPath = Path.resolve(jspubPath, conf.opts.layoutFrags.nav);
-  const ftPath = Path.resolve(jspubPath, conf.opts.layoutFrags.foot);
+  // extract jspub template fragments (special case when generating jsdoc for jspub itself)
+  var hd, nv, ft, error, tmplPath = pkg.name === 'jspub' ? jspubPath : modulePath;
+  const hdPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.layoutFrags.head));
+  const nvPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.layoutFrags.nav));
+  const ftPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.layoutFrags.foot));
   var error;
   try {
     hd = (await Fs.readFile(hdPath)).toString();
@@ -433,4 +444,16 @@ function literal(str, obj) {
 function formatedDate(date, delimiter = '-') {
   date = date || new Date();
   return `${date.getFullYear()}${delimiter}${('0' + (date.getMonth() + 1)).slice(-2)}${delimiter}${('0' + date.getDate()).slice(-2)}`;
+}
+
+/**
+ * Sanitizes a path to accommodate `jspub` self documentation
+ * @private
+ * @ignore
+ * @param {Object} pkg The parsed `package.json`
+ * @param {String} path The path to sanitize
+ * @returns {String} The sanitized path
+ */
+function sanatizePath(pkg, path) {
+  return pkg.name === 'jspub' ? path.replace('node_modules/', '') : path;
 }
