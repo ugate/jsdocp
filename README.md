@@ -12,6 +12,13 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 
 ### Features:
 
+> __Page customizations:__
+&nbsp;
+
+- __Use virtually any [JSDoc supported template](https://github.com/jsdoc3/jsdoc#templates)__- adds a responsive navigation bar to the doc pages that contains icons/links to the `npm` module (optional), CHANGELOG (optional), source code (optional) and doc version selection
+- Branded documentation using your own logo
+- Add your own `CSS`, `JavaScript` and `meta` to the documentation pages without altering the chosen template
+
 > __Versioned documentation:__
 &nbsp;
 
@@ -26,18 +33,11 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 - Customizable CHANGELOG __header__ and __lines__ using markdown, [git formatting](https://git-scm.com/docs/pretty-formats) (e.g. `%h`, etc.) and package/publishing parameter substitutions using [Template Literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) syntax
 - Customizable [grep](https://git-scm.com/docs/git-log#git-log---grepltpatterngt) regular expressions for determining which commit messages will appear in the logs (including support for sub-sectioning into __Breaking Changes__, __Features__, __Fixes__ and __Merges/Pull Requests__)
 
-> __Page customizations:__
-&nbsp;
-
-- Use virtually any [JSDoc supported template](https://github.com/jsdoc3/jsdoc#templates)- adds a responsive navigation bar to the doc pages that contains icons/links to the `npm` module (optional), CHANGELOG (optional), source code (optional) and doc version selection
-- Branded documentation using your own logo
-- Add your own `CSS`, `JavaScript` and `meta` to the documentation pages without altering the chosen template
-
 > __Documentation deployment:__
 &nbsp;
 
-- Page deployment execution via [Node.js cli](https://nodejs.org/api/cli.html) from the command line or via the provided [API](https://ugate.github.io/jspub/globals.html)
-- Easy integration in continuous integration services like [travis-ci](https://travis-ci.com/)
+- Page deployment execution via [Node.js cli](https://nodejs.org/api/cli.html) from the command line or via the provided API
+- Easy integration in continuous integration services like [travis-ci](https://travis-ci.com/), etc.
 
 > __Markdown extensions:__
 &nbsp;
