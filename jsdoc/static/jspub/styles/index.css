@@ -1,5 +1,10 @@
 body {
-  padding-top: 64px !important;
+  margin-top: 64px !important;
+}
+sub[id] {
+  /* allows sub with id to anchor with the offest of the body margin */
+  padding-top: 75px !important;
+  margin-top: -75px !important;
 }
 #jspubNav {
   width: 100%;
@@ -15,7 +20,11 @@ body {
 }
 @media only screen and (max-width: 680px) {
   body {
+    margin-top: inherit !important;
+  }
+  sub[id] {
     padding-top: inherit !important;
+    margin-top: inherit !important;
   }
   #jspubNav {
     height: 56px;
