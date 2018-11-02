@@ -1,5 +1,20 @@
 {
   "1-start": {
     "title": "Getting Started"
+  },
+  "2-conf": {
+    "title": "Configuration"
+  },
+  "3-subs": {
+    "title": "Parameter Substitutions"
+  },
+  "4-vers": {
+    "title": "Documentation Versions"
+  },
+  "5-clog": {
+    "title": "Changelog"
+  },
+  "6-ci": {
+    "title": "Continuous Integration"
   }
 }
