@@ -65,5 +65,5 @@
     data-jspub-version="<?js= env.meta.package.version ?>">
     <option value="" selected><?js= env.meta.package.version ?></option>
   </select>
-  <div id="jspubChangelogContent" style="display:none"><?js= env.meta.changelogHTML ?></div>
+  <div id="jspubChangelogContent" data-title="<?js= (env.conf.opts.changelog && env.conf.opts.changelog.title) || '' ?>" style="display:none"><?js= env.meta.changelogHTML ?></div>
 </div>

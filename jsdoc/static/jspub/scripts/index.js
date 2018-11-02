@@ -30,9 +30,10 @@ function JSPUB() {
     var clt = document.getElementById('main');
     if (!clt) clt = querySelectorOne(['.main', '.content']);
     if (clt && cla && cl) {
-      var original = clt.innerHTML, usingCl;
+      var originalContent = clt.innerHTML, originalTitle = document.title, usingCl;
       cla.addEventListener('click', function overrideChglogClick(event) {
-        clt.innerHTML = usingCl ? original : cl.innerHTML;
+        clt.innerHTML = usingCl ? originalContent : cl.innerHTML;
+        if (cl.hasAttribute('data-title')) document.title = usingCl ? originalTitle : cl.dataset.title;
         usingCl = !usingCl;
         event.preventDefault();
         event.stopPropagation();
