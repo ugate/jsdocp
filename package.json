@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Tests ran during deployment...\"",
     "jspub": "jspub ./jspub/jsdoc.json",
-    "jspub-deploy": "jspub-deploy ./jspub/jsdoc.json"
+    "jspub-deploy": "jspub -D ./jspub/jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -33,10 +33,7 @@
   "devDependencies": {
     "minami": "^1.2.3"
   },
-  "bin": {
-    "jspub": "./cli.js",
-    "jspub-deploy": "./deploy/pages.js"
-  },
+  "bin": "./cli.js",
   "files": [
     "/index.js",
     "/cli.js",
