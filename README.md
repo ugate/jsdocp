@@ -5,10 +5,12 @@
 </b>
 
 ### JSDoc publishing
-Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned documentation, CHANGELOGs and more! Addtional options for auto-deployment via to GitHub pages or other documentation hosting service.
+`jspub` is a [`jsdoc`](http://usejsdoc.org/)/[`git`](https://git-scm.com/) publishing agent that generates versioned documentation, CHANGELOGs, auto-deployment to a documentation hosting service (e.g. `gh-pages`, etc.) and much more!
+
+With `jspub` just about any [`jsdoc` templates](https://github.com/jsdoc3/jsdoc#templates) can be used for a personalized experience without the added complexities of setting up your own template extension.
 
 * [Tutorials](https://ugate.github.io/jspub/tutorial-1-start.html)
-* [API Docs](https://ugate.github.io/jspub/globals.html)
+* [API Docs](https://ugate.github.io/jspub/global.html)
 
 ### Features:
 
@@ -23,8 +25,8 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 &nbsp;
 
 - Each time docs are tagged/deployed to GitHub or any other `git` supported documentation hosting service, the old docs are archived in a versioned directory
-- `versions.json` generation for real-time version selections in previously deployed docs (no more wiping out old docs!)
-- Tag filtering option to restrict doc generation for tagged versions that are released for `major` or `minor` versions rather than every version that is tagged
+- `versions.json` generation for real-time version selections in previously deployed docs (no more wiping out old docs, and old docs auto-reference an updated set of versions!)
+- Tag filtering option to restrict doc generation for tagged versions that are released for [`major` or `minor` versions](https://semver.org) rather than every version that is tagged
 
 > __CHANGELOG generation:__
 &nbsp;
@@ -45,7 +47,7 @@ Simplified [JSDoc](http://usejsdoc.org/) publishing that generates versioned doc
 - Include preprocessed source files into any of your tutorial pages by simply adding...
 <pre>
 ```jspub path/to/my/project/file.js
-// contents of file.js will appear here and the language will be set using the file extension!
+// contents of file.js will appear below this comment and the language will be set using the file extension!
 ```
 </pre>
 
