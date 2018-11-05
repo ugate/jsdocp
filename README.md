@@ -7,7 +7,7 @@
 ### JSDoc publishing
 `jspub` is a [`jsdoc`](http://usejsdoc.org/)/[`git`](https://git-scm.com/) publishing agent that generates versioned documentation, CHANGELOGs, auto-deployment to a documentation hosting service (e.g. `gh-pages`, etc.) and much more!
 
-With `jspub` just about any [`jsdoc` templates](https://github.com/jsdoc3/jsdoc#templates) can be used for a personalized experience without the added complexities of setting up your own template extension.
+With `jspub` any number of [`jsdoc` templates](https://github.com/jsdoc3/jsdoc#templates) can be used for a personalized experience without the added complexities of setting up your own template extension.
 
 * [Tutorials](https://ugate.github.io/jspub/tutorial-1-start.html)
 * [API Docs](https://ugate.github.io/jspub/global.html)
