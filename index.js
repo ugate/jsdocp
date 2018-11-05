@@ -24,86 +24,93 @@ module.exports = publicize;
  * #### See [Getting Started]{@tutorial 1-start} documentation for default values that are ported over from `jsdoc-defaults.conf`
  * @async
  * @param {(String|Object)} conf Either the path to the JSDoc configuration file or the actual JSDoc configuration itself.
- * @param {Object} [conf.opts] The JSDoc options with some added options
- * @param {Object} [conf.opts.versions] The versions options used to generate links to previously published version docs
- * @param {String} [conf.opts.versions.from] A Semantic Versioning compliant version that designates the first version to show
+ * @param {Object} [conf.opts.jspub] The `jspub` options
+ * @param {Object} [conf.opts.jspub.versions] The versions options used to generate links to previously published version docs
+ * @param {String} [conf.opts.jspub.versions.from] A Semantic Versioning compliant version that designates the first version to show
  * in the version drop-down selection for different docs (omit to list all of them)
- * @param {String} [conf.opts.versions.type] A designation that inidcates what doc versions to show in the drop-down selection.
+ * @param {String} [conf.opts.jspub.versions.type] A designation that inidcates what doc versions to show in the drop-down selection.
  * A designation of `major` will only show versions that have been released for __major___ version tags (i.e. the _first_
  * number in the version). A designation of `minor` will only show versions that have been released for __minor__ version
  * tags (i.e. the _second_ number in the version). `undefined` will cause the default value to be used. Any other value, or blank value will cause
  * all versions to be included.
- * @param {Object} [conf.opts.changelog] The change log options used to generate the change log file and link
- * @param {Object} [conf.opts.changelog.title] The change log page `title` of the generated HTML page
- * @param {String} [conf.opts.changelog.line] The _format_ for individual commit lines produced in the change log markdown.
- * @param {String} [conf.opts.changelog.header] The markdown that will be pre-pended to the change log.
- * @param {Object} [conf.opts.changelog.sections] The sections within the change log which organize changes (omit output a list without sections)
- * @param {String} [conf.opts.changelog.sections.breaks] Section options for breaking changes
- * @param {String} [conf.opts.changelog.sections.breaks.header] Markdown used as a _header_ when there are change log entries for breaking changes
- * @param {String} [conf.opts.changelog.sections.breaks.grep] Section `grep` options for breaking changes
- * @param {String} [conf.opts.changelog.sections.breaks.grep.regexp] The regular expression used as filter in the `git log -grep=` for breaking changes
- * @param {String} [conf.opts.changelog.sections.breaks.grep.ignoreCase] `true` for case-insensitive `git log -i` for breaking changes
- * @param {String} [conf.opts.changelog.sections.breaks.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for breaking changes
- * @param {String} [conf.opts.changelog.sections.breaks.grep.allMatch] `true` to limit all regular expressions in the `grep` for breaking changes
- * @param {String} [conf.opts.changelog.sections.features] Section options for features
- * @param {String} [conf.opts.changelog.sections.features.header] Markdown used as a _header_ when there are change log entries for features
- * @param {String} [conf.opts.changelog.sections.features.grep] Section `grep` options for features
- * @param {String} [conf.opts.changelog.sections.features.grep.regexp] The regular expression used used as filter in the `git log -grep=` for features
- * @param {String} [conf.opts.changelog.sections.features.grep.ignoreCase] `true` for case-insensitive `git log -i` for features
- * @param {String} [conf.opts.changelog.sections.features.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for features
- * @param {String} [conf.opts.changelog.sections.features.grep.allMatch] `true` to limit all regular expressions in the `grep` for features
- * @param {String} [conf.opts.changelog.sections.fixes] Section options for features
- * @param {String} [conf.opts.changelog.sections.fixes.header] Markdown used as a _header_ when there are change log entries for fixes
- * @param {String} [conf.opts.changelog.sections.fixes.grep] Section `grep` options for fixes
- * @param {String} [conf.opts.changelog.sections.fixes.grep.regexp] The regular expression used used as filter in the `git log -grep=` for fixes
- * @param {String} [conf.opts.changelog.sections.fixes.grep.ignoreCase] `true` for case-insensitive `git log -i` for fixes
- * @param {String} [conf.opts.changelog.sections.fixes.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for fixes
- * @param {String} [conf.opts.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
- * @param {String} [conf.opts.changelog.sections.merges] Section options for merged/pull requests
- * @param {String} [conf.opts.changelog.sections.merges.header] Markdown used as a _header_ when there are change log entries for merges
- * @param {String} [conf.opts.changelog.sections.merges.grep] Section `grep` options for merges
- * @param {String} [conf.opts.changelog.sections.merges.grep.regexp] The regular expression used used as filter in the `git log -grep=` for merges
- * @param {String} [conf.opts.changelog.sections.merges.grep.ignoreCase] `true` for case-insensitive `git log -i` for merges
- * @param {String} [conf.opts.changelog.sections.merges.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for merges
- * @param {String} [conf.opts.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
- * @param {Object} [conf.opts.pages] The options for the generated pages
- * @param {Boolean} [conf.opts.cleanDestination] `true` to remove the `jsdoc` assigned `conf.opts.destination` prior to publishing
- * @param {Object} [conf.opts.pages.menu] The options for the generated pages naviagation menu
- * @param {String} [conf.opts.pages.menu.className] The CSS class applied to the main menu
- * @param {Object} [conf.opts.pages.menu.logo] The options for the logo displayed in the navigation menu
- * @param {String} [conf.opts.pages.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu (if not overridden by `inlineSvgPath`)
- * @param {String} [conf.opts.pages.menu.logo.inlineSvgPath] A path to an `svg` logo that will be inserted inline within the navigation menu display. Will
+ * @param {Object} [conf.opts.jspub.changelog] The change log options used to generate the change log file and link
+ * @param {Object} [conf.opts.jspub.changelog.title] The change log page `title` of the generated HTML page
+ * @param {String} [conf.opts.jspub.changelog.line] The _format_ for individual commit lines produced in the change log markdown.
+ * @param {String} [conf.opts.jspub.changelog.header] The markdown that will be pre-pended to the change log.
+ * @param {Object} [conf.opts.jspub.changelog.sections] The sections within the change log which organize changes (omit output a list without sections)
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks] Section options for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks.header] Markdown used as a _header_ when there are change log entries for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks.grep] Section `grep` options for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks.grep.regexp] The regular expression used as filter in the `git log -grep=` for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks.grep.ignoreCase] `true` for case-insensitive `git log -i` for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.breaks.grep.allMatch] `true` to limit all regular expressions in the `grep` for breaking changes
+ * @param {String} [conf.opts.jspub.changelog.sections.features] Section options for features
+ * @param {String} [conf.opts.jspub.changelog.sections.features.header] Markdown used as a _header_ when there are change log entries for features
+ * @param {String} [conf.opts.jspub.changelog.sections.features.grep] Section `grep` options for features
+ * @param {String} [conf.opts.jspub.changelog.sections.features.grep.regexp] The regular expression used used as filter in the `git log -grep=` for features
+ * @param {String} [conf.opts.jspub.changelog.sections.features.grep.ignoreCase] `true` for case-insensitive `git log -i` for features
+ * @param {String} [conf.opts.jspub.changelog.sections.features.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for features
+ * @param {String} [conf.opts.jspub.changelog.sections.features.grep.allMatch] `true` to limit all regular expressions in the `grep` for features
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes] Section options for features
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes.header] Markdown used as a _header_ when there are change log entries for fixes
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes.grep] Section `grep` options for fixes
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes.grep.regexp] The regular expression used used as filter in the `git log -grep=` for fixes
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes.grep.ignoreCase] `true` for case-insensitive `git log -i` for fixes
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for fixes
+ * @param {String} [conf.opts.jspub.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
+ * @param {String} [conf.opts.jspub.changelog.sections.merges] Section options for merged/pull requests
+ * @param {String} [conf.opts.jspub.changelog.sections.merges.header] Markdown used as a _header_ when there are change log entries for merges
+ * @param {String} [conf.opts.jspub.changelog.sections.merges.grep] Section `grep` options for merges
+ * @param {String} [conf.opts.jspub.changelog.sections.merges.grep.regexp] The regular expression used used as filter in the `git log -grep=` for merges
+ * @param {String} [conf.opts.jspub.changelog.sections.merges.grep.ignoreCase] `true` for case-insensitive `git log -i` for merges
+ * @param {String} [conf.opts.jspub.changelog.sections.merges.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for merges
+ * @param {String} [conf.opts.jspub.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
+ * @param {Object} [conf.opts.jspub.pages] The options for the generated pages
+ * @param {Boolean} [conf.opts.jspub.cleanDestination] `true` to remove the `jsdoc` assigned `conf.opts.jspub.destination` prior to publishing
+ * @param {Object} [conf.opts.jspub.pages.menu] The options for the generated pages naviagation menu
+ * @param {String} [conf.opts.jspub.pages.menu.className] The CSS class applied to the main menu
+ * @param {Object} [conf.opts.jspub.pages.menu.logo] The options for the logo displayed in the navigation menu
+ * @param {String} [conf.opts.jspub.pages.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu (if not overridden by `inlineSvgPath`)
+ * @param {String} [conf.opts.jspub.pages.menu.logo.inlineSvgPath] A path to an `svg` logo that will be inserted inline within the navigation menu display. Will
  * override the logo `src`, but if present will fall back on the `src` when the `svg` content cannot be extracted.
- * @param {String} [conf.opts.pages.menu.logo.anchorclassName] The CSS class name assigned to the logo icon's anchor tag
- * @param {String} [conf.opts.pages.menu.logo.className] The CSS class name assigned to the logo icon loaded from the `src`
- * @param {Boolean} [conf.opts.pages.menu.logo.inline] `true` when using an `svg` source and it's content should be displayed inline (allows for flexible
+ * @param {String} [conf.opts.jspub.pages.menu.logo.anchorclassName] The CSS class name assigned to the logo icon's anchor tag
+ * @param {String} [conf.opts.jspub.pages.menu.logo.className] The CSS class name assigned to the logo icon loaded from the `src`
+ * @param {Boolean} [conf.opts.jspub.pages.menu.logo.inline] `true` when using an `svg` source and it's content should be displayed inline (allows for flexible
  * styling of the `svg` content)
- * @param {String} [conf.opts.pages.menu.package] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
+ * @param {String} [conf.opts.jspub.pages.menu.package] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
  * default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.pages.menu.changelog] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
+ * @param {String} [conf.opts.jspub.pages.menu.changelog] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
  * version (omit to use the default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.pages.menu.sourceCode] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
+ * @param {String} [conf.opts.jspub.pages.menu.sourceCode] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
  * default icon or set to `none` to hide the icon)
- * @param {Object} [conf.opts.pages.menu.icons] The package, change log and source code icon options
- * @param {String} [conf.opts.pages.menu.icons.className] The CSS class name applied to the package, change log and source code icon options
- * @param {Object[]} [conf.opts.pages.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
+ * @param {Object} [conf.opts.jspub.pages.menu.icons] The package, change log and source code icon options
+ * @param {String} [conf.opts.jspub.pages.menu.icons.className] The CSS class name applied to the package, change log and source code icon options
+ * @param {Object[]} [conf.opts.jspub.pages.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
  * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.
- * @param {Object[]} [conf.opts.pages.metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of
+ * @param {Object[]} [conf.opts.jspub.pages.metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of
  * properties/values that will get translated to an attribute on the `meta` tag matching the property name and an attribute value for the value.
- * @param {Object[]} [conf.opts.pages.scripts] The definitions used to generate `script` tags in the `head` element. Each object can have any number of
+ * @param {Object[]} [conf.opts.jspub.pages.scripts] The definitions used to generate `script` tags in the `head` element. Each object can have any number of
  * properties/values that will get translated to an attribute on the `script` tag matching the property name and an attribute value for the value.
- * @param {Object} [conf.opts.layoutFrags] The layout fragments used. __Typically, none of the fragment values will be overridden since they are handled
+ * @param {Object} [conf.opts.jspub.layoutFrags] The layout fragments used. __Typically, none of the fragment values will be overridden since they are handled
  * internally__
- * @param {String} [conf.opts.layoutFrags.head] The path to the template fragment that will be inserted at the __end__ of the `head` section
- * @param {String} [conf.opts.layoutFrags.nav] The path to the template fragment that will be inserted at the __beginning__ of the `body` section
- * @param {String} [conf.opts.layoutFrags.foot] The path to the template fragment that will be inserted at the __end__ of the `body` section
- * @param {String[]} [conf.opts.layoutFrags.layoutCheckTemplateDirs] The directories that the required `conf.templates.default.layoutFile` will be
+ * @param {String} [conf.opts.jspub.layoutFrags.head] The path to the template fragment that will be inserted at the __end__ of the `head` section
+ * @param {String} [conf.opts.jspub.layoutFrags.nav] The path to the template fragment that will be inserted at the __beginning__ of the `body` section
+ * @param {String} [conf.opts.jspub.layoutFrags.foot] The path to the template fragment that will be inserted at the __end__ of the `body` section
+ * @param {String[]} [conf.opts.jspub.layoutFrags.layoutCheckTemplateDirs] The directories that the required `conf.templates.default.layoutFile` will be
  * searched for in the order they are defined. Unfortunately, template implementations may store the `conf.templates.default.layoutFile` in different
  * locations. By default, the most likley/typlical directories will be checked.
- * @param {Boolean} [deploy] `true` to deploy via `git` after publication
+ * @param {Object} [conf.opts.jspub.deploy] The documentation deployment options
+ * @param {Object} [conf.opts.jspub.deploy.message] The `commit` message used when deploying the documentation
+ * @param {Object} [conf.opts.jspub.deploy.branch] The branch that where documentation will be _pushed_ during deployment
+ * @param {Object} [conf.opts.jspub.deploy.dir] The _local_ directory name relative to the module that will be used to _clone_/_push_ to during deployment
+ * @param {Object} [conf.opts.jspub.deploy.user] The user options that will be used when deploying the documentation pages
+ * @param {Object} [conf.opts.jspub.deploy.user.name] The `git` user name that will be used when deploying the documentation pages
+ * @param {Object} [conf.opts.jspub.deploy.user.email] The `git` email that will be used when deploying the documentation pages
+ * @param {Boolean} [deploy=false] `true` to deploy via `git` after generating documentation
  * @returns {Boolean} `true` when completed successfully
  */
-async function publicize(conf, deploy) {
+async function publicize(conf, deploy = false) {
 // TODO : ESM use... export async function publicize(conf, deploy) {
   const modulePath = Path.normalize(process.env.INIT_CWD || process.env.PWD); // npm run dir or proccess dir
   const pkgPath = Path.resolve(modulePath, 'package.json'), pkg = JSON.parse((await Fs.readFile(pkgPath)).toString());
@@ -142,20 +149,40 @@ async function publicize(conf, deploy) {
   if (process.env.Path) execOpts.env.Path = process.env.Path;
   if (process.env.PATH) execOpts.env.PATH = process.env.PATH;
   return new Promise((resolve, reject) => {
-    const jsdocExec = `${jsdocCliPath} -c "${tempConfPath}" --verbose`;
-    const jsdoc = exec(jsdocExec, execOpts);
-    jsdoc.stdout.pipe(process.stdout);
-    jsdoc.stderr.pipe(process.stderr);
-    jsdoc.on('error', error => reject(error));
-    jsdoc.on('exit', (code, signal) => {
-      if (code !== 0) return reject(new Error(`jsdoc exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
-      if (deploy && conf.opts.deploy) {
-        console.log('Deploying pages...');
-        const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
-        const deploy = exec(`bash ${deployCliPath} "${tempConfPath}" --verbose`, execOpts);
-        console.log(` exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`);
-      } else resolve(true);
-    });
+    try {
+      const jsdocExec = `${jsdocCliPath} -c "${tempConfPath}" --verbose`;
+      const jsdoc = exec(jsdocExec, execOpts);
+      jsdoc.stdout.pipe(process.stdout);
+      jsdoc.stderr.pipe(process.stderr);
+      jsdoc.on('error', error => reject(error));
+      jsdoc.on('exit', (code, signal) => {
+        if (code !== 0) return reject(new Error(`jsdoc exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
+        if (deploy && !conf.opts.jspub.deploy) return reject(new Error(`Deployment flagged for execution, but no "opts.deploy" settings are defined`));
+        if (deploy) {
+          try {
+            console.log('Deploying pages...');
+            const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
+            const ver = sanitizeArg(pkg.version), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
+            const deploy = exec(`bash ${deployCliPath} "${ver}" "${brch}"`, execOpts);
+            deploy.stdout.pipe(process.stdout);
+            deploy.stderr.pipe(process.stderr);
+            deploy.on('error', error => reject(error));
+            jsdoc.on('exit', (code, signal) => {
+              if (code !== 0) return reject(new Error(`Deployment exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
+              resolve(true);
+            });
+          } catch (err) {
+            err.message += ` (Failed to execute deployment)`;
+            err.conf = conf;
+            reject(err);
+          }
+        } else resolve(true);
+      });
+    } catch (err) {
+      err.message += ` (Failed to execute jsdoc)`;
+      err.conf = conf;
+      reject(err);
+    }
   });
 }
 
@@ -184,7 +211,7 @@ async function writeConf(pkg, conf, modulePath, jspubPath, jspubConfPath, tempCo
   const jpConf = JSON.parse((await Fs.readFile(jspubConfPath)).toString());
 
   // template needs to be set to the internal template so it can be proxied
-  conf.opts.templateProxy = conf.opts.template;
+  conf.opts.jspub.templateProxy = conf.opts.template;
   conf.opts.template = Path.resolve(jspubPath, jpConf.opts.template);
 
   // make sure default plugins are included
@@ -269,7 +296,7 @@ async function writeConf(pkg, conf, modulePath, jspubPath, jspubConfPath, tempCo
  */
 async function mergeLayout(pkg, conf, meta, modulePath, jspubPath, jspubTmpdir) {
   // paths should be added from deepest to shallow
-  const dirs = conf.opts.layoutCheckTemplateDirs, base = Path.resolve(modulePath, conf.opts.templateProxy);
+  const dirs = conf.opts.jspub.layoutCheckTemplateDirs, base = Path.resolve(modulePath, conf.opts.jspub.templateProxy);
   const lyt = await getLayout(dirs, conf.templates.default.layoutFile, base);
   if (lyt.errors.length && (!lyt.path || !lyt.content)) {
     const error = lyt.errors.pop();
@@ -280,14 +307,14 @@ async function mergeLayout(pkg, conf, meta, modulePath, jspubPath, jspubTmpdir) 
 
   // extract jspub template fragments (special case when generating jsdoc for jspub itself)
   var hd, nv, ft, error, tmplPath = pkg.name === 'jspub' ? jspubPath : modulePath;
-  const hdPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.layoutFrags.head));
-  const nvPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.layoutFrags.nav));
-  const ftPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.layoutFrags.foot));
+  const hdPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.jspub.layoutFrags.head));
+  const nvPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.jspub.layoutFrags.nav));
+  const ftPath = Path.resolve(tmplPath, sanatizePath(pkg, conf.opts.jspub.layoutFrags.foot));
   var error;
   try {
     hd = (await Fs.readFile(hdPath)).toString();
   } catch (err) {
-    err.message += ` (Unable to find opts.layoutFrags.head at "${hdPath}")`;
+    err.message += ` (Unable to find conf.opts.jspub.layoutFrags.head at "${hdPath}")`;
     err.conf = conf;
     error = err;
     error.head = err;
@@ -295,7 +322,7 @@ async function mergeLayout(pkg, conf, meta, modulePath, jspubPath, jspubTmpdir) 
   try {
     nv = (await Fs.readFile(nvPath)).toString();
   } catch (err) {
-    err.message += ` (Unable to find opts.layoutFrags.nav at "${nvPath}")`;
+    err.message += ` (Unable to find conf.opts.jspub.layoutFrags.nav at "${nvPath}")`;
     err.conf = conf;
     if (error) error.nav = err;
     else error = err;
@@ -303,15 +330,15 @@ async function mergeLayout(pkg, conf, meta, modulePath, jspubPath, jspubTmpdir) 
   try {
     ft = (await Fs.readFile(ftPath)).toString();
   } catch (err) {
-    err.message += ` (Unable to find opts.layoutFrags.foot at "${ftPath}")`;
+    err.message += ` (Unable to find conf.opts.jspub.layoutFrags.foot at "${ftPath}")`;
     err.conf = conf;
     if (error) error.foot = err;
     else error = err;
   }
   if (error) throw error;
-  conf.opts.layoutFrags.head = hdPath;
-  conf.opts.layoutFrags.nav = nvPath;
-  conf.opts.layoutFrags.foot = ftPath;
+  conf.opts.jspub.layoutFrags.head = hdPath;
+  conf.opts.jspub.layoutFrags.nav = nvPath;
+  conf.opts.jspub.layoutFrags.foot = ftPath;
   // merge the template layout with the jspub layout
   lyt.content = lyt.content.replace(/(<\s*head[^>]*>)([\s\S]*?)(<\s*\/\s*head>)/ig, (mtch, open, content, close) =>  {
     return `${open}${content}${hd}${close}`;
@@ -456,4 +483,16 @@ function formatedDate(date, delimiter = '-') {
  */
 function sanatizePath(pkg, path) {
   return pkg.name === 'jspub' ? path.replace('node_modules/', '') : path;
+}
+
+/**
+ * Sanitizes a command line argument
+ * @private
+ * @ignore
+ * @param {String} arg The argument to sanitize
+ */
+function sanitizeArg(arg) {
+  return arg.replace(/[^\\]'|"/g, function (mtch) {
+    return mtch.slice(0, 1) + '\\\'';
+  });
 }

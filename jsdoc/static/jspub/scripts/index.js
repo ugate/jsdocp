@@ -30,15 +30,27 @@ function JSPUB() {
     var clt = document.getElementById('main');
     if (!clt) clt = querySelectorOne(['.main', '.content']);
     if (clt && cla && cl) {
-      var originalContent = clt.innerHTML, originalTitle = document.title, usingCl;
+      var originalContent = clt.innerHTML, originalTitle = document.title;
+      var loadChglog = function loadChglog() {
+        var page = location.pathname.replace(/^.*[\\/]/, ''), clPage = cla.getAttribute('href').replace(/^.*[\\/]/, '');
+        var usingCl = page !== clPage;
+        var title = usingCl ? (cl.hasAttribute('data-title') && cl.dataset.title) || clPage : originalTitle;
+        clt.innerHTML = usingCl ? cl.innerHTML : originalContent;
+        document.title = title;
+        return { title: title, changelog: usingCl };
+      };
       cla.addEventListener('click', function overrideChglogClick(event) {
-        clt.innerHTML = usingCl ? originalContent : cl.innerHTML;
-        if (cl.hasAttribute('data-title')) document.title = usingCl ? originalTitle : cl.dataset.title;
-        usingCl = !usingCl;
+        try {
+          var state = loadChglog();
+          if (state.changelog) history.pushState(state, title, clPage);
+        } catch (err) {
+          console.error(err);
+        }
         event.preventDefault();
         event.stopPropagation();
         return false;
       }, { capture: true });
+      window.addEventListener('popstate', loadChglog);
     }
   }
 
