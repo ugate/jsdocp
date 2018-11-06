@@ -395,14 +395,15 @@ function deployer(resolve, reject, conf, execOpts, pkg, modulePath, jspubPath) {
     const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
     const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
     const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
-    const email = sanitizeArg(conf.opts.jspub.deploy.user.email);
+    const email = sanitizeArg(conf.opts.jspub.deploy.user.email), msg = sanitizeArg(conf.opts.jspub.deploy.message);
     if (!brch) throw new Error('opts.jspub.deploy.branch is required');
     if (!clnUrl) throw new Error('opts.jspub.deploy.url is required');
     if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
       + ' or set a user name in your jsdoc configuration');
     if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
       + ' or set an email in your jsdoc configuration');
-    const deployExec = `bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}"`;
+    if (!msg) throw new Error('opts.jspub.deploy.message is required');
+    const deployExec = `bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}" "${msg}"`;
     const deploy = exec(deployExec, execOpts);
     deploy.stdout.pipe(process.stdout);
     deploy.stderr.pipe(process.stderr);
