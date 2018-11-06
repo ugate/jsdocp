@@ -159,34 +159,8 @@ async function publicize(conf, deploy = false) {
         const conf = moduleConf;
         if (code !== 0) return reject(new Error(`jsdoc exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
         if (deploy && !conf.opts.jspub.deploy) return reject(new Error(`Deployment flagged for execution, but no "opts.deploy" settings are defined`));
-        if (deploy) {
-          try {
-            console.log('Deploying pages...');
-            const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
-            const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
-            const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
-            const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
-            const email = sanitizeArg(conf.opts.jspub.deploy.user.email);
-            if (!brch) throw new Error('opts.jspub.deploy.branch is required');
-            if (!clnUrl) throw new Error('opts.jspub.deploy.url is required');
-            if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
-              + ' or set a user name in your jsdoc configuration');
-            if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
-              + ' or set an email in your jsdoc configuration');
-            const deploy = exec(`bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}"`, execOpts);
-            deploy.stdout.pipe(process.stdout);
-            deploy.stderr.pipe(process.stderr);
-            deploy.on('error', error => reject(error));
-            jsdoc.on('exit', (code, signal) => {
-              if (code !== 0) return reject(new Error(`Deployment exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
-              resolve(true);
-            });
-          } catch (err) {
-            err.message += ` (Failed to execute deployment)`;
-            err.conf = conf;
-            reject(err);
-          }
-        } else resolve(true);
+        if (deploy) deployer(resolve, reject, conf, execOpts, pkg, modulePath, jspubPath);
+        else resolve(true);
       });
     } catch (err) {
       err.message += ` (Failed to execute jsdoc)`;
@@ -400,6 +374,60 @@ async function getLayout(dirs, fileName, base) {
     }
   }
   return rtn;
+}
+
+/**
+ * Handles deploying documentation to a `git` branch
+ * @private
+ * @ignore
+ * @param {Function} resolve The promise resolver
+ * @param {Function} reject The promise rejector
+ * @param {Object} conf The `jsdoc` configuration
+ * @param {Object} execOpts The execution options passed into the deployment executable
+ * @param {Object} pkg The `package.json`
+ * @param {String} modulePath The JSDoc configuration path
+ * @param {String} jspubPath The path to the `jspub` module
+ */
+function deployer(resolve, reject, conf, execOpts, pkg, modulePath, jspubPath) {
+  try {
+    console.log('Deploying pages...');
+    const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
+    const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
+    const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
+    const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
+    const email = sanitizeArg(conf.opts.jspub.deploy.user.email);
+    if (!brch) throw new Error('opts.jspub.deploy.branch is required');
+    if (!clnUrl) throw new Error('opts.jspub.deploy.url is required');
+    if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
+      + ' or set a user name in your jsdoc configuration');
+    if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
+      + ' or set an email in your jsdoc configuration');
+    const deployExec = `bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}"`;
+    const deployFn = () => {
+      const deploy = exec(deployExec, execOpts);
+      deploy.stdout.pipe(process.stdout);
+      deploy.stderr.pipe(process.stderr);
+      deploy.on('error', error => reject(error));
+      deploy.on('exit', (code, signal) => {
+        if (code !== 0) return reject(new Error(`Deployment exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
+        resolve(true);
+      });
+    };
+    if (pkg.name === 'jspub') { // self-deployment requires "npm link", similar to npm install
+      const link = exec(`npm link`, execOpts);
+      link.stdout.pipe(process.stdout);
+      link.stderr.pipe(process.stderr);
+      link.on('error', error => reject(error));
+      link.on('exit', (code, signal) => {
+        if (code !== 0) return reject(new Error(`"npm link" exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
+        deployFn();
+      });
+    } else deployFn();
+  } catch (err) {
+    err.message += ` (Failed to execute deployment)`;
+    err.conf = conf;
+    reject(err);
+  }
 }
 
 /**

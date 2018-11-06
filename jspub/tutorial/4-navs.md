@@ -12,6 +12,36 @@ By default, a changelog icon/link is displayed that points to a _parsed_ markdow
 ### The Source Code Icon <sub id="source"></sub>
 By default, a source code icon/link is displayed that points to the `homepage` URL set in the `package.json`. This option can be supressed by setting [`opts.jspub.pages.menu.sourceCode`](tutorial-2-conf.html) to `none` and can be customized be setting the same option to a value that will be used on the image `src` for the icon. The default icon is rendered as an `svg` so that the icon can be styled/colorized via [`opts.jspub.pages.menu.icons.className`](tutorial-2-conf.html). For more information on available options for `icons`, see the configuration options for [publicize](global.html#publicize).
 
+### Version Selection <sub id="versions"></sub>
+Documentation versions are managed via [`npm view <your_package_name> versions --json`](https://docs.npmjs.com/cli/view). Each published version to `npm` is captured when generating documentation and stored within a `versions.json` file under the `jsdoc` configuration directory set by `opts.destination`. The `versions.json` file contains a simple array of versions that will be loaded via the `jspub` JavaScript ran in the client's browser. During each [deployment](tutorial-1-start.html#deploy) the `versions.json` gets overwritten in the _root_ directory of the branch set by [`opts.jspub.deploy.branch`](tutorial-2-conf.html). This allows both previously and the currently deployed docs to always reference the _latest_ versions in the selection menu presented in the client's browser.
+
+There are a few techniques that allow filtering of versions that are used on the client. The first involves setting the [`opts.jspub.versions.type`](tutorial-2-conf.html) option to either [`major` or `minor`](https://semver.org). When left unset no filtering is performed and all versions are available for client selection. In contrast, when `major`/`minor` is set, only versions that are published where the `major`/`minor` version _changes_ are shown. For example, consider the following published versions:
+- `v1.0.0`
+- `v1.0.1`
+- `v1.0.2`
+- `v1.1.0`
+- `v1.0.1`
+- `v1.2.0`
+- `v2.0.0`
+
+When `major` is set the resulting versions selections shown would be:
+- `v1.0.0`
+- `v2.0.0`
+
+Likewise, when `minor` is set the resulting versions selections shown would be:
+- `v1.0.0`
+- `v1.1.0`
+- `v1.2.0`
+- `v2.0.0`
+
+Another technique is setting the [`opts.jspub.versions.from`](tutorial-2-conf.html) option to a version that will be used as a starting point. Using the same previous example version set, if `from` is set to `v1.1.0` then the resulting versions selections shown would be:
+- `v1.1.0`
+- `v1.0.1`
+- `v1.2.0`
+- `v2.0.0`
+
+__NOTE:__ Keep in mind that the doc version being viewed will always be shown regardless of the filtering values that are set.
+
 ### Static Resources <sub id="resources"></sub>
 Although they are not technically part of the navigation menu, static resources like `CSS`, `JavaScript` and `meta` can be added using [`opts.jspub.pages.links`](tutorial-2-conf.html), [`opts.jspub.pages.scripts`](tutorial-2-conf.html) and [`opts.jspub.pages.meta`](tutorial-2-conf.html), respectively. `links` and `meta` are added to the `head` of the page while `scripts` are added as the last elements within the `body`. The [example configuration](tutorial-2-conf.html#jspub-example) can be used as a guide as well as the documented options for [publicize](global.html#publicize).
 

@@ -3,7 +3,7 @@ The configuration options documented here only contain add-on options for `jsdoc
 ### How It Works <sub id="how"></sub>
 At the core of `jspub` is a wrapper around `jsdoc` that provides all of the features listed in the [README](index.html). 
 1. The supplied configuration is sanitized and merged into a _master_ configuration file (see [Configuration](tutorial-2-conf.html))
-1. Previous `npm` published versions are captured via `npm view versions` and stored in the `opts.destination` directory as `versions.json` (see [Documentation Versions](tutorial-4-vers.html))
+1. Previous `npm` published versions are captured via `npm view versions` and stored in the `opts.destination` directory as `versions.json` (see [Documentation Versions](tutorial-4-navs.html#versions))
 1. Parameter substitutions are resolved within the _master_ configuration's `opts` (see [Parameter Substitutions](tutorial-3-subs.html))
 1. The internal `jspub` templates are injected into the `layout` (the rest of the templates are supplied by the template of your choosing):
   - `head`: Placed in the `head` of every page that supplies the user-defined `links`/CSS sources, `meta`, etc.
