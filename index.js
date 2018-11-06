@@ -403,26 +403,14 @@ function deployer(resolve, reject, conf, execOpts, pkg, modulePath, jspubPath) {
     if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
       + ' or set an email in your jsdoc configuration');
     const deployExec = `bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}"`;
-    const deployFn = () => {
-      const deploy = exec(deployExec, execOpts);
-      deploy.stdout.pipe(process.stdout);
-      deploy.stderr.pipe(process.stderr);
-      deploy.on('error', error => reject(error));
-      deploy.on('exit', (code, signal) => {
-        if (code !== 0) return reject(new Error(`Deployment exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
-        resolve(true);
-      });
-    };
-    if (pkg.name === 'jspub') { // self-deployment requires "npm link", similar to npm install
-      const link = exec(`npm link`, execOpts);
-      link.stdout.pipe(process.stdout);
-      link.stderr.pipe(process.stderr);
-      link.on('error', error => reject(error));
-      link.on('exit', (code, signal) => {
-        if (code !== 0) return reject(new Error(`"npm link" exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
-        deployFn();
-      });
-    } else deployFn();
+    const deploy = exec(deployExec, execOpts);
+    deploy.stdout.pipe(process.stdout);
+    deploy.stderr.pipe(process.stderr);
+    deploy.on('error', error => reject(error));
+    deploy.on('exit', (code, signal) => {
+      if (code !== 0) return reject(new Error(`Deployment exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
+      resolve(true);
+    });
   } catch (err) {
     err.message += ` (Failed to execute deployment)`;
     err.conf = conf;
