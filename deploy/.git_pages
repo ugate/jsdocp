@@ -24,6 +24,7 @@ cp -r $DOC_PATH/* ./
 mkdir -p ./$NPM_PACKAGE_VERSION
 cp -r $DOC_PATH/* ./$NPM_PACKAGE_VERSION
 # publish to github
+echo "Publishing to $PUB_BRANCH for: $PUB_MESSAGE"
 git add .
 git config user.name  $PUB_USER
 git config user.email $PUB_EMAIL
