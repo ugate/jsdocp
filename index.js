@@ -104,6 +104,10 @@ module.exports = publicize;
  * @param {Object} [conf.opts.jspub.deploy.message] The `commit` message used when deploying the documentation
  * @param {Object} [conf.opts.jspub.deploy.branch] The branch that where documentation will be _pushed_ during deployment
  * @param {Object} [conf.opts.jspub.deploy.path] The path where the `branch` will be _cloned_ to and _pushed_ from during deployment
+ * @param {String} [conf.opts.jspub.deploy.urlSuffix] The URL _suffix_ that will be used when _cloning_/_pushing_ during deployment. A _suffix_ is used since
+ * the URL should utilize a __private__ token prefix evaluated at runtime. For example, a _suffix_ of `@github.com/YOUR_USERNAME/YOUR_PROJECT.git` would be
+ * appropriate for `https://${GITHUB_TOKEN}@github.com/YOUR_USERNAME/YOUR_PROJECT.git` or
+ * `https://${GITHUB_TOKEN}@gitlab.example.com/YOUR_USERNAME/YOUR_PROJECT.git`.
  * @param {Object} [conf.opts.jspub.deploy.user] The user options that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.name] The `git` user name that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.email] The `git` email that will be used when deploying the documentation pages
@@ -159,7 +163,7 @@ async function publicize(conf, deploy = false) {
         const conf = moduleConf;
         if (code !== 0) return reject(new Error(`jsdoc exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
         if (deploy && !conf.opts.jspub.deploy) return reject(new Error(`Deployment flagged for execution, but no "opts.deploy" settings are defined`));
-        if (deploy) deployer(resolve, reject, conf, execOpts, pkg, modulePath, jspubPath);
+        if (deploy) deployer(resolve, reject, conf, pkg, modulePath, jspubPath);
         else resolve(true);
       });
     } catch (err) {
@@ -384,26 +388,26 @@ async function getLayout(dirs, fileName, base) {
  * @param {Function} resolve The promise resolver
  * @param {Function} reject The promise rejector
  * @param {Object} conf The `jsdoc` configuration
- * @param {Object} execOpts The execution options passed into the deployment executable
  * @param {Object} pkg The `package.json`
  * @param {String} modulePath The JSDoc configuration path
  * @param {String} jspubPath The path to the `jspub` module
  */
-function deployer(resolve, reject, conf, execOpts, pkg, modulePath, jspubPath) {
+function deployer(resolve, reject, conf, pkg, modulePath, jspubPath) {
   try {
-    console.log('Deploying pages...');
+    console.log(`Deploying v${pkg.version} pages...`);
     const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
     const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
     const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
-    const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
+    const clnUrl = sanitizeArg(conf.opts.jspub.deploy.urlSuffix), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
     const email = sanitizeArg(conf.opts.jspub.deploy.user.email), msg = sanitizeArg(conf.opts.jspub.deploy.message);
     if (!brch) throw new Error('opts.jspub.deploy.branch is required');
-    if (!clnUrl) throw new Error('opts.jspub.deploy.url is required');
+    if (!clnUrl) throw new Error('opts.jspub.deploy.urlSuffix is required');
     if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
       + ' or set a user name in your jsdoc configuration');
     if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
       + ' or set an email in your jsdoc configuration');
     if (!msg) throw new Error('opts.jspub.deploy.message is required');
+    const execOpts = { env: process.env, cwd: modulePath, timeout: 30000 };
     const deployExec = `bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}" "${msg}"`;
     const deploy = exec(deployExec, execOpts);
     deploy.stdout.pipe(process.stdout);

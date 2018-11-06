@@ -10,13 +10,13 @@ NPM_PACKAGE_VERSION=$1
 DOC_PATH=$2
 PUB_PATH=$3
 PUB_BRANCH=$4
-PUB_REPO_URL=$5
+PUB_REPO_URL_SUFFIX=$5
 PUB_USER=$6
 PUB_EMAIL=$7
 PUB_MESSAGE=$8
 # checkout
 pushd $HOME
-git clone --branch=$PUB_BRANCH $PUB_REPO_URL $PUB_PATH 2>&1 > /dev/null
+git clone --branch=$PUB_BRANCH https://${GITHUB_TOKEN}$PUB_REPO_URL_SUFFIX $PUB_PATH 2>&1 > /dev/null
 cd $PUB_PATH
 # recursively copy the latest docs to the root gh-pages
 cp -r $DOC_PATH/* ./
