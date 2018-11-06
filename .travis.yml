@@ -33,10 +33,12 @@ deploy:
     script: npm run jspub-deploy
     on:
       tags: true # only on tagging commit
-      all_branches: true
+      branch:
+        - /v(\d+\.)?(\d+\.)?(\*|\d+)$/
   - provider: npm
     email: "ugate.public@gmail.com"
     api_key: $NPM_TOKEN  # Set in the settings page of your repository, as a secure variable
     on:
       tags: true # only on tagging commit
-      all_branches: true
+      branch:
+        - /v(\d+\.)?(\d+\.)?(\*|\d+)$/
