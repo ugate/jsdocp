@@ -407,8 +407,18 @@ function deployer(resolve, reject, conf, pkg, modulePath, jspubPath) {
     if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
       + ' or set an email in your jsdoc configuration');
     if (!msg) throw new Error('opts.jspub.deploy.message is required');
+
+    process.env.PUB_PACKAGE_VERSION = ver;
+    process.env.PUB_DOC_PATH = docPth;
+    process.env.PUB_PATH = pubPth;
+    process.env.PUB_BRANCH = brch;
+    process.env.PUB_REPO_URL_SUFFIX = clnUrl;
+    process.env.PUB_USER = usr;
+    process.env.PUB_EMAIL = email;
+    process.env.PUB_MESSAGE = msg;
+
     const execOpts = { env: process.env, cwd: modulePath, timeout: 30000 };
-    const deployExec = `bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}" "${msg}"`;
+    const deployExec = `bash ${deployCliPath}`;
     const deploy = exec(deployExec, execOpts);
     deploy.stdout.pipe(process.stdout);
     deploy.stderr.pipe(process.stderr);
