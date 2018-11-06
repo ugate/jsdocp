@@ -1,6 +1,6 @@
 # .travis.yml
 # When a tagged commit is pushed the documentation pages and npm module are published/deployed:
-# npm version patch -m "%s release"
+# npm version patch -m "%s Release"
 language: node_js
 node_js:
   - "10"
