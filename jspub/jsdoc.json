@@ -28,84 +28,86 @@
     "encoding": "utf8",
     "private": false,
     "recurse": true,
-    "deploy": {
-      "pages": {
-        "user": {
-          "name": "Travis",
-          "email": "travis@travis-ci.org"
-        }
-      }
-    },
-    "pages": {
-      "menu": {
-        "className": "pkg-menu",
-        "logo": {
-          "src": "favicon-32x32.png",
-          "inlineSvgPath": "./jspub/static/logo.svg",
-          "className": "pkg-logo"
-        },
-        "icons": {
-          "className": "pkg-icons"
+    "jspub": {
+      "deploy": {
+        "pages": {
+          "user": {
+            "name": "Travis",
+            "email": "travis@travis-ci.org"
+          }
         }
       },
-      "links": [
-        {
-          "rel": "apple-touch-icon",
-          "sizes": "180x180",
-          "href": "apple-touch-icon.png"
+      "pages": {
+        "menu": {
+          "className": "pkg-menu",
+          "logo": {
+            "src": "favicon-32x32.png",
+            "inlineSvgPath": "./jspub/static/logo.svg",
+            "className": "pkg-logo"
+          },
+          "icons": {
+            "className": "pkg-icons"
+          }
         },
-        {
-          "rel": "icon",
-          "type": "image/png",
-          "sizes": "32x32",
-          "href": "favicon-32x32.png"
-        },
-        {
-          "rel": "icon",
-          "type": "image/png",
-          "sizes": "16x16",
-          "href": "favicon-16x16.png"
-        },
-        {
-          "rel": "manifest",
-          "href": "site.webmanifest"
-        },
-        {
-          "rel": "mask-icon",
-          "type": "image/png",
-          "sizes": "16x16",
-          "href": "safari-pinned-tab.svg",
-          "color": "#ffab40"
-        },
-        {
-          "type": "text/css",
-          "rel": "stylesheet",
-          "href": "pkg-styles/pkg-style.css"
-        }
-      ],
-      "metas": [
-        {
-          "name": "msapplication-TileColor",
-          "content": "#ffab40"
-        },
-        {
-          "name": "theme-color",
-          "content": "#bdbdbd"
-        },
-        {
-          "name": "viewport",
-          "content": "width=device-width, initial-scale=1"
-        }
-      ],
-      "scripts": [
-        {
-          "src": "pkg-scripts/pkg-script.js"
-        }
-      ]
-    },
-    "versions": {
-      "from": "1.0.0",
-      "type": ""
+        "links": [
+          {
+            "rel": "apple-touch-icon",
+            "sizes": "180x180",
+            "href": "apple-touch-icon.png"
+          },
+          {
+            "rel": "icon",
+            "type": "image/png",
+            "sizes": "32x32",
+            "href": "favicon-32x32.png"
+          },
+          {
+            "rel": "icon",
+            "type": "image/png",
+            "sizes": "16x16",
+            "href": "favicon-16x16.png"
+          },
+          {
+            "rel": "manifest",
+            "href": "site.webmanifest"
+          },
+          {
+            "rel": "mask-icon",
+            "type": "image/png",
+            "sizes": "16x16",
+            "href": "safari-pinned-tab.svg",
+            "color": "#ffab40"
+          },
+          {
+            "type": "text/css",
+            "rel": "stylesheet",
+            "href": "pkg-styles/pkg-style.css"
+          }
+        ],
+        "metas": [
+          {
+            "name": "msapplication-TileColor",
+            "content": "#ffab40"
+          },
+          {
+            "name": "theme-color",
+            "content": "#bdbdbd"
+          },
+          {
+            "name": "viewport",
+            "content": "width=device-width, initial-scale=1"
+          }
+        ],
+        "scripts": [
+          {
+            "src": "pkg-scripts/pkg-script.js"
+          }
+        ]
+      },
+      "versions": {
+        "from": "1.0.0",
+        "type": ""
+      }
     }
   }
 }

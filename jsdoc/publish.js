@@ -19,7 +19,8 @@ const pkg = require(Path.join(process.env.JSPUB_MODULE_PATH, 'package.json'));
  * - Menu icon/link to the source code
  * - Menu icon/link to the change log
  * @param {TAFFY} taffyData See <http://taffydb.com/>
- * @param {Object} opts The JSDoc options
+ * @param {Object} opts The `jsdoc` options
+ * @param {Object} opts.jspub The `jspub` options
  * @param {Tutorial} tutorials The turtorials
  */
 exports.publish = function(taffyData, opts, tutorials) {
@@ -43,8 +44,8 @@ exports.publish = function(taffyData, opts, tutorials) {
       logger.info(`Writting ${verPath}`);
       const wrVerProm = Fsp.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
       const span = env.meta.publish.lastVersionPublished ? `v${env.meta.publish.lastVersionPublished}..HEAD ` : '';
-      const line = opts.changelog && opts.changelog.line ? opts.changelog.line.replace(/"/g, '\\"') : '* %s';
-      const header = opts.changelog && opts.changelog.header ? opts.changelog.header : `## ${env.meta.package.version}`;
+      const line = opts.jspub.changelog && opts.jspub.changelog.line ? opts.jspub.changelog.line.replace(/"/g, '\\"') : '* %s';
+      const header = opts.jspub.changelog && opts.jspub.changelog.header ? opts.jspub.changelog.header : `## ${env.meta.package.version}`;
       const gitlog = (grepo, merges) => {
         const mrgs = merges ? '--merges --first-parent master' : '--no-merges';
         const grep = grepo && grepo.regexp ? `--grep="${grepo.regexp.replace(/"/g, '\\"')}" ` : '';
@@ -57,28 +58,28 @@ exports.publish = function(taffyData, opts, tutorials) {
           });
         });
       };
-      var chglog = '', cltxt = '', clps = [], sctns = opts.changelog && opts.changelog.sections;
+      var chglog = '', cltxt = '', clps = [], sctns = opts.jspub.changelog && opts.jspub.changelog.sections;
       if (sctns) {
-        if (sctns.breaks && sctns.breaks.grep) clps.push({ promise: gitlog(sctns.breaks.grep), opts: sctns.breaks });
-        if (sctns.features && sctns.features.grep) clps.push({ promise: gitlog(sctns.features.grep), opts: sctns.features });
-        if (sctns.fixes && sctns.fixes.grep) clps.push({ promise: gitlog(sctns.fixes.grep), opts: sctns.fixes });
-        if (sctns.merges && sctns.merges.grep) clps.push({ promise: gitlog(sctns.merges.grep, true), opts: sctns.merges });
+        if (sctns.breaks && sctns.breaks.grep) clps.push({ promise: gitlog(sctns.breaks.grep), clopts: sctns.breaks });
+        if (sctns.features && sctns.features.grep) clps.push({ promise: gitlog(sctns.features.grep), clopts: sctns.features });
+        if (sctns.fixes && sctns.fixes.grep) clps.push({ promise: gitlog(sctns.fixes.grep), clopts: sctns.fixes });
+        if (sctns.merges && sctns.merges.grep) clps.push({ promise: gitlog(sctns.merges.grep, true), clopts: sctns.merges });
       } else chglog += await gitlog();
       for (let cl of clps) {
         try {
           cltxt = await cl.promise;
-          if (cltxt) chglog += `\n\n${cl.opts.header}\n${cltxt}`;
+          if (cltxt) chglog += `\n\n${cl.clopts.header}\n${cltxt}`;
         } catch (err) {
-          err.message += ` (Unable to generate CHANGELOG section "${cl.opts.header}" for grep "${cl.opts.grep}")`;
+          err.message += ` (Unable to generate CHANGELOG section "${cl.clopts.header}" for grep "${cl.clopts.grep}")`;
           return reject(err);
         }
       }
       var logoPath;
-      if (opts.pages.menu.logo.inlineSvgPath) {
-        if (!/.svg$/i.test(opts.pages.menu.logo.inlineSvgPath)) {
-          throw new Error(`"conf.opts.pages.menu.logo.inlineSvgPath" must be in SVG format for: ${conf.opts.pages.menu.logo.inlineSvgPath}`);
+      if (opts.jspub.pages.menu.logo.inlineSvgPath) {
+        if (!/.svg$/i.test(opts.jspub.pages.menu.logo.inlineSvgPath)) {
+          throw new Error(`"conf.opts.jspub.pages.menu.logo.inlineSvgPath" must be in SVG format for: ${conf.opts.jspub.pages.menu.logo.inlineSvgPath}`);
         }
-        logoPath = Path.resolve(process.env.JSPUB_MODULE_PATH, opts.pages.menu.logo.inlineSvgPath);
+        logoPath = Path.resolve(process.env.JSPUB_MODULE_PATH, opts.jspub.pages.menu.logo.inlineSvgPath);
         env.meta.logo = Fsp.readFile(logoPath);
       }
       try {
@@ -111,13 +112,13 @@ exports.publish = function(taffyData, opts, tutorials) {
       try {
         env.meta.logo = env.meta.logo instanceof Promise ? (await env.meta.logo).toString(): env.meta.logo;
       } catch (err) {
-        err.message += ` (Unable to extract logo content from ${logoPath}.${opts.pages.menu.logo.src ? ` Falling back on ${opts.pages.menu.logo.src}` : ''})`;
+        err.message += ` (Unable to extract logo content from ${logoPath}.${opts.jspub.pages.menu.logo.src ? ` Falling back on ${opts.jspub.pages.menu.logo.src}` : ''})`;
         logger.warn(err.message);
         logger.warn(err);
       }
 
       // use the actual template
-      opts.template = opts.templateProxy;
+      opts.template = opts.jspub.templateProxy;
 
       logger.debug(`Running markdown extensions on tutorials...`);
       await tutorialExts(tutorials);
@@ -145,7 +146,7 @@ exports.publish = function(taffyData, opts, tutorials) {
  * @param {Object} opts The `jsdoc` options
  */
 async function destination(opts) {
-  var chkdest = !opts.pages || !opts.pages.cleanDestination, mkdest = true;
+  var chkdest = !opts.jspub.pages || !opts.jspub.pages.cleanDestination, mkdest = true;
   try {
     if (!chkdest) {
       logger.info(`Cleaning ${opts.destination}`);

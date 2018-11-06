@@ -15,91 +15,93 @@
   "opts": {
     "destination": "./docs",
     "template": "./jsdoc",
-    "layoutCheckTemplateDirs": [
-      "tmpl",
-      "template/tmpl",
-      "template"
-    ],
-    "layoutFrags": {
-      "head": "./node_modules/jsdoc/tmpl/head.tmpl",
-      "nav": "./node_modules/jsdoc/tmpl/nav.tmpl",
-      "foot": "./node_modules/jsdoc/tmpl/foot.tmpl"
-    },
-    "deploy": {
-      "pages": {
+    "jspub": {
+      "layoutCheckTemplateDirs": [
+        "tmpl",
+        "template/tmpl",
+        "template"
+      ],
+      "layoutFrags": {
+        "head": "./node_modules/jsdoc/tmpl/head.tmpl",
+        "nav": "./node_modules/jsdoc/tmpl/nav.tmpl",
+        "foot": "./node_modules/jsdoc/tmpl/foot.tmpl"
+      },
+      "deploy": {
+        "message": "Deploy ${package.author.name}/${package.name} to gh-pages",
+        "dir": "publish",
         "branch": "gh-pages",
-        "cloneToPath": "publish",
+        "url": "https://${GITHUB_TOKEN}@github.com/${package.author.name}/${package.name}.git",
         "user": {
           "name": "${package.author.name}",
           "email": "${package.author.email}"
         }
-      }
-    },
-    "pages": {
-      "cleanDestination": true,
-      "menu": {
-        "package": "",
-        "changelog": "",
-        "sourceCode": "",
-        "className": "",
-        "logo": {
-          "src": "",
-          "inlineSvgPath": "",
-          "anchorclassName": "",
-          "className": ""
-        },
-        "icons": {
-          "className": ""
-        }
       },
-      "links": [],
-      "meta": [],
-      "scripts": []
-    },
-    "versions": {
-      "from": "",
-      "type": "minor"
-    },
-    "changelog": {
-      "title": "CHANGELOG v${package.version}",
-      "header": "## [${package.version}](${publish.moduleURL}/tree/${package.version}) (${publish.date})\n[Full Changelog](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version})",
-      "line": "* [%s](${publish.moduleURL}/commit/%H)",
-      "sections": {
-        "breaks": {
-          "grep": {
-            "regexp": "\\[BREAK\\]",
-            "ignoreCase": true,
-            "extendedRegexp": false,
-            "allMatch": false
+      "pages": {
+        "cleanDestination": true,
+        "menu": {
+          "package": "",
+          "changelog": "",
+          "sourceCode": "",
+          "className": "",
+          "logo": {
+            "src": "",
+            "inlineSvgPath": "",
+            "anchorclassName": "",
+            "className": ""
           },
-          "header": "__Breaking Changes:__"
+          "icons": {
+            "className": ""
+          }
         },
-        "features": {
-          "grep": {
-            "regexp": "\\[FEATURE\\]",
-            "ignoreCase": true,
-            "extendedRegexp": false,
-            "allMatch": false
+        "links": [],
+        "meta": [],
+        "scripts": []
+      },
+      "versions": {
+        "from": "",
+        "type": "minor"
+      },
+      "changelog": {
+        "title": "CHANGELOG v${package.version}",
+        "header": "## [${package.version}](${publish.moduleURL}/tree/${package.version}) (${publish.date})\n[Full Changelog](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version})",
+        "line": "* [%s](${publish.moduleURL}/commit/%H)",
+        "sections": {
+          "breaks": {
+            "grep": {
+              "regexp": "\\[BREAK\\]",
+              "ignoreCase": true,
+              "extendedRegexp": false,
+              "allMatch": false
+            },
+            "header": "__Breaking Changes:__"
           },
-          "header": "__Features:__"
-        },
-        "fixes": {
-          "grep": {
-            "regexp": "\\[FIX\\]",
-            "ignoreCase": true,
-            "extendedRegexp": false,
-            "allMatch": false
+          "features": {
+            "grep": {
+              "regexp": "\\[FEATURE\\]",
+              "ignoreCase": true,
+              "extendedRegexp": false,
+              "allMatch": false
+            },
+            "header": "__Features:__"
           },
-          "header": "__Fixes:__"
-        },
-        "merges": {
-          "grep": {
-            "regexp": "\\[MERGE\\]",
-            "ignoreCase": true,
-            "extendedRegexp": false,
-            "allMatch": false
+          "fixes": {
+            "grep": {
+              "regexp": "\\[FIX\\]",
+              "ignoreCase": true,
+              "extendedRegexp": false,
+              "allMatch": false
+            },
+            "header": "__Fixes:__"
           },
-          "header": "__Merged Pull Requests:__"
+          "merges": {
+            "grep": {
+              "regexp": "\\[MERGE\\]",
+              "ignoreCase": true,
+              "extendedRegexp": false,
+              "allMatch": false
+            },
+            "header": "__Merged Pull Requests:__"
+          }
         }
       }
     }
