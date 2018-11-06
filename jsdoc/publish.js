@@ -47,7 +47,7 @@ exports.publish = function(taffyData, opts, tutorials) {
       const line = opts.jspub.changelog && opts.jspub.changelog.line ? opts.jspub.changelog.line.replace(/"/g, '\\"') : '* %s';
       const header = opts.jspub.changelog && opts.jspub.changelog.header ? opts.jspub.changelog.header : `## ${env.meta.package.version}`;
       const gitlog = (grepo, merges) => {
-        const mrgs = merges ? '--merges --first-parent master' : '--no-merges';
+        const mrgs = merges ? '--merges' : '--no-merges';
         const grep = grepo && grepo.regexp ? `--grep="${grepo.regexp.replace(/"/g, '\\"')}" ` : '';
         const rxi = grepo && grepo.ignoreCase ? '-i ' : '', rxe = grepo && grepo.extendedRegexp ? '-E ' : '';
         return new Promise((resolve, reject) => {

@@ -37,6 +37,15 @@ At the core of `jspub` is a wrapper around `jsdoc` that provides all of the feat
 
 ### Deployment <sub id="deploy"><sup>_(assumes [setup](#setup) has been completed)_</sup></sub>
 There are a few different ways that `deployment` can be performed based upon [`opts.jspub.deploy`](tutorial-2-conf.html) options. Deployment can occur locally or using a different `git` hosting service and running `npm run jspub-deploy`, but it will require some minor changes to `conf.opts.jspub.deploy` in the `jsdoc.conf` file outlined in the [setup](#setup). However, we'll cover the most common use case where [GitHub Pages](https://pages.github.com/) and [travis-ci](https://travis-ci.com) are being used.
+1. If the `gh-pages` branch isn't already created/selected for [GitHub Pages](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/) on `https://github.com/<your_username>/<your_repo_name>/settings`, the following script can be used to create the `gh-pages` branch.
+    - ```bash
+    git checkout --orphan gh-pages
+    git rm -rf .
+    touch README.md
+    git add README.md
+    git commit -m 'Initial gh-pages commit'
+    git push origin gh-pages
+    ```
 1. [Create a personal access token on GitHub](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
 1. If you haven't already done so, go to [travis-ci.com](https://travis-ci.com/), setup an account and follow the instructions to enable/activate your repo. Copy the personal access token from GitHub in the previous step and paste it in a new __Environment Variable__ called `GITHUB_TOKEN` on `https://travis-ci.com/<your_username>/<your_repo_name>/settings`.
 1. While your at it, you may also want to do the same thing for `npm` by creating an __Access Token__ on `https://www.npmjs.com/settings/<your_username>/tokens` and copy/paste it in a new __Environment Variable__ called `NPM_TOKEN` on `https://travis-ci.com/<your_username>/<your_repo_name>/settings` (we'll use this in our `.travis.yml` to deploy to `npm`). 
