@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Tests ran during deployment...\"",
     "jspub": "jspub ./jspub/jsdoc.json",
-    "jspub-deploy": "jspub -D ./jspub/jsdoc.json"
+    "jspub-deploy": "npm link && jspub -D ./jspub/jsdoc.json"
   },
   "repository": {
     "type": "git",
