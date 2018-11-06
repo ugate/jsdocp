@@ -30,11 +30,9 @@
     "recurse": true,
     "jspub": {
       "deploy": {
-        "pages": {
-          "user": {
-            "name": "Travis",
-            "email": "travis@travis-ci.org"
-          }
+        "user": {
+          "name": "Travis",
+          "email": "travis@travis-ci.org"
         }
       },
       "pages": {

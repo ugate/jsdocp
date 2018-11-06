@@ -37,12 +37,12 @@ function JSPUB() {
         var title = usingCl ? (cl.hasAttribute('data-title') && cl.dataset.title) || clPage : originalTitle;
         clt.innerHTML = usingCl ? cl.innerHTML : originalContent;
         document.title = title;
-        return { title: title, changelog: usingCl };
+        return { title: title, changelog: usingCl, page: clPage };
       };
       cla.addEventListener('click', function overrideChglogClick(event) {
         try {
           var state = loadChglog();
-          if (state.changelog) history.pushState(state, title, clPage);
+          if (state.changelog) history.pushState(state, state.title, state.page);
         } catch (err) {
           console.error(err);
         }
@@ -81,6 +81,10 @@ JSPUB.prototype.loadVersions = function loadVersions() {
       patch: (parts && parts[2] && !isNaN(parts[2]) && parseInt(parts[2])) || 0
     };
   };
+  sel.addEventListener('change', function versionChange(event) {
+    var trg = event.currentTarget || event.target, base = (trg && trg.dataset.jspubVersionBase) || '';
+    if (trg && trg.value) window.location = (base ? base + '/' : '') + trg.value;
+  });
   jp.fetch(sel.dataset.jspubJsonUrl, 'application/json', function versionsLoaded(error, req) {
     if (error) return console.warn(error);
     var vrs = JSON.parse(req.responseText);

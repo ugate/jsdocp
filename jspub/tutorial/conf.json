@@ -11,10 +11,7 @@
   "4-vers": {
     "title": "Documentation Versions"
   },
-  "5-clog": {
-    "title": "Changelog"
-  },
-  "6-ci": {
-    "title": "Continuous Integration"
+  "5-navs": {
+    "title": "Navigation Menu"
   }
 }

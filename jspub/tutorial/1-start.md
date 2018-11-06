@@ -44,8 +44,7 @@ There are a few different ways that `deployment` can be performed based upon [`o
 1. `npm version patch -m "Deploying %s" && git push origin <tag_name>` - replacing `patch` with `major`, `minor`, etc. as needed (see [npm-version](https://docs.npmjs.com/cli/version))
 
 Now everytime that a new version is _tagged_/_pushed_ a new version of the `npm` package will be updated on `https://www.npmjs.com/package/<your_package_name>` and the docs will get updated on `https://<your_username>.github.io/<your_repo_name>` automatically!
-
-#### `.travis.yml` <sub id="travis"></sub>
+<sub id="travis"></sub>
 ```jspub ./.travis.yml
 ```
 

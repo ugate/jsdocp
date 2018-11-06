@@ -28,7 +28,7 @@
       },
       "deploy": {
         "message": "Deploy ${package.author.name}/${package.name} to gh-pages",
-        "dir": "publish",
+        "path": "./publish",
         "branch": "gh-pages",
         "url": "https://${GITHUB_TOKEN}@github.com/${package.author.name}/${package.name}.git",
         "user": {

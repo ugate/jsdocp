@@ -103,7 +103,7 @@ module.exports = publicize;
  * @param {Object} [conf.opts.jspub.deploy] The documentation deployment options
  * @param {Object} [conf.opts.jspub.deploy.message] The `commit` message used when deploying the documentation
  * @param {Object} [conf.opts.jspub.deploy.branch] The branch that where documentation will be _pushed_ during deployment
- * @param {Object} [conf.opts.jspub.deploy.dir] The _local_ directory name relative to the module that will be used to _clone_/_push_ to during deployment
+ * @param {Object} [conf.opts.jspub.deploy.path] The path where the `branch` will be _cloned_ to and _pushed_ from during deployment
  * @param {Object} [conf.opts.jspub.deploy.user] The user options that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.name] The `git` user name that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.email] The `git` email that will be used when deploying the documentation pages
@@ -156,14 +156,24 @@ async function publicize(conf, deploy = false) {
       jsdoc.stderr.pipe(process.stderr);
       jsdoc.on('error', error => reject(error));
       jsdoc.on('exit', (code, signal) => {
+        const conf = moduleConf;
         if (code !== 0) return reject(new Error(`jsdoc exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
         if (deploy && !conf.opts.jspub.deploy) return reject(new Error(`Deployment flagged for execution, but no "opts.deploy" settings are defined`));
         if (deploy) {
           try {
             console.log('Deploying pages...');
             const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
-            const ver = sanitizeArg(pkg.version), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
-            const deploy = exec(`bash ${deployCliPath} "${ver}" "${brch}"`, execOpts);
+            const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
+            const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
+            const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
+            const email = sanitizeArg(conf.opts.jspub.deploy.user.email);
+            if (!brch) throw new Error('opts.jspub.deploy.branch is required');
+            if (!clnUrl) throw new Error('opts.jspub.deploy.url is required');
+            if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
+              + ' or set a user name in your jsdoc configuration');
+            if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
+              + ' or set an email in your jsdoc configuration');
+            const deploy = exec(`bash ${deployCliPath} "${ver}" "${docPth}" "${pubPth}" "${brch}" "${clnUrl}" "${usr}" "${email}"`, execOpts);
             deploy.stdout.pipe(process.stdout);
             deploy.stderr.pipe(process.stderr);
             deploy.on('error', error => reject(error));
@@ -456,7 +466,7 @@ function literal(str, obj) {
       if (i < ln - 1 && !val.hasOwnProperty(paths[i])) return mtch;
       val = val[paths[i]];
     }
-    return val;
+    return typeof val === 'undefined' ? mtch : val;
   });
 }
 
@@ -494,5 +504,5 @@ function sanatizePath(pkg, path) {
 function sanitizeArg(arg) {
   return arg.replace(/[^\\]'|"/g, function (mtch) {
     return mtch.slice(0, 1) + '\\\'';
-  });
+  }).replace(/\s/g, '');
 }

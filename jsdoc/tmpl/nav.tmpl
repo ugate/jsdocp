@@ -58,7 +58,7 @@
     <?js } ?>
   </a>
   <!-- versions.json should point to the latest list -->
-  <select id="jspubVersions" onchange="window.location='/<?js= env.meta.package.name ?>/' + this.value"
+  <select id="jspubVersions" data-jspub-version-base="/<?js= env.meta.package.name ?>"
     data-jspub-json-url="/<?js= env.meta.package.name ?>/versions.json"
     data-jspub-type="<?js= (env.conf.opts.jspub.versions && env.conf.opts.jspub.versions.type) || '' ?>"
     data-jspub-from="<?js= (env.conf.opts.jspub.versions && env.conf.opts.jspub.versions.from) || '' ?>"
