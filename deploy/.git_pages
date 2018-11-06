@@ -1,26 +1,31 @@
 #!/bin/bash
-PUBLICATION_BRANCH=$1{{opts.travis.pages.branch}}
 REPO_PATH=$PWD
 # current package.json version/name
-NPM_PACKAGE_VERSION=$(npm run env | sed -n 's/^npm_package_version=//p')
+NPM_PACKAGE_VERSION=$1
+#NPM_PACKAGE_VERSION=$(npm run env | sed -n 's/^npm_package_version=//p')
 #NPM_PACKAGE_NAME=$(npm run env | sed -n 's/^npm_package_name=//p')
 # get last published npm version
 #NPM_LAST_PACKAGE_VERSION=$(npm view $NPM_PACKAGE_NAME versions --json | sed -n '1h;1!{x;H;};${g;p;}' | tr '\n' ' ' | sed 's/[^0-9]*\([0-9.]*\).*/\1/')
-{{opts.travis.pages.script.jspub}}
+DOC_PATH=$2
+PUB_REPO_URL=$3
+PUB_PATH=$4
+PUB_BRANCH=$5
+PUB_USER=$6
+PUB_EMAIL=$7
+PUB_MESSAGE=$8
 # checkout
 pushd $HOME
-git clone --branch=$PUBLICATION_BRANCH https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG.git {{opts.travis.pages.cloneToPath}} 2>&1 > /dev/null
-cd {{opts.travis.pages.cloneToPath}}
-#git --no-pager log v1.0.2..HEAD --oneline --no-merges --grep=" " --pretty=format:"* [%h](http://github.com/ugate/asynchro/commit/%H) %s " --reverse > CHANGELOG.md
+git clone --branch=$PUB_BRANCH $PUB_REPO_URL $PUB_PATH 2>&1 > /dev/null
+cd $PUB_PATH
 # recursively copy the latest docs to the root gh-pages
-cp -r $REPO_PATH/{{ots.destination}}/* ./
+cp -r $REPO_PATH/$DOC_PATH/* ./
 # recursively copy the current docs to the version directory and root directory
 mkdir -p ./$NPM_PACKAGE_VERSION
-cp -r $REPO_PATH/{{ots.destination}}/* ./$NPM_PACKAGE_VERSION
+cp -r $REPO_PATH/$DOC_PATH/* ./$NPM_PACKAGE_VERSION
 # publish to github
 git add .
-git config user.name  "{{opts.travis.pages.user.name}}"
-git config user.email "{{opts.travis.pages.user.email}}"
-git commit -m "Deploy $TRAVIS_REPO_SLUG to $PUBLICATION_BRANCH"
-git push -fq origin $PUBLICATION_BRANCH 2>&1 > /dev/null
+git config user.name  $PUB_USER
+git config user.email $PUB_EMAIL
+git commit -m $PUB_MESSAGE
+git push -fq origin $PUB_BRANCH 2>&1 > /dev/null
 popd
