@@ -5,6 +5,7 @@ All of the [`opts.jspub`](tutorial-2-conf.html) configuration option values can 
 - `${publish.lastVersion}`: Evaluates to the last version published to `npm` or the current `package.version`when nothing has been published yet.
 - `${publish.moduleURL}`: Evaluates to the `homepage` in `package.json`, but will also remove any _hashes_ in the URL (e.g. assuming a `homepage` of `https://example.com/username/module#readme` would become `https://example.com/username/module`).
 - `${publish.date}`: The current date string formatted as `YYYY-MM-DD`
+- `${env}`: Evaluates to the `process.env` for `jspub` (e.g. `${env.GITHUB_TOKEN}`)
 
 __NOTE:__ _Only_ placeholders within the `conf.opts` section will be evaluated
 

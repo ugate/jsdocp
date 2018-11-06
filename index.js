@@ -232,7 +232,8 @@ async function writeConf(pkg, conf, modulePath, jspubPath, jspubConfPath, tempCo
             lastVersion: latestVersion || pkg.version,
             moduleURL: pkg.homepage.replace(/#[^\/]*/g, ''),
             date: formatedDate()
-          }
+          },
+          env: process.env
         };
         // for template liternals purposes only: make sure any ${package.author.name}, etc. don't get set to undefined
         if (typeof meta.package.author !== 'object') meta.package.author = { name: meta.package.author, email: '' };
