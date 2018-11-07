@@ -1,6 +1,6 @@
 {
   "name": "jspub",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Simplified JSDoc publishing using git",
   "main": "index.js",
   "scripts": {
