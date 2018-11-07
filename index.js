@@ -104,10 +104,7 @@ module.exports = publicize;
  * @param {Object} [conf.opts.jspub.deploy.message] The `commit` message used when deploying the documentation
  * @param {Object} [conf.opts.jspub.deploy.branch] The branch that where documentation will be _pushed_ during deployment
  * @param {Object} [conf.opts.jspub.deploy.path] The path where the `branch` will be _cloned_ to and _pushed_ from during deployment
- * @param {String} [conf.opts.jspub.deploy.urlSuffix] The URL _suffix_ that will be used when _cloning_/_pushing_ during deployment. A _suffix_ is used since
- * the URL should utilize a __private__ token prefix evaluated at runtime. For example, a _suffix_ of `@github.com/YOUR_USERNAME/YOUR_PROJECT.git` would be
- * appropriate for `https://${GITHUB_TOKEN}@github.com/YOUR_USERNAME/YOUR_PROJECT.git` or
- * `https://${GITHUB_TOKEN}@gitlab.example.com/YOUR_USERNAME/YOUR_PROJECT.git`.
+ * @param {String} [conf.opts.jspub.deploy.url] The URL that will be used when _cloning_/_pushing_ during deployment
  * @param {Object} [conf.opts.jspub.deploy.user] The user options that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.name] The `git` user name that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.email] The `git` email that will be used when deploying the documentation pages
@@ -398,10 +395,10 @@ function deployer(resolve, reject, conf, pkg, modulePath, jspubPath) {
     const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
     const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
     const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
-    const clnUrl = sanitizeArg(conf.opts.jspub.deploy.urlSuffix), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
+    const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
     const email = sanitizeArg(conf.opts.jspub.deploy.user.email), msg = sanitizeArg(conf.opts.jspub.deploy.message);
     if (!brch) throw new Error('opts.jspub.deploy.branch is required');
-    if (!clnUrl) throw new Error('opts.jspub.deploy.urlSuffix is required');
+    if (!clnUrl) throw new Error('opts.jspub.deploy.url is required and should point to a remote repository');
     if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
       + ' or set a user name in your jsdoc configuration');
     if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
@@ -412,7 +409,7 @@ function deployer(resolve, reject, conf, pkg, modulePath, jspubPath) {
     process.env.PUB_DOC_PATH = docPth;
     process.env.PUB_PATH = pubPth;
     process.env.PUB_BRANCH = brch;
-    process.env.PUB_REPO_URL_SUFFIX = clnUrl;
+    process.env.PUB_REPO_URL = clnUrl;
     process.env.PUB_USER = usr;
     process.env.PUB_EMAIL = email;
     process.env.PUB_MESSAGE = msg;

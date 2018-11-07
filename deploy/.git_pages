@@ -4,11 +4,11 @@ REPO_PATH=$PWD
 #PUB_PACKAGE_NAME=$(npm run env | sed -n 's/^npm_package_name=//p')
 # get last published npm version
 #PUB_LAST_PACKAGE_VERSION=$(npm view $PUB_PACKAGE_NAME versions --json | sed -n '1h;1!{x;H;};${g;p;}' | tr '\n' ' ' | sed 's/[^0-9]*\([0-9.]*\).*/\1/')
-#echo "PUB_PACKAGE_VERSION = $PUB_PACKAGE_VERSION, PUB_DOC_PATH = $PUB_DOC_PATH, PUB_PATH = $PUB_PATH, PUB_BRANCH = $PUB_BRANCH"
-#echo "PUB_REPO_URL_SUFFIX = $PUB_REPO_URL_SUFFIX, PUB_USER = $PUB_USER, PUB_EMAIL = $PUB_EMAIL, PUB_MESSAGE = $PUB_MESSAGE"
+echo "PUB_PACKAGE_VERSION = $PUB_PACKAGE_VERSION, PUB_DOC_PATH = $PUB_DOC_PATH, PUB_PATH = $PUB_PATH, PUB_BRANCH = $PUB_BRANCH"
+echo "PUB_REPO_URL = $PUB_REPO_URL, PUB_USER = $PUB_USER, PUB_EMAIL = $PUB_EMAIL, PUB_MESSAGE = $PUB_MESSAGE"
 # checkout
 pushd $HOME
-git clone --branch=$PUB_BRANCH https://${GITHUB_TOKEN}$PUB_REPO_URL_SUFFIX $PUB_PATH 2>&1 > /dev/null
+git clone --branch=$PUB_BRANCH $PUB_REPO_URL $PUB_PATH 2>&1 > /dev/null
 cd $PUB_PATH
 # recursively copy the latest docs to the root gh-pages
 cp -r $PUB_DOC_PATH/* ./
