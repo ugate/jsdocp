@@ -16,8 +16,6 @@ script:
 # provider. Instead, a single script provider handles any pre-deployment executions.
 #before_deploy:
 #  - "npm run jspub"
-before_deploy:
-  - echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
 deploy:
 # Using the pages provider will wipe out previously deployed pages for prior versions. This makes it
 # difficult to navigate version history and link to via documentation.

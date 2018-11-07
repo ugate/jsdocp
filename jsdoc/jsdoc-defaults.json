@@ -30,7 +30,7 @@
         "message": "Deploy ${package.author.name}/${package.name} to gh-pages",
         "path": "./publish",
         "branch": "gh-pages",
-        "url": "https://github.com/${package.author.name}/${package.name}.git",
+        "host": "github.com",
         "user": {
           "name": "${package.author.name}",
           "email": "${package.author.email}"

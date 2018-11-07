@@ -17,7 +17,6 @@ module.exports = publicize;
 // import Os from 'os';
 // const tmpdir = Os.tmpdir();
 
-
 /**
  * Generates the JSDoc style results using any number of [template providers](https://github.com/jsdoc3/jsdoc#templates-and-tools). See [`README`](index.html)
  * for more details.
@@ -104,14 +103,15 @@ module.exports = publicize;
  * @param {Object} [conf.opts.jspub.deploy.message] The `commit` message used when deploying the documentation
  * @param {Object} [conf.opts.jspub.deploy.branch] The branch that where documentation will be _pushed_ during deployment
  * @param {Object} [conf.opts.jspub.deploy.path] The path where the `branch` will be _cloned_ to and _pushed_ from during deployment
- * @param {String} [conf.opts.jspub.deploy.url] The URL that will be used when _cloning_/_pushing_ during deployment
+ * @param {String} [conf.opts.jspub.deploy.host] The host name that will be used when _cloning_/_pushing_ during deployment (e.g. `github.com`)
  * @param {Object} [conf.opts.jspub.deploy.user] The user options that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.name] The `git` user name that will be used when deploying the documentation pages
  * @param {Object} [conf.opts.jspub.deploy.user.email] The `git` email that will be used when deploying the documentation pages
  * @param {Boolean} [deploy=false] `true` to deploy via `git` after generating documentation
+ * @param {Integer} [timeout=30000] The number of milliseconds before timing out for each underlying execution
  * @returns {Boolean} `true` when completed successfully
  */
-async function publicize(conf, deploy = false) {
+async function publicize(conf, deploy = false, timeout = 30000) {
 // TODO : ESM use... export async function publicize(conf, deploy) {
   const modulePath = Path.normalize(process.env.INIT_CWD || process.env.PWD); // npm run dir or proccess dir
   const pkgPath = Path.resolve(modulePath, 'package.json'), pkg = JSON.parse((await Fs.readFile(pkgPath)).toString());
@@ -145,7 +145,7 @@ async function publicize(conf, deploy = false) {
       JSPUB_PUBLISH_DATE: meta.publish.date
     },
     cwd: modulePath,
-    timeout: 30000
+    timeout
   };
   if (process.env.Path) execOpts.env.Path = process.env.Path;
   if (process.env.PATH) execOpts.env.PATH = process.env.PATH;
@@ -160,7 +160,7 @@ async function publicize(conf, deploy = false) {
         const conf = moduleConf;
         if (code !== 0) return reject(new Error(`jsdoc exited with code: ${code}${signal ? ` signal: ${signal}` : ''}`));
         if (deploy && !conf.opts.jspub.deploy) return reject(new Error(`Deployment flagged for execution, but no "opts.deploy" settings are defined`));
-        if (deploy) deployer(resolve, reject, conf, pkg, modulePath, jspubPath);
+        if (deploy) deployer(resolve, reject, conf, pkg, modulePath, jspubPath, timeout);
         else resolve(true);
       });
     } catch (err) {
@@ -388,17 +388,18 @@ async function getLayout(dirs, fileName, base) {
  * @param {Object} pkg The `package.json`
  * @param {String} modulePath The JSDoc configuration path
  * @param {String} jspubPath The path to the `jspub` module
+ * @param {Integer} timeout The execution timeout in milliseconds
  */
-function deployer(resolve, reject, conf, pkg, modulePath, jspubPath) {
+function deployer(resolve, reject, conf, pkg, modulePath, jspubPath, timeout) {
   try {
     console.log(`Deploying v${pkg.version} pages...`);
     const deployCliPath = Path.resolve(jspubPath, 'deploy/.git_pages');
     const ver = sanitizeArg(`v${pkg.version}`), docPth = sanitizeArg(Path.resolve(modulePath, conf.opts.destination));
     const pubPth = sanitizeArg(Path.resolve(modulePath, conf.opts.jspub.deploy.path)), brch = sanitizeArg(conf.opts.jspub.deploy.branch);
-    const clnUrl = sanitizeArg(conf.opts.jspub.deploy.url), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
-    const email = sanitizeArg(conf.opts.jspub.deploy.user.email), msg = sanitizeArg(conf.opts.jspub.deploy.message);
+    const host = sanitizeArg(conf.opts.jspub.deploy.host), usr = sanitizeArg(conf.opts.jspub.deploy.user.name);
+    const email = sanitizeArg(conf.opts.jspub.deploy.user.email), msg = sanitizeArg(conf.opts.jspub.deploy.message, true);
     if (!brch) throw new Error('opts.jspub.deploy.branch is required');
-    if (!clnUrl) throw new Error('opts.jspub.deploy.url is required and should point to a remote repository');
+    if (!host) throw new Error('opts.jspub.deploy.host is required');
     if (!usr) throw new Error('opts.jspub.deploy.user.name is required. Check that your package.json has an author.name'
       + ' or set a user name in your jsdoc configuration');
     if (!email) throw new Error('opts.jspub.deploy.user.email is required. Check that your package.json has an author.email'
@@ -409,12 +410,14 @@ function deployer(resolve, reject, conf, pkg, modulePath, jspubPath) {
     process.env.PUB_DOC_PATH = docPth;
     process.env.PUB_PATH = pubPth;
     process.env.PUB_BRANCH = brch;
-    process.env.PUB_REPO_URL = clnUrl;
+    process.env.PUB_REPO_HOST = host;
+    process.env.PUB_REPO_USER = pkg.author.name;
+    process.env.PUB_REPO_NAME = pkg.name;
     process.env.PUB_USER = usr;
     process.env.PUB_EMAIL = email;
     process.env.PUB_MESSAGE = msg;
 
-    const execOpts = { env: process.env, cwd: modulePath, timeout: 30000 };
+    const execOpts = { env: process.env, cwd: modulePath, timeout };
     const deployExec = `bash ${deployCliPath}`;
     const deploy = exec(deployExec, execOpts);
     deploy.stdout.pipe(process.stdout);
@@ -529,9 +532,12 @@ function sanatizePath(pkg, path) {
  * @private
  * @ignore
  * @param {String} arg The argument to sanitize
+ * @param {Boolean} [spaces] `true` allow spaces
+ * @requires {String} The sanitized argument
  */
-function sanitizeArg(arg) {
-  return arg.replace(/[^\\]'|"/g, function (mtch) {
+function sanitizeArg(arg, spaces) {
+  const sarg = arg.replace(/[^\\]'|"/g, function (mtch) {
     return mtch.slice(0, 1) + '\\\'';
-  }).replace(/\s/g, '');
+  });
+  return spaces ? sarg : sarg.replace(/\s/g, '');
 }
