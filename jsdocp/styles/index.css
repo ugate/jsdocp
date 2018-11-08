@@ -1,0 +1,84 @@
+body {
+  margin-top: 64px !important;
+}
+sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+  /* allows sub and h# with id to anchor with the offset of the body margin */
+  padding-top: 75px !important;
+  margin-top: -75px !important;
+}
+#jsdocpNav {
+  width: 100%;
+  height: 56px;
+  padding: 8px;
+  font-size: 32px;
+  font-family: Arial;
+  background-color: #E0E0E0;
+  box-shadow: 2px 4px 10px rgba(0,0,0,.2);
+  position: fixed;
+  overflow: hidden;
+  z-index: 999999;
+  top: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+@media only screen and (max-width: 680px) {
+  body {
+    margin-top: inherit !important;
+  }
+  sub[id] {
+    padding-top: inherit !important;
+    margin-top: inherit !important;
+  }
+  #jsdocpNav {
+    top: inherit;
+    bottom: 0;
+    transition: bottom 0.3s;
+  }
+  #jsdocpPkgName {
+    display: none;
+  }
+}
+#jsdocpVersions {
+  height: 100%;
+  display: inline-flex;
+  align-self: center;
+  font-size: 24px;
+  margin-left: auto;
+  color: #000000;
+  background-color: #ffffff;
+  direction: rtl;
+}
+#jsdocpNav > a, #jsdocpNav > span {
+  text-decoration: none;
+  color: inherit;
+  margin: 0px 12px;
+  padding: 0;
+  align-self: center;
+  overflow: hidden;
+}
+#jsdocpNav > span {
+  margin: 0px 6px 0px 0px;
+  height: 32px;
+  align-self: stretch;
+}
+a.jsdocp-logo b, a.jsdocp-logo svg, a.jsdocp-logo img {
+  width: 1em;
+  height: 1em;
+  padding: 0;
+  vertical-align: text-bottom;
+}
+a.jsdocp-icon, a.jsdocp-icon img, a.jsdocp-icon svg {
+  height: 24px;
+  width: 24px;
+  display: inline-flex;
+}
+.jsdocp-icon-svg-el {
+  fill: #000000;
+}
+.jsdocp-remove-me {
+  display: none !important;
+}

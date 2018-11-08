@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Getting Started - Documentation</title>
+    <title>jsdocp - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -226,127 +226,146 @@
 
 <div id="main">
     
-    <h1 class="page-title">Getting Started</h1>
+    <h1 class="page-title">jsdocp</h1>
     
 
-    <section>
+    
+
+
+
+
+<section>
 
 <header>
+    
+        
+            
+        
     
 </header>
 
 <article>
-    <p>The configuration options documented here only contain add-on options for <code>jsdoc</code>. See the <a href="http://usejsdoc.org/about-configuring-jsdoc.html"><code>jsdoc</code> configuration</a> for the full list of configuration options. All of the <code>jsdoc</code> configuration works as described in the <a href="http://usejsdoc.org/about-configuring-jsdoc.html">JSDoc configuration</a> as it does in <code>jsdocp</code>. Only additions are made to the configuration <code>opts.jsdocp</code> (See <a href="tutorial-2-conf.html">Configuration</a> for more details).</p>
-<h3>How It Works <sub id="how"></sub></h3><p>At the core of <code>jsdocp</code> is a wrapper around <code>jsdoc</code> that provides all of the features listed in the <a href="index.html">README</a>. </p>
-<ol>
-<li>The supplied configuration is sanitized and merged into a <em>master</em> configuration file (see <a href="tutorial-2-conf.html">Configuration</a>)</li>
-<li>Previous <code>npm</code> published versions are captured via <code>npm view versions</code> and stored in the <code>opts.destination</code> directory as <code>versions.json</code> (see <a href="tutorial-4-navs.html#versions">Documentation Versions</a>)</li>
-<li>Parameter substitutions are resolved within the <em>master</em> configuration's <code>opts</code> (see <a href="tutorial-3-subs.html">Parameter Substitutions</a>)</li>
-<li>The internal <code>jsdocp</code> templates are injected into the <code>layout</code> (the rest of the templates are supplied by the template of your choosing):<ul>
-<li><code>head</code>: Placed in the <code>head</code> of every page that supplies the user-defined <code>links</code>/CSS sources, <code>meta</code>, etc.</li>
-<li><code>nav</code>: Placed as the first entry to every page's <code>body</code> that contains all of the navigation links to the <code>npm</code> module, <code>CHANGELOG</code>, source code, document version selection, etc.</li>
-<li><code>foot</code>: Placed as the last entry to every page's <code>body</code> that contains user-defined <code>script</code>s</li>
-</ul>
-</li>
-<li>The <code>jsdoc</code> command is ran using the internally processed <em>master</em> configuration file as input</li>
-<li>The <code>CHANGELOG.md</code> and parsed <code>CHANGELOG.html</code> are generated in the <code>opts.destinaiton</code> directory (generated/filtered via <code>git log</code> using the supplied <a href="tutorial-2-conf.html">rich set of configuration options</a>)</li>
-<li><code>jsdocp</code> markdown extensions are parsed on the tutorials (see the <a href="tutorial-3-subs.html">Parameter Substitutions</a> section for more details)</li>
-<li>Publishing control is transferred to the template designated by <code>opts.template</code></li>
-</ol>
-<h3>Setup <sub id="setup"><sup><em>(windows users can use <a href="https://gitforwindows.org"><code>git</code> for windows</a>)</em></sup></sub></h3><ol>
-<li><code>npm install -D &lt;template&gt;</code><ul>
-<li>Replace <code>&lt;template&gt;</code> with the desired template to use (see <a href="https://github.com/jsdoc3/jsdoc#templates"><code>jsdoc</code> templates</a>)</li>
-</ul>
-</li>
-<li><code>npm install -D jsdocp</code><ul>
-<li>Install jsdocp as a <code>dev</code> dependency</li>
-</ul>
-</li>
-<li><code>mkdir -p jsdocp/static jsdocp/tutorial &amp;&amp; touch jsdocp/jsdoc.conf</code><ul>
-<li>Create the directories that will be used by <code>jsdocp</code></li>
-<li>Add the desired <code>static</code>/<code>tutorial</code> files (e.g. CSS, scripts, images, tutorials, etc.)</li>
-</ul>
-</li>
-<li>Add the desired <a href="tutorial-2-conf.html"><code>jsdoc</code>/<code>jsdocp</code> configuration options</a> to the <code>jsdocp/jsdoc.conf</code> file. The <a href="tutorial-2-conf.html#jsdocp-example">example <code>jsdocp</code> configuration</a> can be used as a guide. <br/>At <strong>minumum</strong>, ensure the follwing are set:<ul>
-<li><code>source</code> - All the source files that should be included in the docs</li>
-<li><code>opts.template</code> - Set to a path to the actual <a href="https://github.com/jsdoc3/jsdoc#templates"><code>jsdoc</code> template</a> being used. The template should be a module acceessible on <a href="https://www.npmjs.com/">npm</a> and the path should be relative to the module that <code>jsdoc</code> is generating documentation for (e.g. <code>./node_modules/myCoolTemplateModuleName</code>).</li>
-</ul>
-</li>
-<li>Add the following to <code>package.json</code>:<ul>
-<li><pre class="prettyprint source lang-json"><code>&quot;scripts&quot;: {
- &quot;jsdocp&quot;: &quot;jsdocp ./jsdocp/jsdoc.json&quot;,
- &quot;jsdocp-deploy&quot;: &quot;jsdocp -D ./jsdocp/jsdoc.json&quot;
-}</code></pre></li>
-</ul>
-</li>
-<li><code>npm run jsdocp</code> will generate the docs in the module's <code>./docs</code> (unless overridden in the <a href="tutorial-2-conf.html">Configuration</a>)</li>
-</ol>
-<h3>Deployment <sub id="deploy"><sup><em>(assumes <a href="#setup">setup</a> has been completed)</em></sup></sub></h3><p>There are a few different ways that <code>deployment</code> can be performed based upon <a href="tutorial-2-conf.html"><code>opts.jsdocp.deploy</code></a> options. Deployment can occur locally or using a different <code>git</code> hosting service and running <code>npm run jsdocp-deploy</code>, but it will require some minor changes to <code>conf.opts.jsdocp.deploy</code> in the <code>jsdoc.conf</code> file outlined in the <a href="#setup">setup</a>. However, we'll cover the most common use case where <a href="https://pages.github.com/">GitHub Pages</a> and <a href="https://travis-ci.com">travis-ci</a> are being used.</p>
-<ol>
-<li>If the <code>gh-pages</code> branch isn't already created/selected for <a href="https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/">GitHub Pages</a> on <code>https://github.com/&lt;your_username&gt;/&lt;your_repo_name&gt;/settings</code>, the following script can be used to create the <code>gh-pages</code> branch.<ul>
-<li><pre class="prettyprint source lang-bash"><code>git checkout --orphan gh-pages
-git rm -rf .
-touch README.md
-git add README.md
-git commit -m 'Initial gh-pages commit'
-git push origin gh-pages</code></pre></li>
-</ul>
-</li>
-<li><a href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/">Create a personal access token on GitHub</a>.</li>
-<li>If you haven't already done so, go to <a href="https://travis-ci.com/">travis-ci.com</a>, setup an account and follow the instructions to enable/activate your repo. Copy the personal access token from GitHub in the previous step and paste it in a new <strong>Environment Variable</strong> called <code>GITHUB_TOKEN</code> on <code>https://travis-ci.com/&lt;your_username&gt;/&lt;your_repo_name&gt;/settings</code>.</li>
-<li>While your at it, you may also want to do the same thing for <code>npm</code> by creating an <strong>Access Token</strong> on <code>https://www.npmjs.com/settings/&lt;your_username&gt;/tokens</code> and copy/paste it in a new <strong>Environment Variable</strong> called <code>NPM_TOKEN</code> on <code>https://travis-ci.com/&lt;your_username&gt;/&lt;your_repo_name&gt;/settings</code> (we'll use this in our <code>.travis.yml</code> to deploy to <code>npm</code>). </li>
-<li>Create a  <code>.travis.yml</code> in the <em>root</em> of your project using the <a href="#travis"><code>.travis.yml</code> below</a> as a guide.</li>
-<li><code>npm version patch -m &quot;Deploying %s&quot; &amp;&amp; git push origin &lt;tag_name&gt;</code> - replacing <code>patch</code> with <code>major</code>, <code>minor</code>, etc. as needed (see <a href="https://docs.npmjs.com/cli/version">npm-version</a>)</li>
-</ol>
-<p>Now everytime that a new version is <em>tagged</em>/<em>pushed</em> a new version of the <code>npm</code> package will be updated on <code>https://www.npmjs.com/package/&lt;your_package_name&gt;</code> and the docs will get updated on <code>https://&lt;your_username&gt;.github.io/&lt;your_repo_name&gt;</code> automatically!
-<sub id="travis"></sub></p>
-<pre class="prettyprint source lang-yml"><code># .travis.yml
-# When a tagged commit is pushed the documentation pages and npm module are published/deployed:
-# npm version patch -m &quot;%s Release&quot;
-language: node_js
-node_js:
-  - &quot;10&quot;
-branches:
-  only:
-    - master
-    - &quot;/v*/&quot;
-script:
-# - printenv
-  - &quot;npm test&quot;
-# Using before_deploy will run before every deploy resulting in running multiple times when there is
-# one or more deploy providers and will run regardless of the &quot;on&quot; directive used on the desired
-# provider. Instead, a single script provider handles any pre-deployment executions.
-#before_deploy:
-#  - &quot;npm run jsdocp&quot;
-deploy:
-# Using the pages provider will wipe out previously deployed pages for prior versions. This makes it
-# difficult to navigate version history and link to via documentation.
-#  - provider: pages
-#    skip-cleanup: true
-#    github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-#    keep-history: true
-#    target-branch: gh-pages
-#    local-dir: docs
-#    on:
-#      tags: true # only on tagging commit
-#      all_branches: true
-  - provider: script
-    skip_cleanup: true
-    script: npm run jsdocp-deploy
-    on:
-      tags: true # only on tagging commit
-      branch:
-        - /v(\d+\.)?(\d+\.)?(\*|\d+)$/
-  - provider: npm
-    email: &quot;ugate.public@gmail.com&quot;
-    api_key: $NPM_TOKEN  # Set in the settings page of your repository, as a secure variable
-    on:
-      tags: true # only on tagging commit
-      branch:
-        - /v(\d+\.)?(\d+\.)?(\*|\d+)$/</code></pre><h4><a href="tutorial-2-conf.html">Configuration &gt;&gt;</a></h4>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Command line <code>cli</code> for <code>jsdocp</code>.
+<br/><strong>Command Line Options:</strong></p>
+<ul>
+<li><code>-D</code> (or <code>--deploy</code>): Attempts to deploy the generated <code>jsdoc</code> to the configured deployment branch</li>
+</ul></div>
+        
+
+        
+            
+<div class="section-method">
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="cli.js.html">cli.js</a>, <a href="cli.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-examples">
+<h5>Examples</h5>
+
+    <pre class="prettyprint"><code>jsdocp ./jsdocp/jsdoc.conf</code></pre>
+
+    <pre class="prettyprint"><code>jsdocp -D ./jsdocp/jsdoc.conf</code></pre>
+
+    <pre class="prettyprint"><code>jsdocp --deploy ./jsdocp/jsdoc.conf</code></pre>
+
+</div>
+
+</div>
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
 </article>
 
 </section>
+
+
+
 
 </div>
 
