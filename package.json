@@ -1,6 +1,6 @@
 {
   "name": "jsdocp",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Simplified JSDoc publishing using git",
   "main": "index.js",
   "scripts": {
