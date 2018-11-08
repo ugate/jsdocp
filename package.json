@@ -1,16 +1,16 @@
 {
-  "name": "jspub",
+  "name": "jsdocp",
   "version": "0.0.9",
   "description": "Simplified JSDoc publishing using git",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Tests ran during deployment...\"",
-    "jspub": "jspub ./jspub/jsdoc.json",
-    "jspub-deploy": "npm link && jspub -D ./jspub/jsdoc.json"
+    "jsdocp": "jsdocp ./jsdocp/jsdoc.json",
+    "jsdocp-deploy": "npm link && jsdocp -D ./jsdocp/jsdoc.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ugate/jspub.git"
+    "url": "git+https://github.com/ugate/jsdocp.git"
   },
   "keywords": [
     "jsdoc",
@@ -24,13 +24,14 @@
   "author": "ugate",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ugate/jspub/issues"
+    "url": "https://github.com/ugate/jsdocp/issues"
   },
-  "homepage": "https://github.com/ugate/jspub#readme",
+  "homepage": "https://github.com/ugate/jsdocp#readme",
   "dependencies": {
     "jsdoc": "^3.5.5"
   },
   "devDependencies": {
+    "ink-docstrap": "^1.3.2",
     "minami": "^1.2.3"
   },
   "bin": "./cli.js",

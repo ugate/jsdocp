@@ -1,5 +1,5 @@
   <!-- https://realfavicongenerator.net/ -->
-  <?js for (let lnk of env.conf.opts.jspub.pages.links) { ?>
+  <?js for (let lnk of env.conf.opts.jsdocp.links) { ?>
     <link
       <?js for (let lnkAttr in lnk) { ?>
       <?js= lnkAttr ?>="<?js= lnk[lnkAttr] ?>" 
@@ -7,7 +7,7 @@
     >
   <?js } ?>
 
-  <?js for (let meta of env.conf.opts.jspub.pages.metas) { ?>
+  <?js for (let meta of env.conf.opts.jsdocp.metas) { ?>
     <meta
       <?js for (let metaAttr in meta) { ?>
       <?js= metaAttr ?>="<?js= meta[metaAttr] ?>" 
@@ -15,4 +15,4 @@
     >
   <?js } ?>
 
-  <link type="text/css" rel="stylesheet" href="jspub/styles/index.css">
+  <link type="text/css" rel="stylesheet" href="jsdocp/styles/index.css">

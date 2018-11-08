@@ -15,7 +15,7 @@ script:
 # one or more deploy providers and will run regardless of the "on" directive used on the desired
 # provider. Instead, a single script provider handles any pre-deployment executions.
 #before_deploy:
-#  - "npm run jspub"
+#  - "npm run jsdocp"
 deploy:
 # Using the pages provider will wipe out previously deployed pages for prior versions. This makes it
 # difficult to navigate version history and link to via documentation.
@@ -30,7 +30,7 @@ deploy:
 #      all_branches: true
   - provider: script
     skip_cleanup: true
-    script: npm run jspub-deploy
+    script: npm run jsdocp-deploy
     on:
       tags: true # only on tagging commit
       branch:

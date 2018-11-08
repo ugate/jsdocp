@@ -1,4 +1,4 @@
-<?js for (let scrpt of env.conf.opts.jspub.pages.scripts) { ?>
+<?js for (let scrpt of env.conf.opts.jsdocp.scripts) { ?>
   <script
     <?js for (let scrptAttr in scrpt) { ?>
     <?js= scrptAttr ?>="<?js= scrpt[scrptAttr] ?>" 
@@ -6,4 +6,4 @@
   ></script>
 <?js } ?>
 
-<script src="jspub/scripts/index.js"></script>
+<script src="jsdocp/scripts/index.js"></script>

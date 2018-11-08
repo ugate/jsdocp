@@ -14,8 +14,9 @@
   },
   "opts": {
     "destination": "./docs",
-    "template": "./jsdoc",
-    "jspub": {
+    "template": "./node_modules/jsdoc",
+    "jsdocp": {
+      "cleanDestination": true,
       "layoutCheckTemplateDirs": [
         "tmpl",
         "template/tmpl",
@@ -36,34 +37,31 @@
           "email": "${package.author.email}"
         }
       },
-      "pages": {
-        "cleanDestination": true,
-        "menu": {
-          "package": "",
-          "changelog": "",
-          "sourceCode": "",
-          "className": "",
-          "logo": {
-            "src": "",
-            "inlineSvgPath": "",
-            "anchorclassName": "",
-            "className": ""
-          },
-          "icons": {
-            "className": ""
-          }
+      "menu": {
+        "package": "",
+        "changelog": "",
+        "sourceCode": "",
+        "className": "",
+        "logo": {
+          "src": "",
+          "inlineSvgPath": "",
+          "anchorclassName": "",
+          "className": ""
         },
-        "links": [],
-        "meta": [],
-        "scripts": []
+        "icons": {
+          "className": ""
+        }
       },
+      "links": [],
+      "meta": [],
+      "scripts": [],
       "versions": {
         "from": "",
         "type": "minor"
       },
       "changelog": {
         "title": "CHANGELOG v${package.version}",
-        "header": "## [${package.version}](${publish.moduleURL}/tree/${package.version}) (${publish.date})\n[Full Changelog](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version})",
+        "header": "## [${package.version}](${publish.moduleURL}/tree/v${package.version}) (${publish.date})\n[Full Changelog](${publish.moduleURL}/compare/v${publish.lastVersion}...v${package.version})",
         "line": "* [%s](${publish.moduleURL}/commit/%H)",
         "sections": {
           "breaks": {

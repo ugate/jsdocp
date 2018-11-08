@@ -8,7 +8,7 @@ const Fs = require('fs');
 const Fsp = Fs.promises;
 const Path = require('path');
 
-const pkg = require(Path.join(process.env.JSPUB_MODULE_PATH, 'package.json'));
+const pkg = require(Path.join(process.env.JSDOCP_MODULE_PATH, 'package.json'));
 
 /**
  * Publishes a modules documentation along with the following:
@@ -20,7 +20,7 @@ const pkg = require(Path.join(process.env.JSPUB_MODULE_PATH, 'package.json'));
  * - Menu icon/link to the change log
  * @param {TAFFY} taffyData See <http://taffydb.com/>
  * @param {Object} opts The `jsdoc` options
- * @param {Object} opts.jspub The `jspub` options
+ * @param {Object} opts.jsdocp The `jsdocp` options
  * @param {Tutorial} tutorials The turtorials
  */
 exports.publish = function(taffyData, opts, tutorials) {
@@ -31,10 +31,10 @@ exports.publish = function(taffyData, opts, tutorials) {
     env.meta = { // accessibility in templates
       package: pkg,
       publish: {
-        lastVersionPublished: process.env.JSPUB_PUBLISH_LAST_VER_PUB,
-        lastVersion: process.env.JSPUB_PUBLISH_LAST_VER,
-        moduleURL: process.env.JSPUB_PUBLISH_MODULE_URL,
-        date: process.env.JSPUB_PUBLISH_DATE
+        lastVersionPublished: process.env.JSDOCP_PUBLISH_LAST_VER_PUB,
+        lastVersion: process.env.JSDOCP_PUBLISH_LAST_VER,
+        moduleURL: process.env.JSDOCP_PUBLISH_MODULE_URL,
+        date: process.env.JSDOCP_PUBLISH_DATE
       }
     };
     try {
@@ -42,10 +42,10 @@ exports.publish = function(taffyData, opts, tutorials) {
       const chglogPath = Path.join(opts.destination, 'CHANGELOG.md'), verPath = Path.join(opts.destination, 'versions.json');
       const chglogHtmlPath = Path.join(opts.destination, 'CHANGELOG.html');
       logger.info(`Writting ${verPath}`);
-      const wrVerProm = Fsp.writeFile(verPath, process.env.JSPUB_PUBLISH_VERSIONS);
+      const wrVerProm = Fsp.writeFile(verPath, process.env.JSDOCP_PUBLISH_VERSIONS);
       const span = env.meta.publish.lastVersionPublished ? `v${env.meta.publish.lastVersionPublished}..HEAD ` : '';
-      const line = opts.jspub.changelog && opts.jspub.changelog.line ? opts.jspub.changelog.line.replace(/"/g, '\\"') : '* %s';
-      const header = opts.jspub.changelog && opts.jspub.changelog.header ? opts.jspub.changelog.header : `## ${env.meta.package.version}`;
+      const line = opts.jsdocp.changelog && opts.jsdocp.changelog.line ? opts.jsdocp.changelog.line.replace(/"/g, '\\"') : '* %s';
+      const header = opts.jsdocp.changelog && opts.jsdocp.changelog.header ? opts.jsdocp.changelog.header : `## ${env.meta.package.version}`;
       const gitlog = (grepo, merges) => {
         const mrgs = merges ? '--merges' : '--no-merges';
         const grep = grepo && grepo.regexp ? `--grep="${grepo.regexp.replace(/"/g, '\\"')}" ` : '';
@@ -58,7 +58,7 @@ exports.publish = function(taffyData, opts, tutorials) {
           });
         });
       };
-      var chglog = '', cltxt = '', clps = [], sctns = opts.jspub.changelog && opts.jspub.changelog.sections;
+      var chglog = '', cltxt = '', clps = [], sctns = opts.jsdocp.changelog && opts.jsdocp.changelog.sections;
       if (sctns) {
         if (sctns.breaks && sctns.breaks.grep) clps.push({ promise: gitlog(sctns.breaks.grep), clopts: sctns.breaks });
         if (sctns.features && sctns.features.grep) clps.push({ promise: gitlog(sctns.features.grep), clopts: sctns.features });
@@ -75,11 +75,11 @@ exports.publish = function(taffyData, opts, tutorials) {
         }
       }
       var logoPath;
-      if (opts.jspub.pages.menu.logo.inlineSvgPath) {
-        if (!/.svg$/i.test(opts.jspub.pages.menu.logo.inlineSvgPath)) {
-          throw new Error(`"conf.opts.jspub.pages.menu.logo.inlineSvgPath" must be in SVG format for: ${conf.opts.jspub.pages.menu.logo.inlineSvgPath}`);
+      if (opts.jsdocp.menu.logo.inlineSvgPath) {
+        if (!/.svg$/i.test(opts.jsdocp.menu.logo.inlineSvgPath)) {
+          throw new Error(`"conf.opts.jsdocp.menu.logo.inlineSvgPath" must be in SVG format for: ${conf.opts.jsdocp.menu.logo.inlineSvgPath}`);
         }
-        logoPath = Path.resolve(process.env.JSPUB_MODULE_PATH, opts.jspub.pages.menu.logo.inlineSvgPath);
+        logoPath = Path.resolve(process.env.JSDOCP_MODULE_PATH, opts.jsdocp.menu.logo.inlineSvgPath);
         env.meta.logo = Fsp.readFile(logoPath);
       }
       try {
@@ -112,28 +112,29 @@ exports.publish = function(taffyData, opts, tutorials) {
       try {
         env.meta.logo = env.meta.logo instanceof Promise ? (await env.meta.logo).toString(): env.meta.logo;
       } catch (err) {
-        err.message += ` (Unable to extract logo content from ${logoPath}.${opts.jspub.pages.menu.logo.src ? ` Falling back on ${opts.jspub.pages.menu.logo.src}` : ''})`;
+        err.message += ` (Unable to extract logo content from ${logoPath}.${opts.jsdocp.menu.logo.src ? ` Falling back on ${opts.jsdocp.menu.logo.src}` : ''})`;
         logger.warn(err.message);
         logger.warn(err);
       }
 
       // use the actual template
-      opts.template = opts.jspub.templateProxy;
+      opts.template = opts.jsdocp.templateProxy;
 
       logger.debug(`Running markdown extensions on tutorials...`);
       await tutorialExts(tutorials);
       
       // transfer control over to template engine
-      const Engine = require(`${Path.parse(opts.template).name}/publish`);
+      //const moduleName =opts.template.match(/.*node_modules(?:\\|\/)([^\/\\]*)/);
+      const Engine = require(`${opts.template}/publish.js`);
       resolve(Engine.publish.apply(thiz, args)); // no need to customize how docs are parsed
     } catch(err) {
       reject(err);
     } finally {
       try {
-        await rmrf(process.env.JSPUB_TMPDIR);
-        logger.info(`Removed ${process.env.JSPUB_TMPDIR}`);
+        await rmrf(process.env.JSDOCP_TMPDIR);
+        logger.info(`Removed ${process.env.JSDOCP_TMPDIR}`);
       } catch (err) {
-        logger.warn(`Unable to cleanup ${process.env.JSPUB_TMPDIR}`);
+        logger.warn(`Unable to cleanup ${process.env.JSDOCP_TMPDIR}`);
         logger.warn(err);
       }
     }
@@ -146,7 +147,7 @@ exports.publish = function(taffyData, opts, tutorials) {
  * @param {Object} opts The `jsdoc` options
  */
 async function destination(opts) {
-  var chkdest = !opts.jspub.pages || !opts.jspub.pages.cleanDestination, mkdest = true;
+  var chkdest = !opts.jsdocp.pages || !opts.jsdocp.cleanDestination, mkdest = true;
   try {
     if (!chkdest) {
       logger.info(`Cleaning ${opts.destination}`);
@@ -194,11 +195,11 @@ async function tutorialExts(tuts) {
  */
 async function markdownExt(md) {
   if (!md.content) return;
-  // replace all jspub inline code blocks with the actual code blocks unless wrapped in a "pre"
-  const rx = /^\s*(`{3,})jspub\s*(\S+)?\s*[\r\n]([\s\S]*?)[\r\n]?\s*(`{3,})\s*(?:\n+|$)/igm, prms = [];
+  // replace all jsdocp inline code blocks with the actual code blocks unless wrapped in a "pre"
+  const rx = /^\s*(`{3,})jsdocp\s*(\S+)?\s*[\r\n]([\s\S]*?)[\r\n]?\s*(`{3,})\s*(?:\n+|$)/igm, prms = [];
   md.content.replace(rx, (mtch, bktckStart, pth, cnt, bktckEnd) => {
     if (bktckStart.length > 3 && bktckEnd.length > 3) return mtch;
-    prms.push(Fsp.readFile(Path.resolve(process.env.JSPUB_MODULE_PATH, pth)));
+    prms.push(Fsp.readFile(Path.resolve(process.env.JSDOCP_MODULE_PATH, pth)));
     return mtch;
   });
   if (!prms.length) return;

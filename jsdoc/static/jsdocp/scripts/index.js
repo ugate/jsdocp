@@ -1,15 +1,15 @@
-var jspub = new JSPUB();
+var jsdocp = new JSDocp();
 
-function JSPUB() {
+function JSDocp() {
   var jp = this, py = window.pageYOffset, mobile = window.matchMedia('(max-width: 680px)');
-  var chglogId = 'jspubChangelog', chglogContentId = 'jspubChangelogContent';
-  var logoSrcSel = '.jspub-logo-svg', logoSrcAttr = 'jspub-logo-src';
+  var chglogId = 'jsdocpChangelog', chglogContentId = 'jsdocpChangelogContent';
+  var logoSrcSel = '.jsdocp-logo-svg', logoSrcAttr = 'jsdocp-logo-src';
 
   // handles mobile nav menu showing/hiding based upon scrolling direction
   window.addEventListener('scroll', function scroller() {
     var y = window.pageYOffset;
     if (mobile.matches) {
-      var nav = document.getElementById('jspubNav');
+      var nav = document.getElementById('jsdocpNav');
       if (nav) nav.style.bottom = py > y ? '0' : '-' + getComputedStyle(nav).height;
     }
     py = y;
@@ -67,11 +67,11 @@ function JSPUB() {
 }
 
 /**
- * Loads the `versions.json` into the `#jspubVersions` select element from it's `data-jspub-json-url` attribute URL. Uses the `data-jspub-from`,
- * `data-jspub-type` to filter what versions are shown.
+ * Loads the `versions.json` into the `#jsdocpVersions` select element from it's `data-jsdocp-json-url` attribute URL. Uses the `data-jsdocp-from`,
+ * `data-jsdocp-type` to filter what versions are shown.
  */
-JSPUB.prototype.loadVersions = function loadVersions() {
-  var jp = this, sel = document.querySelector('#jspubVersions');
+JSDocp.prototype.loadVersions = function loadVersions() {
+  var jp = this, sel = document.querySelector('#jsdocpVersions');
   if (!sel) return;
   var versioned = function(ver) {
     var parts = String(ver).split('.');
@@ -82,22 +82,22 @@ JSPUB.prototype.loadVersions = function loadVersions() {
     };
   };
   sel.addEventListener('change', function versionChange(event) {
-    var trg = event.currentTarget || event.target, base = (trg && trg.dataset.jspubVersionBase) || '';
+    var trg = event.currentTarget || event.target, base = (trg && trg.dataset.jsdocpVersionBase) || '';
     if (trg && trg.value) window.location = (base ? base + '/' : '') + trg.value;
   });
-  jp.fetch(sel.dataset.jspubJsonUrl, 'application/json', function versionsLoaded(error, req) {
+  jp.fetch(sel.dataset.jsdocpJsonUrl, 'application/json', function versionsLoaded(error, req) {
     if (error) return console.warn(error);
     var vrs = JSON.parse(req.responseText);
-    var i = vrs.length, last, curr, from = sel.dataset.jspubFrom ? versioned(sel.dataset.jspubFrom) : null;
+    var i = vrs.length, last, curr, from = sel.dataset.jsdocpFrom ? versioned(sel.dataset.jsdocpFrom) : null;
     while (i--) { // add in reverse order 
-      if (from || sel.dataset.jspubType) {
-        if (!last) last = versioned(sel.dataset.jspubVersion);
+      if (from || sel.dataset.jsdocpType) {
+        if (!last) last = versioned(sel.dataset.jsdocpVersion);
         curr = versioned(vrs[i]);
         if (from && curr.major < from.major) break;
         if (from && curr.major === from.major && curr.minor < from.minor) break;
         if (from && curr.major === from.major && curr.minor === from.minor && curr.patch < from.patch) break;
-        if (sel.dataset.jspubType === 'major' && curr.major === last.major) continue;
-        if (sel.dataset.jspubType === 'minor' && curr.minor === last.minor) continue;
+        if (sel.dataset.jsdocpType === 'major' && curr.major === last.major) continue;
+        if (sel.dataset.jsdocpType === 'minor' && curr.minor === last.minor) continue;
         last = curr;
       }
       opt = document.createElement('option');
@@ -114,7 +114,7 @@ JSPUB.prototype.loadVersions = function loadVersions() {
  * @param {(NodeList | Element[] | Element)} els The element(s) to replace in the DOM with retrieved svg content
  * @param {String} [urlAttr='src'] The attribute that will contain the URL to retrieve the svg content from 
  */
-JSPUB.prototype.imgSvgToInline = function imgSvgToInline(els, urlAttr) {
+JSDocp.prototype.imgSvgToInline = function imgSvgToInline(els, urlAttr) {
   var jp = this;
   els = els instanceof NodeList || Array.isArray(els) ? els : (els && [els]) || [];
   urlAttr = urlAttr || 'src';
@@ -145,7 +145,7 @@ JSPUB.prototype.imgSvgToInline = function imgSvgToInline(els, urlAttr) {
  * @param {Function} [cb] The callback `function(error, request, arg)`
  * @param {*} [arg] An argument to pass to the callback as the last argument
  */
-JSPUB.prototype.fetch = function fetch(url, mime, cb, arg) {
+JSDocp.prototype.fetch = function fetch(url, mime, cb, arg) {
   var req = new XMLHttpRequest();
   if (mime) req.overrideMimeType(mime);
   req.open('GET', url, true);
