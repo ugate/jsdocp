@@ -71,7 +71,7 @@ function JSDocp() {
  * `data-jsdocp-type` to filter what versions are shown.
  */
 JSDocp.prototype.loadVersions = function loadVersions() {
-  var jp = this, sel = document.querySelector('#jsdocpVersions');
+  var jp = this, sel = document.querySelector('#jsdocpVersions > select');
   if (!sel) return;
   var versioned = function(ver) {
     var parts = String(ver).split('.');

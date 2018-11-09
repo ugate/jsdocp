@@ -24,7 +24,7 @@
     "theme": "readable"
   },
   "opts": {
-    "template": "./node_modules/minami",
+    "template": "./node_modules/ink-docstrap/template",
     "tutorials": "./jsdocp/tutorial",
     "encoding": "utf8",
     "private": false,

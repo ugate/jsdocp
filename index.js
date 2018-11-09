@@ -65,7 +65,6 @@ module.exports = publicize;
  * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.ignoreCase] `true` for case-insensitive `git log -i` for merges
  * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for merges
  * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
- * @param {Object} [conf.opts.jsdocp.pages] The options for the generated pages
  * @param {Boolean} [conf.opts.jsdocp.cleanDestination] `true` to remove the `jsdoc` assigned `conf.opts.jsdocp.destination` prior to publishing
  * @param {Object} [conf.opts.jsdocp.menu] The options for the generated pages naviagation menu
  * @param {String} [conf.opts.jsdocp.menu.className] The CSS class applied to the main menu
@@ -83,6 +82,8 @@ module.exports = publicize;
  * version (omit to use the default icon or set to `none` to hide the icon)
  * @param {String} [conf.opts.jsdocp.menu.sourceCode] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
  * default icon or set to `none` to hide the icon)
+ * @param {String} [conf.opts.jsdocp.menu.versions] The `src` used on the `img` in the navigation menu that links to the documentation version selection
+ * (omit to use the default icon or set to `none` to hide the icon)
  * @param {Object} [conf.opts.jsdocp.menu.icons] The package, change log and source code icon options
  * @param {String} [conf.opts.jsdocp.menu.icons.className] The CSS class name applied to the package, change log and source code icon options
  * @param {Object[]} [conf.opts.jsdocp.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of

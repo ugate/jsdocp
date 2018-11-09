@@ -1,15 +1,15 @@
 <div id="jsdocpNav" class="<?js= env.conf.opts.jsdocp.menu.className ?>">
-  <a href="index.html" id="jsdocpLogo" title="Home" class="jsdocp-logo <?js= env.conf.opts.jsdocp.menu.logo.anchorclassName ?>">
+  <a href="index.html" id="jsdocpLogo" title="<?js= env.meta.package.name ?>" class="jsdocp-logo <?js= env.conf.opts.jsdocp.menu.logo.anchorclassName ?>">
     <b class="<?js= env.conf.opts.jsdocp.menu.logo.className ?>">
     <?js if (env.meta.logo) { ?>
       <?js= env.meta.logo ?>
     <?js } else if (env.conf.opts.jsdocp.menu.logo.src) { ?>
-      <img src="<?js= env.conf.opts.jsdocp.menu.logo.src ?>" /> 
+      <img src="<?js= env.conf.opts.jsdocp.menu.logo.src ?>" />
     <?js } ?>
     </b>
     <b id="jsdocpPkgName"><?js= env.meta.package.name ?></b>
+    <b>|</b>
   </a>
-  <span class="sep">|</span>
   <a href="https://www.npmjs.com/package/<?js= env.meta.package.name ?>" id="jsdocpModule" title="npm"
     class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.package === 'none' ? 'jsdocp-remove-me' : '' ?>">
     <?js if (env.conf.opts.jsdocp.menu.package && env.conf.opts.jsdocp.menu.package !== 'none') { ?>
@@ -27,17 +27,15 @@
     <?js if (env.conf.opts.jsdocp.menu.changelog && env.conf.opts.jsdocp.menu.changelog !== 'none') { ?>
       <img src="<?js= env.conf.opts.jsdocp.menu.changelog ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
     <?js } else { ?>
-    <svg version="1.1" viewBox="0 0 64 64" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
-      <g>
-        <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
-          d="M 31,5 C 16.133528,5.0000001 4.0000001,17.133528 4,32 4,46.866472 16.133528,59 31,59 45.866472,59 57.999998,46.866471 58,32 a 3.8178623,3.8178623 0 1 0 -7.634766,0 C 50.365233,42.740233 41.740232,51.365234 31,51.365234 20.259768,51.365234 11.634766,42.740232 11.634766,32 11.634766,21.259768 20.259768,12.634766 31,12.634766 A 3.8178623,3.8178623 0 1 0 31,5 Z" />
-        <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="evenodd"
-          d="M 54.15,25.309292 46.5,34 61.8,34 Z" />
-        <rect class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none"
-          transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)" y="-33.812084" x="39.697144" height="35" width="10" />
-        <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="evenodd"
-          d="m 25.408629,37.8317 7.530687,-0.954595 -6.576093,-6.576093 z" />
-      </g>
+    <svg version="1.1" viewBox="0 0 64 64" height="64" width="64" xmlns="http://www.w3.org/2000/svg">
+      <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
+        d="M 29.896194,0.97873581 C 13.435048,0.97873581 1.1072664e-7,15.139296 0,32.489368 0,49.839439 13.435048,64 29.896194,64 46.357339,64 59.792385,49.839438 59.792388,32.489368 a 4.2273908,4.4556761 0 1 0 -8.453721,0 c -10e-7,12.534501 -9.550175,22.600399 -21.442473,22.600399 -11.892299,0 -21.4424739,-10.065899 -21.4424739,-22.600399 0,-12.5345 9.5501749,-22.6003988 21.4424739,-22.6003988 a 4.2273908,4.4556761 0 1 0 0,-8.91023339 z" />
+      <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
+        d="m 55.529412,24.680907 -8.470588,10.142582 16.941176,0 z"/>
+      <rect class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
+        transform="matrix(0.6882785,0.72544656,-0.6882785,0.72544656,0,0)" y="-38.592953" x="38.592953" height="39.814472" width="11.375563" />
+      <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
+        d="m 23.705056,39.295314 8.338477,-1.11407 -7.281487,-7.674698 z"/>
     </svg>
     <?js } ?>
   </a>
@@ -58,7 +56,20 @@
     <?js } ?>
   </a>
   <!-- versions.json should point to the latest list -->
-  <select id="jsdocpVersions" data-jsdocp-version-base="/<?js= env.meta.package.name ?>"
+  <a id="jsdocpVersionsIcon"title="Documentation Versions"
+    class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.versions === 'none' ? 'jsdocp-remove-me' : '' ?>">
+    <?js if (env.conf.opts.jsdocp.menu.versions && env.conf.opts.jsdocp.menu.versions !== 'none') { ?>
+      <img src="<?js= env.conf.opts.jsdocp.menu.versions ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
+    <?js } else { ?>
+    <svg version="1.1" viewBox="0 0 64 64" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
+        d="m 63.999999,25.315556 -24.108295,0 9.74288,-10.026667 C 39.927261,5.6888885 24.210644,5.3333335 14.503322,14.933333 c -9.7073234,9.635555 -9.7073234,25.173334 0,34.808888 9.707322,9.635556 25.423939,9.635556 35.131262,0 4.835883,-4.764443 7.253823,-10.346666 7.253823,-17.386666 l 7.111592,0 c 0,7.039999 -3.1291,16.177777 -9.387301,22.364444 -12.480844,12.373334 -32.748879,12.373334 -45.2297224,0 -12.445286,-12.337778 -12.55196,-32.39111 -0.071116,-44.7288881 12.4808434,-12.3377774 32.4999734,-12.3377774 44.9808174,0 L 64,-5e-7 64,25.315556 Z" />
+      <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
+        d="m 33.775734,17.777777 0,15.111111 12.445286,7.395556 -2.560173,4.302222 -15.218806,-9.031112 0,-17.777777 5.333693,0 z" />
+    </svg>
+    <?js } ?>
+  </a>
+  <select id="jsdocpVersions" title="version" data-jsdocp-version-base="/<?js= env.meta.package.name ?>"
     data-jsdocp-json-url="/<?js= env.meta.package.name ?>/versions.json"
     data-jsdocp-type="<?js= (env.conf.opts.jsdocp.versions && env.conf.opts.jsdocp.versions.type) || '' ?>"
     data-jsdocp-from="<?js= (env.conf.opts.jsdocp.versions && env.conf.opts.jsdocp.versions.from) || '' ?>"
