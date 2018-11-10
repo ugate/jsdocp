@@ -60,16 +60,22 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   margin-left: auto;
   color: #000000;
   background-color: #ffffff;
-  direction: rtl;
+  position: absolute;
+  height: 56px;
+  opacity: 0.01;
+  cursor: pointer;
+}
+#jsdocpNav.jsdocp-nav-vertical #jsdocpVersions {
+  bottom: 0;
+}
+#jsdocpNav:not(.jsdocp-nav-vertical) #jsdocpVersions {
+  right: 0;
 }
 #jsdocpNav.jsdocp-nav-vertical #jsdocpVersions, #jsdocpNav.jsdocp-nav-vertical #jsdocpVersionsIcon {
   margin-top: auto;
 }
-#jsdocpNav.jsdocp-nav-vertical #jsdocpVersions {
-  display: none;
-}
 #jsdocpNav:not(.jsdocp-nav-vertical) #jsdocpVersionsIcon {
-  display: none;
+  margin-left: auto;
 }
 #jsdocpNav > a {
   text-decoration: none;
@@ -89,11 +95,15 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   display: none;
 }
 a.jsdocp-logo * {
-  width: inherit;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   line-height: 1em;
   padding: 0;
   vertical-align: text-top;
+}
+#jsdocpNav:not(.jsdocp-nav-vertical) a.jsdocp-logo * {
+  width: 40px;
+  height: 40px;
 }
 a.jsdocp-icon, a.jsdocp-icon img, a.jsdocp-icon svg {
   height: 24px;
