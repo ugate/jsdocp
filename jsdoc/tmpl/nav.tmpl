@@ -9,6 +9,7 @@
     </b>
     <b id="jsdocpPkgName"><?js= env.meta.package.name ?></b>
     <b>|</b>
+    <hr/>
   </a>
   <a href="https://www.npmjs.com/package/<?js= env.meta.package.name ?>" id="jsdocpModule" title="npm"
     class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.package === 'none' ? 'jsdocp-remove-me' : '' ?>">
@@ -56,8 +57,7 @@
     <?js } ?>
   </a>
   <!-- versions.json should point to the latest list -->
-  <a id="jsdocpVersionsIcon"title="Documentation Versions"
-    class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.versions === 'none' ? 'jsdocp-remove-me' : '' ?>">
+  <a id="jsdocpVersionsIcon" class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.versions === 'none' ? 'jsdocp-remove-me' : '' ?>">
     <?js if (env.conf.opts.jsdocp.menu.versions && env.conf.opts.jsdocp.menu.versions !== 'none') { ?>
       <img src="<?js= env.conf.opts.jsdocp.menu.versions ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
     <?js } else { ?>
@@ -69,12 +69,11 @@
     </svg>
     <?js } ?>
   </a>
-  <select id="jsdocpVersions" title="version" data-jsdocp-version-base="/<?js= env.meta.package.name ?>"
+  <select id="jsdocpVersions" title="v<?js= env.meta.package.version ?>" data-jsdocp-version-base="/<?js= env.meta.package.name ?>"
     data-jsdocp-json-url="/<?js= env.meta.package.name ?>/versions.json"
     data-jsdocp-type="<?js= (env.conf.opts.jsdocp.versions && env.conf.opts.jsdocp.versions.type) || '' ?>"
     data-jsdocp-from="<?js= (env.conf.opts.jsdocp.versions && env.conf.opts.jsdocp.versions.from) || '' ?>"
     data-jsdocp-version="<?js= env.meta.package.version ?>">
     <option value="" selected><?js= env.meta.package.version ?></option>
   </select>
-  <div id="jsdocpChangelogContent" data-title="<?js= (env.conf.opts.jsdocp.changelog && env.conf.opts.jsdocp.changelog.title) || '' ?>" style="display:none"><?js= env.meta.changelogHTML ?></div>
 </div>

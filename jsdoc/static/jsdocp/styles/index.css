@@ -1,5 +1,8 @@
-body {
-  margin-top: 64px !important;
+::selection {
+  background: #BDBDBD;
+}
+::-moz-selection {
+  background: #BDBDBD;
 }
 sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   /* allows sub and h# with id to anchor with the offset of the body margin */
@@ -26,6 +29,15 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   justify-content: flex-start;
   align-items: stretch;
 }
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
+  padding-right: 56px !important;
+}
+#jsdocpNav.jsdocp-nav-vertical:not(.jsdocp-nav-right) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
+  padding-left: 56px !important;
+}
+#jsdocpNav:not(.jsdocp-nav-vertical) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
+  padding-top: 56px !important;
+}
 #jsdocpNav.jsdocp-nav-vertical {
   width: 56px;
   height: 100%;
@@ -35,10 +47,27 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   left: inherit;
   right: 0;
 }
+#jsdocpChangelogContent {
+  overflow: auto;
+  position: fixed;
+  z-index: 1;
+  top: -100vh;
+  margin: 0;
+  margin-left: 1em;
+  width: calc(100% - 2em);
+  max-height: calc(100vh - 64px - 1em);
+  padding: 24px;
+  background-color: white;
+  transition: top 0.8s ease 0.3s, box-shadow 0.5s ease;
+  border-radius: 2px;
+}
+#jsdocpChangelogContent.jsdocp-open {
+  z-index: 99999;
+  top: 64px;
+  transition: top 0.8s ease, box-shadow 0.5s ease;
+  box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.14), 0 16px 24px 2px rgba(0, 0, 0, 0.098), 0 6px 30px 5px rgba(0, 0, 0, 0.084);
+}
 @media only screen and (max-width: 680px) {
-  body {
-    margin-top: inherit !important;
-  }
   sub[id] {
     padding-top: inherit !important;
     margin-top: inherit !important;
@@ -64,6 +93,11 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   height: 56px;
   opacity: 0.01;
   cursor: pointer;
+  direction: rtl;
+}
+#jsdocpVersions option:checked {
+  background: #E0E0E0;
+  color: #000000;
 }
 #jsdocpNav.jsdocp-nav-vertical #jsdocpVersions {
   bottom: 0;
@@ -91,7 +125,14 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   margin: 0px;
   height: 56px;
 }
-#jsdocpNav.jsdocp-nav-vertical .jsdocp-logo > :not(:first-child) {
+#jsdocpNav .jsdocp-logo > hr {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid;
+  height: 1px;
+}
+#jsdocpNav.jsdocp-nav-vertical .jsdocp-logo > :not(:first-child):not(hr), #jsdocpNav:not(.jsdocp-nav-vertical) .jsdocp-logo > hr {
   display: none;
 }
 a.jsdocp-logo * {
@@ -100,6 +141,7 @@ a.jsdocp-logo * {
   line-height: 1em;
   padding: 0;
   vertical-align: text-top;
+  user-select: none;
 }
 #jsdocpNav:not(.jsdocp-nav-vertical) a.jsdocp-logo * {
   width: 40px;
@@ -115,4 +157,18 @@ a.jsdocp-icon, a.jsdocp-icon img, a.jsdocp-icon svg {
 }
 .jsdocp-remove-me {
   display: none !important;
+}
+body.jsdocp-cover {
+  overflow: hidden;
+}
+body.jsdocp-cover:after {
+  content: '';
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.2);
 }

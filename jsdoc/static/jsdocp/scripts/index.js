@@ -27,22 +27,11 @@ function JSDocp() {
    */
   function changelogLink() {
     var cla = document.getElementById(chglogId), cl = document.getElementById(chglogContentId);
-    var clt = document.getElementById('main');
-    if (!clt) clt = querySelectorOne(['.main', '.content']);
-    if (clt && cla && cl) {
-      var originalContent = clt.innerHTML, originalTitle = document.title;
-      var loadChglog = function loadChglog() {
-        var page = location.pathname.replace(/^.*[\\/]/, ''), clPage = cla.getAttribute('href').replace(/^.*[\\/]/, '');
-        var usingCl = page !== clPage;
-        var title = usingCl ? (cl.hasAttribute('data-title') && cl.dataset.title) || clPage : originalTitle;
-        clt.innerHTML = usingCl ? cl.innerHTML : originalContent;
-        document.title = title;
-        return { title: title, changelog: usingCl, page: clPage };
-      };
+    if (cla && cl) {
       cla.addEventListener('click', function overrideChglogClick(event) {
         try {
-          var state = loadChglog();
-          if (state.changelog) history.pushState(state, state.title, state.page);
+          document.body.classList.toggle('jsdocp-cover');
+          cl.classList.toggle('jsdocp-open');
         } catch (err) {
           console.error(err);
         }
@@ -50,18 +39,6 @@ function JSDocp() {
         event.stopPropagation();
         return false;
       }, { capture: true });
-      window.addEventListener('popstate', loadChglog);
-    }
-  }
-
-  /**
-   * Finds the first occurance of a selector that has only one element in the document
-   * @param {String[]} sels The CSS selectors
-   */
-  function querySelectorOne(sels) {
-    for (var i = 0, el; i < sels.length; i++) {
-      el = document.querySelectorAll(sels[i]);
-      if (clt.length == 1) return el;
     }
   }
 }
