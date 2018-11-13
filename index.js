@@ -74,18 +74,28 @@ module.exports = publicize;
  * override the logo `src`, but if present will fall back on the `src` when the `svg` content cannot be extracted.
  * @param {String} [conf.opts.jsdocp.menu.logo.anchorclassName] The CSS class name assigned to the logo icon's anchor tag
  * @param {String} [conf.opts.jsdocp.menu.logo.className] The CSS class name assigned to the logo icon loaded from the `src`
- * @param {Boolean} [conf.opts.jsdocp.menu.logo.inline] `true` when using an `svg` source and it's content should be displayed inline (allows for flexible
- * styling of the `svg` content)
- * @param {String} [conf.opts.jsdocp.menu.package] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
- * default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.jsdocp.menu.changelog] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
- * version (omit to use the default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.jsdocp.menu.sourceCode] The `src` used on the `img` in the navigation menu that links to the souce code (omit to use the
- * default icon or set to `none` to hide the icon)
- * @param {String} [conf.opts.jsdocp.menu.versions] The `src` used on the `img` in the navigation menu that links to the documentation version selection
- * (omit to use the default icon or set to `none` to hide the icon)
- * @param {Object} [conf.opts.jsdocp.menu.icons] The package, change log and source code icon options
- * @param {String} [conf.opts.jsdocp.menu.icons.className] The CSS class name applied to the package, change log and source code icon options
+ * @param {Object} [conf.opts.jsdocp.menu.icons] The options that apply to __all__ of the navigation menu icons (excluding the `logo`)
+ * @param {String} [conf.opts.jsdocp.menu.icons.className] The CSS class name applied to __all__ of the icons in the navigation menu (excluding the `logo`)
+ * @param {String} [conf.opts.jsdocp.menu.package] The options for the `npm` package icon that will appear in the navigation menu
+ * @param {String} [conf.opts.jsdocp.menu.package.title] The `title` set on the `npm` package icon
+ * @param {String} [conf.opts.jsdocp.menu.package.src] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
+ * default icon)
+ * @param {String} [conf.opts.jsdocp.menu.package.className] The CSS class name assigned to the `npm` package icon
+ * @param {String} [conf.opts.jsdocp.menu.changelog] The options for the `CHANGELOG` icon that will appear in the navigation menu
+ * @param {String} [conf.opts.jsdocp.menu.changelog.title] The `title` set on the `CHANGELOG` icon
+ * @param {String} [conf.opts.jsdocp.menu.changelog.src] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
+ * version (omit to use the default icon)
+ * @param {String} [conf.opts.jsdocp.menu.changelog.className] The CSS class name assigned to the `CHANGELOG` icon
+ * @param {String} [conf.opts.jsdocp.menu.sourceCode] The options for the source `code` icon that will appear in the navigation menu
+ * @param {String} [conf.opts.jsdocp.menu.sourceCode.title] The `title` set on the source `code` icon
+ * @param {String} [conf.opts.jsdocp.menu.sourceCode.src] The `src` used on the `img` in the navigation menu that links to the source `code` (omit to use the
+ * default icon)
+ * @param {String} [conf.opts.jsdocp.menu.sourceCode.className] The CSS class name assigned to the source `code` icon
+ * @param {String} [conf.opts.jsdocp.menu.versions] The options for the documentation version selection icon that will appear in the navigation menu
+ * @param {String} [conf.opts.jsdocp.menu.versions.title] The `title` set on the documentation version selection icon
+ * @param {String} [conf.opts.jsdocp.menu.versions.src] The `src` used on the `img` in the navigation menu that links to the documentation version selection
+ * (omit to use the default icon)
+ * @param {String} [conf.opts.jsdocp.menu.versions.className] The CSS class name assigned to the documentation version selection icon
  * @param {Object[]} [conf.opts.jsdocp.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
  * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.
  * @param {Object[]} [conf.opts.jsdocp.metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of

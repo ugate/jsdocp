@@ -38,13 +38,14 @@
       },
       "menu": {
         "className": "pkg-menu",
+        "icons": {
+          "className": "pkg-icons"
+        },
         "logo": {
+          "title": "${package.name}",
           "src": "favicon-32x32.png",
           "inlineSvgPath": "./jsdocp/static/logo.svg",
           "className": "pkg-logo"
-        },
-        "icons": {
-          "className": "pkg-icons"
         }
       },
       "links": [

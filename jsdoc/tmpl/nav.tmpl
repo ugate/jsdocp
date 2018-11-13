@@ -1,5 +1,7 @@
 <div id="jsdocpNav" class="<?js= env.conf.opts.jsdocp.menu.className ?>">
-  <a href="index.html" id="jsdocpLogo" title="<?js= env.meta.package.name ?>" class="jsdocp-logo <?js= env.conf.opts.jsdocp.menu.logo.anchorclassName ?>">
+  <a href="index.html" id="jsdocpLogo"
+    title="<?js= (env.conf.opts.jsdocp.menu.logo.title && env.conf.opts.jsdocp.menu.logo.title) || '' ?>"
+    class="jsdocp-logo <?js= env.conf.opts.jsdocp.menu.logo.anchorclassName ?>">
     <b class="<?js= env.conf.opts.jsdocp.menu.logo.className ?>">
     <?js if (env.meta.logo) { ?>
       <?js= env.meta.logo ?>
@@ -11,10 +13,11 @@
     <b>|</b>
     <hr/>
   </a>
-  <a href="https://www.npmjs.com/package/<?js= env.meta.package.name ?>" id="jsdocpModule" title="npm"
-    class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.package === 'none' ? 'jsdocp-remove-me' : '' ?>">
-    <?js if (env.conf.opts.jsdocp.menu.package && env.conf.opts.jsdocp.menu.package !== 'none') { ?>
-      <img src="<?js= env.conf.opts.jsdocp.menu.package ?>" style="<?js= env.conf.opts.jsdocp.menu.icons.style ?>" />
+  <a href="https://www.npmjs.com/package/<?js= env.meta.package.name ?>" id="jsdocpModule"
+    title="<?js= (env.conf.opts.jsdocp.menu.package && env.conf.opts.jsdocp.menu.package.title) || '' ?>"
+    class="jsdocp-icon <?js= !env.conf.opts.jsdocp.menu.package ? 'jsdocp-remove-me' : '' ?>">
+    <?js if (env.conf.opts.jsdocp.menu.package && env.conf.opts.jsdocp.menu.package.src) { ?>
+      <img src="<?js= env.conf.opts.jsdocp.menu.package.src ?>" style="<?js= env.conf.opts.jsdocp.menu.icons.style ?>" />
     <?js } else { ?>
     <svg version="1.1" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
       <g class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" transform="translate(0,24) scale(0.1,-0.1)">
@@ -23,10 +26,11 @@
     </svg>
     <?js } ?>
   </a>
-  <a href="CHANGELOG.html" id="jsdocpChangelog" title="Changelog" data-jsdocp-root-href="<?js= env.meta.publish.moduleURL ?>/CHANGELOG.html"
-    class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.package === 'none' ? 'jsdocp-remove-me' : '' ?>">
-    <?js if (env.conf.opts.jsdocp.menu.changelog && env.conf.opts.jsdocp.menu.changelog !== 'none') { ?>
-      <img src="<?js= env.conf.opts.jsdocp.menu.changelog ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
+  <a href="CHANGELOG.html" id="jsdocpChangelog" data-jsdocp-root-href="<?js= env.meta.publish.moduleURL ?>/CHANGELOG.html"
+    title="<?js= (env.conf.opts.jsdocp.menu.changelog && env.conf.opts.jsdocp.menu.changelog.title) || '' ?>"
+    class="jsdocp-icon <?js= !env.conf.opts.jsdocp.menu.changelog ? 'jsdocp-remove-me' : '' ?>">
+    <?js if (env.conf.opts.jsdocp.menu.changelog && env.conf.opts.jsdocp.menu.changelog.src) { ?>
+      <img src="<?js= env.conf.opts.jsdocp.menu.changelog.src ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
     <?js } else { ?>
     <svg version="1.1" viewBox="0 0 64 64" height="64" width="64" xmlns="http://www.w3.org/2000/svg">
       <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
@@ -40,10 +44,11 @@
     </svg>
     <?js } ?>
   </a>
-  <a href="<?js= env.meta.package.homepage ?>" id="jsdocpSourceCode" title="Source Code"
-    class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.package === 'none' ? 'jsdocp-remove-me' : '' ?>">
-    <?js if (env.conf.opts.jsdocp.menu.sourceCode && env.conf.opts.jsdocp.menu.sourceCode !== 'none') { ?>
-      <img src="<?js= env.conf.opts.jsdocp.menu.sourceCode ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
+  <a href="<?js= env.meta.package.homepage ?>" id="jsdocpSourceCode"
+    title="<?js= (env.conf.opts.jsdocp.menu.sourceCode && env.conf.opts.jsdocp.menu.sourceCode.title) || '' ?>"
+    class="jsdocp-icon <?js= !env.conf.opts.jsdocp.menu.sourceCode ? 'jsdocp-remove-me' : '' ?>">
+    <?js if (env.conf.opts.jsdocp.menu.sourceCode && env.conf.opts.jsdocp.menu.sourceCode.src) { ?>
+      <img src="<?js= env.conf.opts.jsdocp.menu.sourceCode.src ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
     <?js } else { ?>
     <svg version="1.1" viewBox="0 0 10 16" width="24" height="24" xmlns="http://www.w3.org/2000/svg" id="jsdocpSourceIcon">
       <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="evenodd"
@@ -57,9 +62,10 @@
     <?js } ?>
   </a>
   <!-- versions.json should point to the latest list -->
-  <a id="jsdocpVersionsIcon" class="jsdocp-icon <?js= env.conf.opts.jsdocp.menu.versions === 'none' ? 'jsdocp-remove-me' : '' ?>">
-    <?js if (env.conf.opts.jsdocp.menu.versions && env.conf.opts.jsdocp.menu.versions !== 'none') { ?>
-      <img src="<?js= env.conf.opts.jsdocp.menu.versions ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
+  <a id="jsdocpVersionsIcon"
+    class="jsdocp-icon <?js= !env.conf.opts.jsdocp.menu.versions ? 'jsdocp-remove-me' : '' ?>">
+    <?js if (env.conf.opts.jsdocp.menu.versions && env.conf.opts.jsdocp.menu.versions.src) { ?>
+      <img src="<?js= env.conf.opts.jsdocp.menu.versions.src ?>" class="<?js= env.conf.opts.jsdocp.menu.icons.className ?>" />
     <?js } else { ?>
     <svg version="1.1" viewBox="0 0 64 64" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
       <path class="jsdocp-icon-svg-el <?js= env.conf.opts.jsdocp.menu.icons.className ?>" stroke="none" fill-rule="nonzero"
@@ -69,7 +75,9 @@
     </svg>
     <?js } ?>
   </a>
-  <select id="jsdocpVersions" title="v<?js= env.meta.package.version ?>" data-jsdocp-version-base="/<?js= env.meta.package.name ?>"
+  <select id="jsdocpVersions"
+    title="<?js= (env.conf.opts.jsdocp.menu.versions && env.conf.opts.jsdocp.menu.versions.title) || '' ?>"
+    data-jsdocp-version-base="/<?js= env.meta.package.name ?>"
     data-jsdocp-json-url="/<?js= env.meta.package.name ?>/versions.json"
     data-jsdocp-type="<?js= (env.conf.opts.jsdocp.versions && env.conf.opts.jsdocp.versions.type) || '' ?>"
     data-jsdocp-from="<?js= (env.conf.opts.jsdocp.versions && env.conf.opts.jsdocp.versions.from) || '' ?>"

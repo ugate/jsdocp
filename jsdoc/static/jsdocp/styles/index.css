@@ -4,10 +4,15 @@
 ::-moz-selection {
   background: #BDBDBD;
 }
-sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
-  /* allows sub and h# with id to anchor with the offset of the body margin */
-  padding-top: 75px !important;
-  margin-top: -75px !important;
+@media only screen and (max-width: 680px) {
+  #jsdocpNav {
+    top: inherit;
+    bottom: 0;
+    transition: bottom 0.3s;
+  }
+  #jsdocpPkgName {
+    display: none;
+  }
 }
 #jsdocpNav {
   width: 100%;
@@ -29,13 +34,15 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
   justify-content: flex-start;
   align-items: stretch;
 }
-#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad),
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ * #toc {
   padding-right: 56px !important;
 }
 #jsdocpNav.jsdocp-nav-vertical:not(.jsdocp-nav-right) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
   padding-left: 56px !important;
 }
-#jsdocpNav:not(.jsdocp-nav-vertical) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
+#jsdocpNav:not(.jsdocp-nav-vertical) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad),
+#jsdocpNav:not(.jsdocp-nav-vertical) ~ * #toc {
   padding-top: 56px !important;
 }
 #jsdocpNav.jsdocp-nav-vertical {
@@ -50,36 +57,50 @@ sub[id], h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
 #jsdocpChangelogContent {
   overflow: auto;
   position: fixed;
-  z-index: 1;
-  top: -100vh;
+  z-index: 99999;
   margin: 0;
+  padding: 24px;
+  background-color: white;
+  border: 1px solid rgba(0,0,0,0.14);
+  border-radius: 2px;
+  opacity: 0;
+}
+#jsdocpChangelogContent.jsdocp-open {
+  box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.14), 0 16px 24px 2px rgba(0, 0, 0, 0.098), 0 6px 30px 5px rgba(0, 0, 0, 0.084);
+  opacity: 1;
+}
+#jsdocpNav:not(.jsdocp-nav-vertical) ~ #jsdocpChangelogContent {
+  top: -100vh;
   margin-left: 1em;
   width: calc(100% - 2em);
   max-height: calc(100vh - 64px - 1em);
-  padding: 24px;
-  background-color: white;
-  transition: top 0.8s ease 0.3s, box-shadow 0.5s ease;
-  border-radius: 2px;
+  transition: top 0.8s ease 0.5s, box-shadow 0.5s ease, opacity .3s ease 1s;
 }
-#jsdocpChangelogContent.jsdocp-open {
-  z-index: 99999;
+#jsdocpNav:not(.jsdocp-nav-vertical) ~ #jsdocpChangelogContent.jsdocp-open {
   top: 64px;
-  transition: top 0.8s ease, box-shadow 0.5s ease;
-  box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.14), 0 16px 24px 2px rgba(0, 0, 0, 0.098), 0 6px 30px 5px rgba(0, 0, 0, 0.084);
+  transition: top 0.2s ease, box-shadow 0.3s ease 0.4s;
 }
-@media only screen and (max-width: 680px) {
-  sub[id] {
-    padding-top: inherit !important;
-    margin-top: inherit !important;
-  }
-  #jsdocpNav {
-    top: inherit;
-    bottom: 0;
-    transition: bottom 0.3s;
-  }
-  #jsdocpPkgName {
-    display: none;
-  }
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ #jsdocpChangelogContent {
+  top: 1em;
+  right: -100vw;
+  width: calc(100% - 64px - 1em);
+  max-height: calc(100vh - 1em);
+  transition: right 0.8s ease 0.5s, box-shadow 0.5s ease, opacity .3s ease 1s;
+}
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ #jsdocpChangelogContent.jsdocp-open {
+  right: 64px;
+  transition: right 0.2s ease, box-shadow 0.3s ease 0.4s;
+}
+#jsdocpNav.jsdocp-nav-vertical:not(.jsdocp-nav-right) ~ #jsdocpChangelogContent {
+  top: 1em;
+  left: -100vw;
+  width: calc(100% - 64px - 1em);
+  max-height: calc(100vh - 1em);
+  transition: left 0.8s ease 0.5s, box-shadow 0.5s ease, opacity .3s ease 1s;
+}
+#jsdocpNav.jsdocp-nav-vertical:not(.jsdocp-nav-right) ~ #jsdocpChangelogContent.jsdocp-open {
+  left: 64px;
+  transition: left 0.2s ease, box-shadow 0.3s ease 0.4s;
 }
 #jsdocpVersions {
   height: 100%;
@@ -158,10 +179,25 @@ a.jsdocp-icon, a.jsdocp-icon img, a.jsdocp-icon svg {
 .jsdocp-remove-me {
   display: none !important;
 }
-body.jsdocp-cover {
-  overflow: hidden;
+.jsdocp-close {
+  position: relative;
+  float: right;
+  right: -12px;
+  top: -12px;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  font-style: normal;
+  color: grey;
+  cursor: pointer;
+}
+body.jsdocp-noscroll {
+  position: fixed; 
+  overflow-y: scroll;
+  width: 100%;
 }
 body.jsdocp-cover:after {
+  z-index: 99998;
   content: '';
   position: fixed;
   padding: 0;

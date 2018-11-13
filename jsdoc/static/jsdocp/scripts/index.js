@@ -1,17 +1,20 @@
 var jsdocp = new JSDocp();
 
 function JSDocp() {
-  var jp = this, py = window.pageYOffset, mobile = window.matchMedia('(max-width: 680px)');
+  var jp = this, py = window.pageYOffset, y = py, mobile = window.matchMedia('(max-width: 680px)');
   var chglogId = 'jsdocpChangelog', chglogContentId = 'jsdocpChangelogContent';
+  var chglogCloseId = 'jsdocpChangelogClose', navId = 'jsdocpNav';
   var logoSrcSel = '.jsdocp-logo-svg', logoSrcAttr = 'jsdocp-logo-src';
+  var throttles = {};
 
   // handles mobile nav menu showing/hiding based upon scrolling direction
-  window.addEventListener('scroll', function scroller() {
+  window.addEventListener('scroll', function scroller(evt) {
     var y = window.pageYOffset;
-    if (mobile.matches) {
+    throttle(navId, evt.type, 100, function scrollerThrottle() {
+      if (!mobile.matches) return;
       var nav = document.getElementById('jsdocpNav');
-      if (nav) nav.style.bottom = py > y ? '0' : '-' + getComputedStyle(nav).height;
-    }
+      if (nav) nav.style.bottom = py > window.pageYOffset ? '0' : '-' + getComputedStyle(nav).height;
+    });
     py = y;
   });
 
@@ -28,10 +31,29 @@ function JSDocp() {
   function changelogLink() {
     var cla = document.getElementById(chglogId), cl = document.getElementById(chglogContentId);
     if (cla && cl) {
-      cla.addEventListener('click', function overrideChglogClick(event) {
-        try {
+      var cls = document.getElementById(chglogCloseId);
+      var toggleChangelog = function toggleChangelog() {
+        var isOpen = cl.classList.contains('jsdocp-open');
+        var hasSB = window.innerHeight ? document.body.offsetHeight > window.innerHeight : document.documentElement.scrollHeight > 
+          document.documentElement.offsetHeight || document.body.scrollHeight > document.body.offsetHeight;
+        document.body.classList[!isOpen && hasSB ? 'add' : 'remove']('jsdocp-noscroll');
+        if (isOpen) {
+          var stl = getComputedStyle(cl), mtch = stl && stl.transition && stl.transition.match(/\s+(\d+\.?\d+)(m?s)/i);
+          var dur = (mtch && mtch[1] && parseFloat(mtch[1])) || 0;
+          dur = mtch && mtch[2] && mtch[2].length > 1 ? dur : dur * 1000;
+          cl.classList.toggle('jsdocp-open');
+          setTimeout(function cltko() {
+            document.body.classList.toggle('jsdocp-cover');
+          }, dur);
+        } else {
           document.body.classList.toggle('jsdocp-cover');
           cl.classList.toggle('jsdocp-open');
+        }
+      };
+      if (cls) cls.addEventListener('click', toggleChangelog);
+      cla.addEventListener('click', function overrideChglogClick(event) {
+        try {
+          toggleChangelog();
         } catch (err) {
           console.error(err);
         }
@@ -40,6 +62,23 @@ function JSDocp() {
         return false;
       }, { capture: true });
     }
+  }
+
+  /**
+  * Throttles a function call
+  * @param {*} [id] an id that will be used for throttling
+  * @param {String} [type] the type of throttle (e.g. event type)
+  * @param {Integer} [timeout] the number of milliseconds to wait between function calls before re-executing
+  * @param {function} fn the function that will be throttled
+  * @returns {String} the cached id
+  */
+  function throttle(id, type, timeout, fn) {
+    var nid = id + '-type-' + type;
+    clearTimeout(throttles[nid]);
+    if (timeout >= 0) throttles[nid] = setTimeout(function throttleTimeout() {
+      fn(nid);
+    }, timeout);
+    return id;
   }
 }
 

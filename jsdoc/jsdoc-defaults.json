@@ -38,18 +38,36 @@
         }
       },
       "menu": {
-        "package": "",
-        "changelog": "",
-        "sourceCode": "",
-        "versions": "",
         "className": "",
+        "position": "top",
+        "icons": {
+          "className": ""
+        },
         "logo": {
+          "title": "",
           "src": "",
           "inlineSvgPath": "",
           "anchorclassName": "",
           "className": ""
         },
-        "icons": {
+        "package": {
+          "title": "npm",
+          "src": "",
+          "className": ""
+        },
+        "changelog": {
+          "title": "Changelog",
+          "src": "",
+          "className": ""
+        },
+        "sourceCode": {
+          "title": "Source Code",
+          "src": "",
+          "className": ""
+        },
+        "versions": {
+          "title": "v${package.version}",
+          "src": "",
           "className": ""
         }
       },
