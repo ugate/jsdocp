@@ -44,8 +44,8 @@
           "mediaMatch": "(max-width: 480px)"
         },
         "MD": {
-          "position": "bottom",
-          "autoHide": true,
+          "position": "left",
+          "autoHide": false,
           "mediaMatch": "(min-width: 481px) and (max-width: 839px)"
         },
         "LG": {

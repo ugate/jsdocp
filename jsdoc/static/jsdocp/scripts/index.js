@@ -43,7 +43,7 @@ function JSDocp() {
       var cls = document.getElementById(chglogCloseId);
       var toggleChangelog = function toggleChangelog() {
         var isOpen = cl.classList.contains('jsdocp-open');
-        var hasSB = window.innerHeight ? document.body.offsetHeight > window.innerHeight : document.documentElement.scrollHeight > 
+        var hasSB = (window.innerHeight && (document.body.offsetHeight > window.innerHeight)) || document.documentElement.scrollHeight > 
           document.documentElement.offsetHeight || document.body.scrollHeight > document.body.offsetHeight;
         document.body.classList[!isOpen && hasSB ? 'add' : 'remove']('jsdocp-noscroll');
         if (isOpen) {

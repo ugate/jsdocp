@@ -24,7 +24,7 @@
     "theme": "readable"
   },
   "opts": {
-    "template": "./node_modules/ink-docstrap/template",
+    "template": "./node_modules/docdash",
     "tutorials": "./jsdocp/tutorial",
     "encoding": "utf8",
     "private": false,
