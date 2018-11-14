@@ -140,7 +140,7 @@ JSDocp.prototype.loadVersions = function loadVersions() {
   };
   sel.addEventListener('change', function versionChange(event) {
     var trg = event.currentTarget || event.target, base = (trg && trg.dataset.jsdocpVersionBase) || '';
-    if (trg && trg.value) window.location = (base ? base + '/' : '') + trg.value;
+    if (trg && trg.value) window.location = (base ? base + '/' : '') + 'v' + trg.value;
   });
   jp.fetch(sel.dataset.jsdocpJsonUrl, 'application/json', function versionsLoaded(error, req) {
     if (error) return console.warn(error);

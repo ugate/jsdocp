@@ -121,7 +121,6 @@
   height: 56px;
   opacity: 0.01;
   cursor: pointer;
-  direction: rtl;
 }
 #jsdocpVersions option:checked {
   background: #E0E0E0;
