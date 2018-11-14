@@ -67,6 +67,21 @@ module.exports = publicize;
  * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
  * @param {Boolean} [conf.opts.jsdocp.cleanDestination] `true` to remove the `jsdoc` assigned `conf.opts.jsdocp.destination` prior to publishing
  * @param {Object} [conf.opts.jsdocp.menu] The options for the generated pages naviagation menu
+ * @param {String} [conf.opts.jsdocp.menu.SM] The navigation menu options for small displays
+ * @param {String} [conf.opts.jsdocp.menu.SM.position] The navigation menu _position_ for small displays (`top`, `left`, `bottom`, `right`)
+ * @param {String} [conf.opts.jsdocp.menu.SM.mediaMatch] The CSS segment that will be passed into `window.matchMedia` in the client's browser when matched
+ * the navigation menu options for small displays are applied
+ * @param {String} [conf.opts.jsdocp.menu.SM.autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_ on small displays
+ * @param {String} [conf.opts.jsdocp.menu.MD] The navigation menu options for medium displays
+ * @param {String} [conf.opts.jsdocp.menu.MD.position] The navigation menu _position_ for medium displays (`top`, `left`, `bottom`, `right`)
+ * @param {String} [conf.opts.jsdocp.menu.MD.mediaMatch] The CSS segment that will be passed into `window.matchMedia` in the client's browser when matched
+ * the navigation menu options for medium displays are applied
+ * @param {String} [conf.opts.jsdocp.menu.MD.autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_ on medium displays
+ * @param {String} [conf.opts.jsdocp.menu.LG] The navigation menu options for large displays
+ * @param {String} [conf.opts.jsdocp.menu.LG.position] The navigation menu _position_ for large displays (`top`, `left`, `bottom`, `right`)
+ * @param {String} [conf.opts.jsdocp.menu.LG.mediaMatch] The CSS segment that will be passed into `window.matchMedia` in the client's browser when matched
+ * the navigation menu options for large displays are applied
+ * @param {String} [conf.opts.jsdocp.menu.LG.autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_ on large displays
  * @param {String} [conf.opts.jsdocp.menu.className] The CSS class applied to the main menu
  * @param {Object} [conf.opts.jsdocp.menu.logo] The options for the logo displayed in the navigation menu
  * @param {String} [conf.opts.jsdocp.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu (if not overridden by `inlineSvgPath`)

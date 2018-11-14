@@ -38,8 +38,22 @@
         }
       },
       "menu": {
+        "SM": {
+          "position": "bottom",
+          "autoHide": true,
+          "mediaMatch": "(max-width: 480px)"
+        },
+        "MD": {
+          "position": "bottom",
+          "autoHide": true,
+          "mediaMatch": "(min-width: 481px) and (max-width: 839px)"
+        },
+        "LG": {
+          "position": "top",
+          "autoHide": false,
+          "mediaMatch": "(min-width: 840px)"
+        },
         "className": "",
-        "position": "top",
         "icons": {
           "className": ""
         },

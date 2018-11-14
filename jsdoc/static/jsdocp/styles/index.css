@@ -4,12 +4,8 @@
 ::-moz-selection {
   background: #BDBDBD;
 }
+/* mobile devices will always show standard nav */
 @media only screen and (max-width: 680px) {
-  #jsdocpNav {
-    top: inherit;
-    bottom: 0;
-    transition: bottom 0.3s;
-  }
   #jsdocpPkgName {
     display: none;
   }
@@ -33,26 +29,37 @@
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  transition: top 0.2s ease;
 }
-#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad),
-#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right ~ * #toc {
-  padding-right: 56px !important;
+#jsdocpNav.jsdocp-nav-bottom {
+  top: inherit;
+  bottom: 0;
+  transition: bottom 0.2s ease;
 }
-#jsdocpNav.jsdocp-nav-vertical:not(.jsdocp-nav-right) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad) {
-  padding-left: 56px !important;
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right:not(.jsdocp-nav-auto-hide) ~ :not(#jsdocpChangelogContent):not(.jsdocp-nopad),
+#jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right:not(.jsdocp-nav-auto-hide) ~ * #toc:not(.jsdocp-nopad) {
+  padding-right: 56px;
 }
-#jsdocpNav:not(.jsdocp-nav-vertical) ~ :not(#jsdocpChangelogContent):not(jsdocp-nopad),
-#jsdocpNav:not(.jsdocp-nav-vertical) ~ * #toc {
-  padding-top: 56px !important;
+#jsdocpNav.jsdocp-nav-vertical:not(.jsdocp-nav-right):not(.jsdocp-nav-auto-hide) ~ :not(#jsdocpChangelogContent):not(.jsdocp-nopad) {
+  padding-left: 56px;
+}
+#jsdocpNav:not(.jsdocp-nav-vertical):not(.jsdocp-nav-bottom):not(.jsdocp-nav-auto-hide) ~ :not(#jsdocpChangelogContent):not(.jsdocp-nopad),
+#jsdocpNav:not(.jsdocp-nav-vertical):not(.jsdocp-nav-bottom):not(.jsdocp-nav-auto-hide) ~ * #toc:not(.jsdocp-nopad) {
+  padding-top: 56px;
+}
+#jsdocpNav.jsdocp-nav-bottom:not(.jsdocp-nav-auto-hide) ~ :not(#jsdocpChangelogContent):not(.jsdocp-nopad) {
+  padding-bottom: 56px;
 }
 #jsdocpNav.jsdocp-nav-vertical {
   width: 56px;
   height: 100%;
   flex-direction: column;
+  transition: left 0.2s ease;
 }
 #jsdocpNav.jsdocp-nav-vertical.jsdocp-nav-right {
   left: inherit;
   right: 0;
+  transition: right 0.2s ease;
 }
 #jsdocpChangelogContent {
   overflow: auto;

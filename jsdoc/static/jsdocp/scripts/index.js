@@ -1,20 +1,29 @@
 var jsdocp = new JSDocp();
 
 function JSDocp() {
-  var jp = this, py = window.pageYOffset, y = py, mobile = window.matchMedia('(max-width: 680px)');
+  var jp = this, py = window.pageYOffset;
   var chglogId = 'jsdocpChangelog', chglogContentId = 'jsdocpChangelogContent';
   var chglogCloseId = 'jsdocpChangelogClose', navId = 'jsdocpNav';
   var logoSrcSel = '.jsdocp-logo-svg', logoSrcAttr = 'jsdocp-logo-src';
-  var throttles = {};
+
+  jp.throttles = {};
+  jp.nav = document.getElementById(navId);
+  jp.navOpts = jp.nav ? generateNavOpts() : {};
+
+  setTimeout(function setNavPos() { // need timeout so prototypes will be set
+    jp.nav && jp.setNavPosition();
+  });
 
   // handles mobile nav menu showing/hiding based upon scrolling direction
   window.addEventListener('scroll', function scroller(evt) {
     var y = window.pageYOffset;
-    throttle(navId, evt.type, 100, function scrollerThrottle() {
-      if (!mobile.matches) return;
-      var nav = document.getElementById('jsdocpNav');
-      if (nav) nav.style.bottom = py > window.pageYOffset ? '0' : '-' + getComputedStyle(nav).height;
-    });
+    if (jp.nav && ((jp.navOpts.lgAH && jp.navOpts.lg.matches)
+        || (jp.navOpts.mdAH && jp.navOpts.md.matches)
+        || (jp.navOpts.smAH && jp.navOpts.sm.matches))) {
+      if (jp.nav.classList.contains('jsdocp-nav-vertical')) {
+        jp.nav.style[jp.nav.classList.contains('jsdocp-nav-right') ? 'right' : 'left'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).width;
+      } else jp.nav.style[jp.nav.classList.contains('jsdocp-nav-bottom') ? 'bottom' : 'top'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).height;
+    }
     py = y;
   });
 
@@ -65,22 +74,54 @@ function JSDocp() {
   }
 
   /**
-  * Throttles a function call
-  * @param {*} [id] an id that will be used for throttling
-  * @param {String} [type] the type of throttle (e.g. event type)
-  * @param {Integer} [timeout] the number of milliseconds to wait between function calls before re-executing
-  * @param {function} fn the function that will be throttled
-  * @returns {String} the cached id
-  */
-  function throttle(id, type, timeout, fn) {
-    var nid = id + '-type-' + type;
-    clearTimeout(throttles[nid]);
-    if (timeout >= 0) throttles[nid] = setTimeout(function throttleTimeout() {
-      fn(nid);
-    }, timeout);
-    return id;
+   * Captures the navigation menu options from the data attributes set on the navigation menu element
+   */
+  function generateNavOpts() {
+    var smPos = jp.nav && jp.nav.dataset.jsdocpSmPosition;
+    var mdPos = jp.nav && jp.nav.dataset.jsdocpMdPosition;
+    var lgPos = jp.nav && jp.nav.dataset.jsdocpLgPosition;
+    var sm = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpSmMediaMatch);
+    var md = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpMdMediaMatch);
+    var lg = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpLgMediaMatch);
+    var smAH = jp.nav && jp.nav.dataset.jsdocpSmAutoHide === 'true';
+    var mdAH = jp.nav && jp.nav.dataset.jsdocpMdAutoHide === 'true';
+    var lgAH = jp.nav && jp.nav.dataset.jsdocpLgAutoHide === 'true';
+    if (jp.nav) {
+      jp.nav.removeAttribute('data-jsdocp-sm-position');
+      jp.nav.removeAttribute('data-jsdocp-md-position');
+      jp.nav.removeAttribute('data-jsdocp-lg-position');
+      jp.nav.removeAttribute('data-jsdocp-sm-media-match');
+      jp.nav.removeAttribute('data-jsdocp-md-media-match');
+      jp.nav.removeAttribute('data-jsdocp-lg-media-match');
+      jp.nav.removeAttribute('data-jsdocp-sm-auto-hide');
+      jp.nav.removeAttribute('data-jsdocp-md-auto-hide');
+      jp.nav.removeAttribute('data-jsdocp-lg-auto-hide');
+    }
+    return { sm: sm, md: md, lg: lg, smAH: smAH, mdAH: mdAH, lgAH: lgAH, smPos: smPos, mdPos: mdPos, lgPos: lgPos };
   }
 }
+
+/**
+ * Sets the proper CSS classes required for the navigation menu based upon the specified `MediaQueryList` for resolution sizes and the
+ * corresponding `data-jsdocp-sm-position`, `data-jsdocp-md-position` and `data-jsdocp-lg-position` attributes on the navigation menu element.
+ * @returns {Boolean} `true` when able to set, `false` when not
+ */
+JSDocp.prototype.setNavPosition = function setNavPosition() {
+  var jp = this, opts = jp.navOpts;
+  var pos = ((opts.sm.matches ? opts.smPos : opts.md.matches ? opts.mdPos : opts.lg.matches ? opts.lgPos : '') || '').toLowerCase();
+  var ahd = opts.sm.matches ? opts.smAH : opts.md.matches ? opts.mdAH : opts.lg.matches ? opts.lgAH : false;
+  if (!pos) return false;
+  if (pos === 'left' || pos === 'right') jp.nav.classList.add('jsdocp-nav-vertical');
+  else jp.nav.classList.remove('jsdocp-nav-vertical');
+  if (pos === 'right') jp.nav.classList.add('jsdocp-nav-right');
+  else jp.nav.classList.remove('jsdocp-nav-right');
+  if (pos === 'bottom') jp.nav.classList.add('jsdocp-nav-bottom');
+  else jp.nav.classList.remove('jsdocp-nav-bottom');
+  if (ahd) jp.nav.classList.add('jsdocp-nav-auto-hide');
+  else jp.nav.classList.remove('jsdocp-nav-auto-hide');
+  jp.nav.classList.remove('jsdocp-remove-me');
+  return true;
+};
 
 /**
  * Loads the `versions.json` into the `#jsdocpVersions` select element from it's `data-jsdocp-json-url` attribute URL. Uses the `data-jsdocp-from`,
@@ -176,4 +217,21 @@ JSDocp.prototype.fetch = function fetch(url, mime, cb, arg) {
     cb(error, req, arg);
   };
   req.send(null);
+};
+
+ /**
+  * Throttles how many times a function is called over a given time
+  * @param {*} [id] an id that will be used for throttling
+  * @param {String} [type] the type of throttle (e.g. event type)
+  * @param {Integer} [timeout] the number of milliseconds to wait between function calls before re-executing
+  * @param {function} fn the function that will be throttled
+  * @returns {String} the cached id
+  */
+ JSDocp.prototype.throttle = function throttle(id, type, timeout, fn) {
+  var nid = id + '-type-' + type;
+  clearTimeout(this.throttles[nid]);
+  if (timeout >= 0) this.throttles[nid] = setTimeout(function throttleTimeout() {
+    fn(nid);
+  }, timeout);
+  return id;
 };
