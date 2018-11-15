@@ -1,5 +1,26 @@
 The _responsive_ navigation menu that gets injected into the chosen [`jsdoc` template](https://github.com/jsdoc3/jsdoc#templates) can be modified to add a personalized look-and-feel using the provided [`opts.jsdocp.menu`](tutorial-2-conf.html) configuration options. Everything from the CSS `class` of the menu, an _optional_ `logo` to each of the `icons` displayed can be changed.
 
+### Navigation Menu Positioning <sub id="position"></sub>
+There are four different `media` query-driven configuration options available that allows for custom positioning of the navigation menu. They include __small__ ([`opts.jsdocp.menu.SM`](tutorial-2-conf.html)), __medium__ ([`opts.jsdocp.menu.MD`](tutorial-2-conf.html)) and __large__ ([`opts.jsdocp.menu.SM`](tutorial-2-conf.html)). Each `media` _region_ (small, medium and large) can be calibrated using the [`matchMedia`](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia) to determine when the menu positioning will be applied. Consider the following:
+```json
+  "SM": {
+    "position": "bottom",
+    "autoHide": true,
+    "matchMedia": "(max-width: 480px)"
+  },
+  "MD": {
+    "position": "left",
+    "autoHide": true,
+    "matchMedia": "(min-width: 481px) and (max-width: 839px)"
+  },
+  "LG": {
+    "position": "top",
+    "autoHide": false,
+    "matchMedia": "(min-width: 840px)"
+  }
+```
+When a clients browser matches `(max-width: 480px)`, __SM__ is applied causing the navigation menu to be displayed at the `bottom` of the screen and will be hidden when the page is scrolled down and visible when scrolled up. Similarly, __MD__ or __LG__ will be applied when they match the client's browser size (in that order of precedence).
+
 ### The Logo <sub id="logo"></sub>
 By default, no `logo` is used. Only the `package.name` is displayed in the navigation menu. However, if a `logo` is desired there are a few options available. When the [`opts.jsdocp.menu.logo.src`](tutorial-2-conf.html) is set the `logo` will be rendered as a simple `img`. This option is adequate when styling is not needed, but if the `logo` is in `svg` format and it needs to be styled it falls short. To accommodate `svg` styling, a separate [`opts.jsdocp.menu.logo.inlineSvgPath`](tutorial-2-conf.html) can be defined that provides a path to an `svg` that will be loaded into the `logo` link as the raw `svg` content rather than an `img`. This permits the [`opts.jsdocp.menu.logo.className`](tutorial-2-conf.html) to style the `logo` for the `svg` elements (e.g. `fill: red`). For more information on available `logo` options, see the configuration options for [publicize](global.html#publicize).
 
