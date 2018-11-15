@@ -145,6 +145,7 @@
   background-color: #ffffff;
   position: absolute;
   height: 56px;
+  min-width: 56px;
   opacity: 0.01;
   cursor: pointer;
 }

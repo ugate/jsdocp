@@ -41,7 +41,7 @@ exports.publish = function(taffyData, opts, tutorials) {
       await destination(opts);
       const chglogPath = Path.join(opts.destination, 'CHANGELOG.md'), verPath = Path.join(opts.destination, 'versions.json');
       const chglogHtmlPath = Path.join(opts.destination, 'CHANGELOG.html');
-      logger.info(`Writting ${verPath}`);
+      logger.info(`Writting ${verPath}: ${process.env.JSDOCP_PUBLISH_VERSIONS}`);
       const wrVerProm = Fsp.writeFile(verPath, process.env.JSDOCP_PUBLISH_VERSIONS);
       const span = env.meta.publish.lastVersionPublished ? `v${env.meta.publish.lastVersionPublished}..HEAD ` : '';
       const line = opts.jsdocp.changelog && opts.jsdocp.changelog.line ? opts.jsdocp.changelog.line.replace(/"/g, '\\"') : '* %s';

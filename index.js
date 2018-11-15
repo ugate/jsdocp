@@ -251,7 +251,7 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
     exec(`npm view ${pkg.name} versions --json`, async (error, stdout, stderr) => {
       try {
         // need to account for first-time publish where module does not exist in npm
-        const versions = (!error && !stderr && stdout) || '[]', latestVersion = JSON.parse(versions).pop() || '';
+        const versions = (!error && !stderr && JSON.parse(stdout)) || [], latestVersion = versions[versions.length - 1] || '';
         const meta = {
           package: pkg,
           publish: {
@@ -276,7 +276,8 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
         // set private meta after merge takes place
         // private since versions could be published after the current versions is published
         // should be captured on the client to get the latest copy at the root dir
-        meta.publish.versions = versions;
+        if (!versions.includes(pkg.version)) versions.push(pkg.version);
+        meta.publish.versions = JSON.stringify(versions, 0);
 
         // write require files/dirs
         console.log(`Writting compiled configuration: ${tempConfPath}`);

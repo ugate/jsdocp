@@ -169,7 +169,7 @@ JSDocp.prototype.loadVersions = function loadVersions() {
   };
   sel.addEventListener('change', function versionChange(event) {
     var trg = event.currentTarget || event.target, base = (trg && trg.dataset.jsdocpVersionBase) || '';
-    if (trg && trg.value) window.location = (base ? base + '/' : '') + 'v' + trg.value;
+    if (trg && trg.value && trg.value !== trg.dataset.jsdocpVersion) window.location = (base ? base + '/' : '') + 'v' + trg.value;
   });
   jp.fetch(sel.dataset.jsdocpJsonUrl, 'application/json', function versionsLoaded(error, req) {
     if (error) return console.warn(error);
@@ -188,6 +188,7 @@ JSDocp.prototype.loadVersions = function loadVersions() {
       }
       opt = document.createElement('option');
       opt.setAttribute('value', vrs[i]);
+      if (vrs[i] === sel.dataset.jsdocpVersion) opt.setAttribute('selected', 'selected');
       opt.appendChild(document.createTextNode(vrs[i]));
       sel.appendChild(opt);
     }
