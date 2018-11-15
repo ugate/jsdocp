@@ -96,6 +96,9 @@
     bottom: inherit !important;
     width: 100% !important;
     height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    z-index: 999999;
   }
 }
 #jsdocpNav:not(.jsdocp-nav-vertical) ~ #jsdocpChangelogContent {
