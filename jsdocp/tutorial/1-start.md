@@ -48,7 +48,7 @@ There are a few different ways that `deployment` can be performed based upon [`o
     ```
 1. [Create a personal access token on GitHub](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
 1. If you haven't already done so, go to [travis-ci.com](https://travis-ci.com/), setup an account and follow the instructions to enable/activate your repo. Copy the personal access token from GitHub in the previous step and paste it in a new __Environment Variable__ called `GITHUB_TOKEN` on `https://travis-ci.com/<your_username>/<your_repo_name>/settings`.
-1. While your at it, you may also want to do the same thing for `npm` by creating an __Access Token__ on `https://www.npmjs.com/settings/<your_username>/tokens` and copy/paste it in a new __Environment Variable__ called `NPM_TOKEN` on `https://travis-ci.com/<your_username>/<your_repo_name>/settings` (we'll use this in our `.travis.yml` to deploy to `npm`). 
+1. While your at it, you may also want to do the same thing for `npm` by creating an __Access Token__ on `https://www.npmjs.com/settings/<your_username>/tokens` and copy/paste it in a new __Environment Variable__ called `NPM_TOKEN` on `https://travis-ci.com/<your_username>/<your_repo_name>/settings` __and put quotes around the value pasted: "my-npm-token-value"__  (we'll use this in our `.travis.yml` to deploy to `npm`).
 1. Create a  `.travis.yml` in the _root_ of your project using the [`.travis.yml` below](#travis) as a guide.
 1. `npm version patch -m "Deploying %s" && git push origin <tag_name>` - replacing `patch` with `major`, `minor`, etc. as needed (see [npm-version](https://docs.npmjs.com/cli/version))
 
