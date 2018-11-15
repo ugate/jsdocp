@@ -551,7 +551,7 @@ function formatedDate(date, delimiter = '-') {
  * @returns {String} The sanitized path
  */
 function sanitizePath(pkg, path) {
-  return pkg.name === 'jsdocp' ? path.replace('node_modules/', '') : path;
+  return pkg.name === 'jsdocp' ? path.replace('node_modules/jsdocp', '') : path;
 }
 
 /**

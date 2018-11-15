@@ -7,14 +7,14 @@
       "layoutFile": "layout.tmpl",
       "staticFiles": {
         "include": [
-          "./node_modules/jsdoc/static"
+          "./node_modules/jsdocp/jsdoc/static"
         ]
       }
     }
   },
   "opts": {
     "destination": "./docs",
-    "template": "./node_modules/jsdoc",
+    "template": "./node_modules/jsdocp/jsdoc",
     "jsdocp": {
       "cleanDestination": true,
       "layoutCheckTemplateDirs": [
@@ -23,9 +23,9 @@
         "template"
       ],
       "layoutFrags": {
-        "head": "./node_modules/jsdoc/tmpl/head.tmpl",
-        "nav": "./node_modules/jsdoc/tmpl/nav.tmpl",
-        "foot": "./node_modules/jsdoc/tmpl/foot.tmpl"
+        "head": "./node_modules/jsdocp/jsdoc/tmpl/head.tmpl",
+        "nav": "./node_modules/jsdocp/jsdoc/tmpl/nav.tmpl",
+        "foot": "./node_modules/jsdocp/jsdoc/tmpl/foot.tmpl"
       },
       "deploy": {
         "message": "Deploy ${package.author.name}/${package.name} to gh-pages",
