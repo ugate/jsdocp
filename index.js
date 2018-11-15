@@ -223,7 +223,7 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
 
   // template needs to be set to the internal template so it can be proxied
   conf.opts.jsdocp.templateProxy = Path.resolve(modulePath, conf.opts.template);
-  conf.opts.template = Path.resolve(jsdocpPath, sanitizePath(pkg, jpConf.opts.template));
+  conf.opts.template = Path.resolve(modulePath, sanitizePath(pkg, jpConf.opts.template));
 
   // make sure default plugins are included
   conf.plugins = conf.plugins || [];
@@ -239,7 +239,7 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
   conf.templates.default.staticFiles = conf.templates.default.staticFiles || {};
   const incls = conf.templates.default.staticFiles.include;
   const jpIncls = jpConf.templates.default.staticFiles.include;
-  for (let i = 0; i < jpIncls.length; i++) jpIncls[i] = Path.resolve(jsdocpPath, sanitizePath(pkg, jpIncls[i]));
+  for (let i = 0; i < jpIncls.length; i++) jpIncls[i] = Path.resolve(modulePath, sanitizePath(pkg, jpIncls[i]));
   conf.templates.default.staticFiles.include = Array.isArray(incls) ? jpIncls.concat(incls) : jpIncls;
 
   // add the static files required by the jsdocp
@@ -551,7 +551,7 @@ function formatedDate(date, delimiter = '-') {
  * @returns {String} The sanitized path
  */
 function sanitizePath(pkg, path) {
-  return pkg.name === 'jsdocp' ? path.replace('node_modules/jsdocp', '') : path;
+  return pkg.name === 'jsdocp' ? path.replace(/node_modules[\/\\]+jsdocp/ig, '') : path;
 }
 
 /**
