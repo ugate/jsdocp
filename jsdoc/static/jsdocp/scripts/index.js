@@ -3,29 +3,23 @@ var jsdocp = new JSDocp();
 function JSDocp() {
   var jp = this, py = window.pageYOffset;
   var chglogId = 'jsdocpChangelog', chglogContentId = 'jsdocpChangelogContent';
-  var chglogCloseId = 'jsdocpChangelogClose', navId = 'jsdocpNav';
+  var chglogCloseId = 'jsdocpChangelogClose', navId = 'jsdocpNav', navState;
   var logoSrcSel = '.jsdocp-logo-svg', logoSrcAttr = 'jsdocp-logo-src';
 
   jp.throttles = {};
   jp.nav = document.getElementById(navId);
-  jp.navOpts = jp.nav ? generateNavOpts() : {};
+  jp.navOpts = jp.nav ? navOpts() : {};
 
-  setTimeout(function setNavPos() { // need timeout so prototypes will be set
-    jp.nav && jp.setNavPosition();
+  if (jp.nav) setTimeout(function setNavPos() { // need timeout so prototypes will be set
+    jp.setNavPosition();
   });
 
-  // handles mobile nav menu showing/hiding based upon scrolling direction
-  window.addEventListener('scroll', function scroller(evt) {
-    var y = window.pageYOffset;
-    if (jp.nav && ((jp.navOpts.lgAH && jp.navOpts.lg.matches)
-        || (jp.navOpts.mdAH && jp.navOpts.md.matches)
-        || (jp.navOpts.smAH && jp.navOpts.sm.matches))) {
-      if (jp.nav.classList.contains('jsdocp-nav-vertical')) {
-        jp.nav.style[jp.nav.classList.contains('jsdocp-nav-right') ? 'right' : 'left'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).width;
-      } else jp.nav.style[jp.nav.classList.contains('jsdocp-nav-bottom') ? 'bottom' : 'top'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).height;
-    }
-    py = y;
-  });
+  // handles nav menu showing/hiding based upon scrolling direction
+  if (jp.nav && (jp.navOpts.smAH || jp.navOpts.mdAH || jp.navOpts.lgAH)) {
+    navState = navAutoHides();
+    window.addEventListener('scroll', navAutoHideListener);
+    window.addEventListener('resize', navAutoHideListener);
+  }
 
   // handle loading of versions.json and populates the version drop-down select
   window.addEventListener('load', function loaded() {
@@ -74,15 +68,38 @@ function JSDocp() {
   }
 
   /**
-   * Captures the navigation menu options from the data attributes set on the navigation menu element
+   * Handles/throttles scrolling/resize events and adjusts the navigation menu for auto-hiding the menu and positioning
+   * @param {Event} evt The event being listened to
    */
-  function generateNavOpts() {
+  function navAutoHideListener(evt) {
+    if (navState.running === evt.type) return;
+    navState.running = evt.type;
+    requestAnimationFrame(function jsdocpScrolling() {
+      var y = window.pageYOffset;
+      var nah = navAutoHides();
+      if (navState.isSmAH !== nah.isSmAH || navState.isMdAH !== nah.isMdAH || navState.isLgAH !== nah.isLgAH) jp.setNavPosition();
+      if (nah.isSmAH || nah.isMdAH || nah.isLgAH) {
+        if (jp.nav.classList.contains('jsdocp-nav-vertical')) {
+          jp.nav.style[jp.nav.classList.contains('jsdocp-nav-right') ? 'right' : 'left'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).width;
+        } else jp.nav.style[jp.nav.classList.contains('jsdocp-nav-bottom') ? 'bottom' : 'top'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).height;
+      }
+      py = y;
+      navState = nah;
+      navState.running = false;
+    });
+  }
+
+  /**
+   * Extracts the navigation menu options from the data attributes set on the navigation menu element
+   * @returns {Object} The extracted navigation menu options
+   */
+  function navOpts() {
     var smPos = jp.nav && jp.nav.dataset.jsdocpSmPosition;
     var mdPos = jp.nav && jp.nav.dataset.jsdocpMdPosition;
     var lgPos = jp.nav && jp.nav.dataset.jsdocpLgPosition;
-    var sm = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpSmMediaMatch);
-    var md = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpMdMediaMatch);
-    var lg = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpLgMediaMatch);
+    var sm = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpSmMatchMedia);
+    var md = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpMdMatchMedia);
+    var lg = jp.nav && window.matchMedia(jp.nav.dataset.jsdocpLgMatchMedia);
     var smAH = jp.nav && jp.nav.dataset.jsdocpSmAutoHide === 'true';
     var mdAH = jp.nav && jp.nav.dataset.jsdocpMdAutoHide === 'true';
     var lgAH = jp.nav && jp.nav.dataset.jsdocpLgAutoHide === 'true';
@@ -90,14 +107,26 @@ function JSDocp() {
       jp.nav.removeAttribute('data-jsdocp-sm-position');
       jp.nav.removeAttribute('data-jsdocp-md-position');
       jp.nav.removeAttribute('data-jsdocp-lg-position');
-      jp.nav.removeAttribute('data-jsdocp-sm-media-match');
-      jp.nav.removeAttribute('data-jsdocp-md-media-match');
-      jp.nav.removeAttribute('data-jsdocp-lg-media-match');
+      jp.nav.removeAttribute('data-jsdocp-sm-match-media');
+      jp.nav.removeAttribute('data-jsdocp-md-match-media');
+      jp.nav.removeAttribute('data-jsdocp-lg-match-media');
       jp.nav.removeAttribute('data-jsdocp-sm-auto-hide');
       jp.nav.removeAttribute('data-jsdocp-md-auto-hide');
       jp.nav.removeAttribute('data-jsdocp-lg-auto-hide');
     }
     return { sm: sm, md: md, lg: lg, smAH: smAH, mdAH: mdAH, lgAH: lgAH, smPos: smPos, mdPos: mdPos, lgPos: lgPos };
+  }
+
+  /**
+   * Checks the navigation menu options to determine if the media query for different display resolutions matches what
+   * is on the client
+   * @returns {Object} The checked auto-hides
+   */
+  function navAutoHides() {
+    var isSmAH = jp.navOpts.smAH && jp.navOpts.sm.matches;
+    var isMdAH = !isSmAH && jp.navOpts.mdAH && jp.navOpts.md.matches;
+    var isLgAH = !isSmAH && !isMdAH && jp.navOpts.lgAH && jp.navOpts.lg.matches;
+    return { isSmAH: isSmAH, isMdAH: isMdAH, isLgAH: isLgAH };
   }
 }
 
