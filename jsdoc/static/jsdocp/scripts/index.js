@@ -179,11 +179,13 @@ JSDocp.prototype.loadVersions = function loadVersions() {
       if (from || sel.dataset.jsdocpType) {
         if (!last) last = versioned(sel.dataset.jsdocpVersion);
         curr = versioned(vrs[i]);
-        if (from && curr.major < from.major) break;
-        if (from && curr.major === from.major && curr.minor < from.minor) break;
-        if (from && curr.major === from.major && curr.minor === from.minor && curr.patch < from.patch) break;
-        if (sel.dataset.jsdocpType === 'major' && curr.major === last.major) continue;
-        if (sel.dataset.jsdocpType === 'minor' && curr.minor === last.minor) continue;
+        if (sel.dataset.jsdocpVersion !== vrs[i]) {
+          if (from && curr.major < from.major) break;
+          if (from && curr.major === from.major && curr.minor < from.minor) break;
+          if (from && curr.major === from.major && curr.minor === from.minor && curr.patch < from.patch) break;
+          if (sel.dataset.jsdocpType === 'major' && curr.major === last.major) continue;
+          if (sel.dataset.jsdocpType === 'minor' && curr.minor === last.minor) continue;
+        }
         last = curr;
       }
       opt = document.createElement('option');
