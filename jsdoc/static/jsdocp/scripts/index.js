@@ -80,8 +80,8 @@ function JSDocp() {
       if (navState.isSmAH !== nah.isSmAH || navState.isMdAH !== nah.isMdAH || navState.isLgAH !== nah.isLgAH) jp.setNavPosition();
       if (nah.isSmAH || nah.isMdAH || nah.isLgAH) {
         if (jp.nav.classList.contains('jsdocp-nav-vertical')) {
-          jp.nav.style[jp.nav.classList.contains('jsdocp-nav-right') ? 'right' : 'left'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).width;
-        } else jp.nav.style[jp.nav.classList.contains('jsdocp-nav-bottom') ? 'bottom' : 'top'] = py > y ? '0' : '-' + getComputedStyle(jp.nav).height;
+          jp.nav.style[jp.nav.classList.contains('jsdocp-nav-right') ? 'right' : 'left'] = py >= y ? 0 : '-' + getComputedStyle(jp.nav).width;
+        } else jp.nav.style[jp.nav.classList.contains('jsdocp-nav-bottom') ? 'bottom' : 'top'] = py >= y ? 0 : '-' + getComputedStyle(jp.nav).height;
       }
       py = y;
       navState = nah;
