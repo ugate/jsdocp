@@ -37,8 +37,8 @@ At the core of `jsdocp` is a wrapper around `jsdoc` that provides all of the fea
 
 ### Deployment <sub id="deploy"><sup>_(assumes [setup](#setup) has been completed)_</sup></sub>
 There are a few different ways that `deployment` can be performed based upon [`opts.jsdocp.deploy`](tutorial-2-conf.html) options. Deployment can occur locally or using a different `git` hosting service and running `npm run jsdocp-deploy`, but it will require some minor changes to `conf.opts.jsdocp.deploy` in the `jsdoc.conf` file outlined in the [setup](#setup). However, we'll cover the most common use case where [GitHub Pages](https://pages.github.com/) and [travis-ci](https://travis-ci.com) are being used.
-1. If the `gh-pages` branch isn't already created/selected for [GitHub Pages](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/) on `https://github.com/<your_username>/<your_repo_name>/settings`, the following script can be used to create the `gh-pages` branch.
-    - ```bash
+1. If the `gh-pages` branch isn't already created/selected for [GitHub Pages](https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/) on `https://github.com/<your_username>/<your_repo_name>/settings`, the following script can be used to create the `gh-pages` branch. __NOTE:__ Make sure to commit any changes to your currently checked out branch before proceeding to run the following script.
+    ```bash
     git checkout --orphan gh-pages
     git rm -rf .
     touch README.md

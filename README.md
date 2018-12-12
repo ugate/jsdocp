@@ -1,6 +1,10 @@
 <b class="jsdocp-remove-me">
   
-# ![](https://raw.githubusercontent.com/ugate/jsdocp/master/jsdocp/static/favicon-32x32.png) <span style="font-size:larger;">jsdocp</span> [![Build Status](https://travis-ci.com/ugate/jsdocp.svg?branch=master)](https://travis-ci.com/ugate/jsdocp)
+# ![](https://raw.githubusercontent.com/ugate/jsdocp/master/jsdocp/static/favicon-32x32.png) <span style="font-size:larger;">jsdocp</span>
+
+[![Build Status](https://img.shields.io/travis/ugate/jsdocp/master.svg?style=flat-square)](https://travis-ci.com/ugate/jsdocp)
+[![Dependency Status](https://img.shields.io/david/ugate/jsdocp.svg?style=flat-square)](https://david-dm.org/ugate/jsdocp)
+[![Dev Dependency Status](https://img.shields.io/david/dev/ugate/jsdocp.svg?style=flat-square)](https://david-dm.org/ugate/jsdocp?type=dev)
 
 </b>
 
