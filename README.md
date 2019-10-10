@@ -2,7 +2,7 @@
   
 # ![](https://raw.githubusercontent.com/ugate/jsdocp/master/jsdocp/static/favicon-32x32.png) <span style="font-size:larger;">jsdocp</span>
 
-[![Build Status](https://badgen.net/npm/v/jsdocp?color=orange&icon=npm)](https://www.npmjs.com/package/jsdocp)
+[![npm version](https://badgen.net/npm/v/jsdocp?color=orange&icon=npm)](https://www.npmjs.com/package/jsdocp)
 [![Build Status](https://badgen.net/travis/ugate/jsdocp?icon=travis)](https://travis-ci.com/ugate/jsdocp)
 [![Dependency Status](https://badgen.net/david/dep/ugate/jsdocp)](https://david-dm.org/ugate/jsdocp)
 [![Dev Dependency Status](https://badgen.net/david/dev/ugate/jsdocp)](https://david-dm.org/ugate/jsdocp?type=dev)
