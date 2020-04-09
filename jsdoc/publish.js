@@ -27,9 +27,16 @@ exports.publish = function(taffyData, opts, tutorials) {
   //console.dir(tutorials, {depth:100});
   // console.dir(opts, {depth:10});
   const thiz = this, args = arguments;
+  let repoURL = (pkg && pkg.homepage) || '';
+  if (pkg && pkg.repository && pkg.repository.url) {
+    // strip any prefixes that the repo URL may have
+    const ridx = pkg.repository.url.indexOf('http');
+    repoURL = ridx >= 0 ? pkg.repository.url.substr(ridx) : pkg.repository.url;
+  }
   return new Promise(async (resolve, reject) => {
     env.meta = { // accessibility in templates
       package: pkg,
+      repoURL: repoURL,
       publish: {
         lastVersionPublished: process.env.JSDOCP_PUBLISH_LAST_VER_PUB,
         lastVersion: process.env.JSDOCP_PUBLISH_LAST_VER,
