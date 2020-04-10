@@ -274,13 +274,13 @@ function jsonPaths(src, dest, pths, onDest) {
     if (!sval.hasOwnProperty(pth)) return;
     if (!val.hasOwnProperty(pth)) {
       if (cnt === pths.length || typeof sval[pth] !== 'object') {
-        if (onDest) dest[pth] = sval[pth];
+        if (onDest) val[pth] = sval[pth];
         else val[pth] = sval[pth];
-      } else {
+      } else if (!onDest) {
         val[pth] = {};
       }
     }
-    val = val[pth];
+    if (!onDest) val = val[pth];
     sval = sval[pth];
   }
 }
