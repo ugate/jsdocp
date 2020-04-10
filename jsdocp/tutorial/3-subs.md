@@ -35,7 +35,7 @@ In particular, JSON files can include one or more path arguements so that only d
 
 Would result in something like (using the `package.json` from the  `jsdocp` module):
 
-```jsdocp ./package.json @ devDependencies.jsdoc @ repository.url @ bugs.nonExistentProperty
+```jsdocp ./package.json @ devDependencies.jsdoc @ devDependencies.minami @ repository.url @ bugs.nonExistentProperty
 ```
 
 #### [Navigation Menu >>](tutorial-4-navs.html)

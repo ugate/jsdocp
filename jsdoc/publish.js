@@ -260,11 +260,14 @@ function jsonPaths(src, dest, pths) {
     cnt++;
     pth = pth.trim();
     if (!sval.hasOwnProperty(pth)) return;
-    if (cnt === pths.length || typeof sval[pth] !== 'object') {
-      val[pth] = sval[pth];
-    } else if (!val.hasOwnProperty(pth)) {
-      val = val[pth] = {};
+    if (!val.hasOwnProperty(pth)) {
+      if (cnt === pths.length || typeof sval[pth] !== 'object') {
+        val[pth] = sval[pth];
+      } else {
+        val[pth] = {};
+      }
     }
+    val = val[pth];
     sval = sval[pth];
   }
 }
