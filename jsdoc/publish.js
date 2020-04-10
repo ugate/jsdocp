@@ -227,20 +227,28 @@ async function markdownExt(md) {
 
 /**
  * Constructs a JSON string based upon a JSON object and arguements where each arguement
- * is a `/` delimited path that points to a destination property value within the supplied
+ * is a `.` delimited path that points to a destination property value within the supplied
  * JSON object. For example `{ prop1: { prop2: 1 } otherProp: 2 }` with args `['prop1.prop2']`
  * would result in a return value of `1` whereas args of `['prop1.prop2', 'otherProp']` would
  * result in a return value of `{ prop2: 1, otherProp: 2 }` (note how multiple args will always
  * result in property names/values while a single arg will always result in just the value of
- * arg path).
+ * arg path). Prefix arguments with `~` to set the arg path name/value directly on the root JSON
+ * that is returned.
+ * @private
  * @param {Object} json The JSON to extract the `args` from
  * @param {String[]} args The arguements that contain one or more JSON paths
  * @returns {String} The composed JSON string using the path destinations from the `args`
  */
 function jsonArgs(json, args) {
   const dest = {};
+  let onDest;
   for (let arg of args) {
-    jsonPaths(json, dest, arg.split('.'));
+    onDest = false;
+    arg = arg.replace(/~\s*/g, () => {
+      onDest = true;
+      return '';
+    });
+    jsonPaths(json, dest, arg.split('.'), onDest);
   }
   return JSON.stringify(dest, null, '  ');
 }
@@ -248,13 +256,17 @@ function jsonArgs(json, args) {
 /**
  * Traverses the paths of a specified JSON object and returns the property name/value (or `undefined`
  * when the path does not exist).
+ * @private
  * @param {Object} src The JSON to traverse
+ * @param {Object} dest The JSON destination where paths will be set
  * @param {String[]} pths The paths to traverse that reside in the JSON
+ * @param {Boolean} [onDest] Truthy to set values directly on the destination rather than following the
+ * JSON source property name path.
  * @returns {Object | undefined} An object if the paths lead to valid destination withon the JSON
  * or `undefined` when they do not. The returned object will contain a `name` of the final JSON
  * property name and a `value` for the JSON property value.
  */
-function jsonPaths(src, dest, pths) {
+function jsonPaths(src, dest, pths, onDest) {
   let val = dest, sval = src, cnt = 0;
   for (let pth of pths) {
     cnt++;
@@ -262,7 +274,8 @@ function jsonPaths(src, dest, pths) {
     if (!sval.hasOwnProperty(pth)) return;
     if (!val.hasOwnProperty(pth)) {
       if (cnt === pths.length || typeof sval[pth] !== 'object') {
-        val[pth] = sval[pth];
+        if (onDest) dest[pth] = sval[pth];
+        else val[pth] = sval[pth];
       } else {
         val[pth] = {};
       }

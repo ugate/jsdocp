@@ -26,16 +26,16 @@ function fileFunction() {
 ```
 </pre>
 
-In particular, JSON files can include one or more path arguements so that only designated segments of a given JSON source will be included in the `code` snippets. Each arguement can be separated by an `@` symbol. Within each argement, a period delimited path can be defined that points to the JSON segment(s) that will be included in the `code` snippet. For example:
+In particular, JSON files can include one or more path arguements so that only designated segments of a given JSON source will be included in the `code` snippets. Each arguement can be separated by an `@` symbol. Within each argement, a period delimited path can be defined that points to the JSON segment(s) that will be included in the `code` snippet. In addition, each path can be prefixed with a `~` indicating that the extracted property name/value should reside on the root element of the JSON output. For example:
 
 <pre>
-````jsdocp ./some/path/to/package.json @ devDependencies.jsdoc @ repository.url @ bugs.nonExistentProperty
+````jsdocp ./some/path/to/package.json @ devDependencies.jsdoc @ devDependencies.minami @ repository.url @~ repository.type @ bugs.nonExistentProperty
 ````
 </pre>
 
 Would result in something like (using the `package.json` from the  `jsdocp` module):
 
-```jsdocp ./package.json @ devDependencies.jsdoc @ devDependencies.minami @ repository.url @ bugs.nonExistentProperty
+```jsdocp ./package.json @ devDependencies.jsdoc @ devDependencies.minami @ repository.url @~ repository.type @ bugs.nonExistentProperty
 ```
 
 #### [Navigation Menu >>](tutorial-4-navs.html)
