@@ -25,8 +25,8 @@ At the core of `jsdocp` is a wrapper around `jsdoc` that provides all of the fea
 1. Add the desired [`jsdoc`/`jsdocp` configuration options](tutorial-2-conf.html) to the `jsdocp/jsdoc.conf` file. The [example `jsdocp` configuration](tutorial-2-conf.html#jsdocp-example) can be used as a guide. <br/>At __minumum__, ensure the follwing are set:
     - `source` - All the source files that should be included in the docs
     - `opts.template` - Set to a path to the actual [`jsdoc` template](https://github.com/jsdoc3/jsdoc#templates) being used. The template should be a module acceessible on [npm](https://www.npmjs.com/) and the path should be relative to the module that `jsdoc` is generating documentation for (e.g. `./node_modules/myCoolTemplateModuleName`).
-1. Add the following to `package.json`:
-    -  
+1. Add the following:
+    - your `package.json`...
     ```json
     "scripts": {
         "jsdocp": "jsdocp ./jsdocp/jsdoc.json",

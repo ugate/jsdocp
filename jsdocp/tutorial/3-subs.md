@@ -26,4 +26,16 @@ function fileFunction() {
 ```
 </pre>
 
+In particular, JSON files can include one or more path arguements so that only designated segments of a given JSON source will be included in the `code` snippets. Each arguement can be separated by an `@` symbol. Within each argement, a period delimited path can be defined that points to the JSON segment(s) that will be included in the `code` snippet. For example:
+
+<pre>
+````jsdocp ./some/path/to/package.json @ devDependencies.jsdoc @ repository.url @ bugs.nonExistentProperty
+````
+</pre>
+
+Would result in something like (using the `package.json` from the  `jsdocp` module):
+
+```jsdocp ./package.json @ devDependencies.jsdoc @ repository.url @ bugs.nonExistentProperty
+```
+
 #### [Navigation Menu >>](tutorial-4-navs.html)
