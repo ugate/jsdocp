@@ -1,6 +1,6 @@
 {
   "name": "jsdocp",
-  "version": "1.0.3",
+  "version": "1.2.1",
   "description": "Simplified JSDoc publishing using git",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/ugate/jsdocp/issues"
   },
-  "homepage": "https://github.com/ugate/jsdocp#readme",
+  "homepage": "https://ugate.github.io/jsdocp",
   "devDependencies": {
     "docdash": "^1.2.0",
     "ink-docstrap": "^1.3.2",

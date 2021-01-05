@@ -27,9 +27,16 @@ exports.publish = function(taffyData, opts, tutorials) {
   //console.dir(tutorials, {depth:100});
   // console.dir(opts, {depth:10});
   const thiz = this, args = arguments;
+  let repoURL = (pkg && pkg.homepage) || '';
+  if (pkg && pkg.repository && pkg.repository.url) {
+    // strip any prefixes that the repo URL may have
+    const ridx = pkg.repository.url.indexOf('http');
+    repoURL = ridx >= 0 ? pkg.repository.url.substr(ridx) : pkg.repository.url;
+  }
   return new Promise(async (resolve, reject) => {
     env.meta = { // accessibility in templates
       package: pkg,
+      repoURL: repoURL,
       publish: {
         lastVersionPublished: process.env.JSDOCP_PUBLISH_LAST_VER_PUB,
         lastVersion: process.env.JSDOCP_PUBLISH_LAST_VER,
@@ -196,19 +203,86 @@ async function tutorialExts(tuts) {
 async function markdownExt(md) {
   if (!md.content) return;
   // replace all jsdocp inline code blocks with the actual code blocks unless wrapped in a "pre"
-  const rx = /^\s*(`{3,})jsdocp\s*(\S+)?\s*[\r\n]([\s\S]*?)[\r\n]?\s*(`{3,})\s*(?:\n+|$)/igm, prms = [];
-  md.content.replace(rx, (mtch, bktckStart, pth, cnt, bktckEnd) => {
+  const rx = /^\s*(`{3,})jsdocp\s*([^\r\n\@]+)?\s*(@[^\r\n]*?)?[\r\n]([\s\S]*?)[\r\n]?\s*(`{3,})\s*(?:\n+|$)/igm, prms = [];
+  md.content.replace(rx, (mtch, bktckStart, pth, args, cnt, bktckEnd) => {
     if (bktckStart.length > 3 && bktckEnd.length > 3) return mtch;
-    prms.push(Fsp.readFile(Path.resolve(process.env.JSDOCP_MODULE_PATH, pth)));
+    prms.push(Fsp.readFile(Path.resolve(process.env.JSDOCP_MODULE_PATH, pth.trim())));
     return mtch;
   });
   if (!prms.length) return;
   let vals = await Promise.all(prms), idx = -1;
-  md.content = md.content.replace(rx, (mtch, bktckStart, pth, cnt, bktckEnd) => {
-    if (bktckStart.length > 3 && bktckEnd.length > 3) return mtch.replace(/`{4,}/g, '```');
-    const lang = pth.split('.').pop();
-    return `\`\`\`${lang}\n${cnt ? `${cnt}\n` : ''}${vals[++idx].toString()}\n\`\`\`\n`;
+  md.content = md.content.replace(rx, (mtch, bktckStart, pth, args, cnt, bktckEnd, offset) => {
+    if (bktckStart.length > 3 && bktckEnd.length > 3) {
+      return mtch.replace(/`{4,}/g, '```');
+    }
+    let val = vals[++idx].toString();
+    let lang = pth.split('.').pop();
+    if (lang) lang = lang.trim();
+    const argsArray = args && args.split('@');
+    if (argsArray) argsArray.shift(); // anything before first @ is not needed
+    if (lang === 'json' && argsArray && argsArray.length) val = jsonArgs(JSON.parse(val), argsArray);
+    return `\`\`\`${lang}\n${cnt ? `${cnt}\n` : ''}${val}\n\`\`\`\n`;
   });
+}
+
+/**
+ * Constructs a JSON string based upon a JSON object and arguements where each arguement
+ * is a `.` delimited path that points to a destination property value within the supplied
+ * JSON object. For example `{ prop1: { prop2: 1 } otherProp: 2 }` with args `['prop1.prop2']`
+ * would result in a return value of `1` whereas args of `['prop1.prop2', 'otherProp']` would
+ * result in a return value of `{ prop2: 1, otherProp: 2 }` (note how multiple args will always
+ * result in property names/values while a single arg will always result in just the value of
+ * arg path). Prefix arguments with `~` to set the arg path name/value directly on the root JSON
+ * that is returned.
+ * @private
+ * @param {Object} json The JSON to extract the `args` from
+ * @param {String[]} args The arguements that contain one or more JSON paths
+ * @returns {String} The composed JSON string using the path destinations from the `args`
+ */
+function jsonArgs(json, args) {
+  const dest = {};
+  let onDest;
+  for (let arg of args) {
+    onDest = false;
+    arg = arg.replace(/~\s*/g, () => {
+      onDest = true;
+      return '';
+    });
+    jsonPaths(json, dest, arg.split('.'), onDest);
+  }
+  return JSON.stringify(dest, null, '  ');
+}
+
+/**
+ * Traverses the paths of a specified JSON object and returns the property name/value (or `undefined`
+ * when the path does not exist).
+ * @private
+ * @param {Object} src The JSON to traverse
+ * @param {Object} dest The JSON destination where paths will be set
+ * @param {String[]} pths The paths to traverse that reside in the JSON
+ * @param {Boolean} [onDest] Truthy to set values directly on the destination rather than following the
+ * JSON source property name path.
+ * @returns {Object | undefined} An object if the paths lead to valid destination withon the JSON
+ * or `undefined` when they do not. The returned object will contain a `name` of the final JSON
+ * property name and a `value` for the JSON property value.
+ */
+function jsonPaths(src, dest, pths, onDest) {
+  let val = dest, sval = src, cnt = 0;
+  for (let pth of pths) {
+    cnt++;
+    pth = pth.trim();
+    if (!sval.hasOwnProperty(pth)) return;
+    if (!val.hasOwnProperty(pth)) {
+      if (cnt === pths.length || typeof sval[pth] !== 'object') {
+        if (onDest) val[pth] = sval[pth];
+        else val[pth] = sval[pth];
+      } else if (!onDest) {
+        val[pth] = {};
+      }
+    }
+    if (!onDest) val = val[pth];
+    sval = sval[pth];
+  }
 }
 
 /**
