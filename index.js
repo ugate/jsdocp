@@ -22,117 +22,7 @@ module.exports = publicize;
  * for more details.
  * #### See [Getting Started]{@tutorial 1-start} documentation for default values that are ported over from `jsdoc-defaults.conf`
  * @async
- * @param {(String|Object)} conf Either the path to the JSDoc configuration file or the actual JSDoc configuration itself.
- * @param {Object} [conf.opts.jsdocp] The `jsdocp` options
- * @param {Object} [conf.opts.jsdocp.versions] The versions options used to generate links to previously published version docs
- * @param {String} [conf.opts.jsdocp.versions.from] A Semantic Versioning compliant version that designates the first version to show
- * in the version drop-down selection for different docs (omit to list all of them)
- * @param {String} [conf.opts.jsdocp.versions.type] A designation that inidcates what doc versions to show in the drop-down selection.
- * A designation of `major` will only show versions that have been released for __major___ version tags (i.e. the _first_
- * number in the version). A designation of `minor` will only show versions that have been released for __minor__ version
- * tags (i.e. the _second_ number in the version). `undefined` will cause the default value to be used. Any other value, or blank value will cause
- * all versions to be included.
- * @param {Object} [conf.opts.jsdocp.changelog] The change log options used to generate the change log file and link
- * @param {Object} [conf.opts.jsdocp.changelog.title] The change log page `title` of the generated HTML page
- * @param {String} [conf.opts.jsdocp.changelog.line] The _format_ for individual commit lines produced in the change log markdown.
- * @param {String} [conf.opts.jsdocp.changelog.header] The markdown that will be pre-pended to the change log.
- * @param {Object} [conf.opts.jsdocp.changelog.sections] The sections within the change log which organize changes (omit output a list without sections)
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks] Section options for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks.header] Markdown used as a _header_ when there are change log entries for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks.grep] Section `grep` options for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks.grep.regexp] The regular expression used as filter in the `git log -grep=` for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks.grep.ignoreCase] `true` for case-insensitive `git log -i` for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.breaks.grep.allMatch] `true` to limit all regular expressions in the `grep` for breaking changes
- * @param {String} [conf.opts.jsdocp.changelog.sections.features] Section options for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.features.header] Markdown used as a _header_ when there are change log entries for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.features.grep] Section `grep` options for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.features.grep.regexp] The regular expression used used as filter in the `git log -grep=` for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.features.grep.ignoreCase] `true` for case-insensitive `git log -i` for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.features.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.features.grep.allMatch] `true` to limit all regular expressions in the `grep` for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes] Section options for features
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes.header] Markdown used as a _header_ when there are change log entries for fixes
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes.grep] Section `grep` options for fixes
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes.grep.regexp] The regular expression used used as filter in the `git log -grep=` for fixes
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes.grep.ignoreCase] `true` for case-insensitive `git log -i` for fixes
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for fixes
- * @param {String} [conf.opts.jsdocp.changelog.sections.fixes.grep.allMatch] `true` to limit all regular expressions in the `grep` for fixes
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges] Section options for merged/pull requests
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges.header] Markdown used as a _header_ when there are change log entries for merges
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep] Section `grep` options for merges
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.regexp] The regular expression used used as filter in the `git log -grep=` for merges
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.ignoreCase] `true` for case-insensitive `git log -i` for merges
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.extendedRegexp] `true` for _extended_ regular expressions `git log -E` for merges
- * @param {String} [conf.opts.jsdocp.changelog.sections.merges.grep.allMatch] `true` to limit all regular expressions in the `grep` for merges
- * @param {Boolean} [conf.opts.jsdocp.cleanDestination] `true` to remove the `jsdoc` assigned `conf.opts.jsdocp.destination` prior to publishing
- * @param {Object} [conf.opts.jsdocp.menu] The options for the generated pages naviagation menu
- * @param {String} [conf.opts.jsdocp.menu.SM] The navigation menu options for small displays
- * @param {String} [conf.opts.jsdocp.menu.SM.position] The navigation menu _position_ for small displays (`top`, `left`, `bottom`, `right`)
- * @param {String} [conf.opts.jsdocp.menu.SM.matchMedia] The CSS segment that will be passed into `window.matchMedia` in the client's browser when matched
- * the navigation menu options for small displays are applied
- * @param {String} [conf.opts.jsdocp.menu.SM.autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_ on small displays
- * @param {String} [conf.opts.jsdocp.menu.MD] The navigation menu options for medium displays
- * @param {String} [conf.opts.jsdocp.menu.MD.position] The navigation menu _position_ for medium displays (`top`, `left`, `bottom`, `right`)
- * @param {String} [conf.opts.jsdocp.menu.MD.matchMedia] The CSS segment that will be passed into `window.matchMedia` in the client's browser when matched
- * the navigation menu options for medium displays are applied
- * @param {String} [conf.opts.jsdocp.menu.MD.autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_ on medium displays
- * @param {String} [conf.opts.jsdocp.menu.LG] The navigation menu options for large displays
- * @param {String} [conf.opts.jsdocp.menu.LG.position] The navigation menu _position_ for large displays (`top`, `left`, `bottom`, `right`)
- * @param {String} [conf.opts.jsdocp.menu.LG.matchMedia] The CSS segment that will be passed into `window.matchMedia` in the client's browser when matched
- * the navigation menu options for large displays are applied
- * @param {String} [conf.opts.jsdocp.menu.LG.autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_ on large displays
- * @param {String} [conf.opts.jsdocp.menu.className] The CSS class applied to the main menu
- * @param {Object} [conf.opts.jsdocp.menu.logo] The options for the logo displayed in the navigation menu
- * @param {String} [conf.opts.jsdocp.menu.logo.src] The source URL for the logo icon dsiplayed in the navigation menu (if not overridden by `inlineSvgPath`)
- * @param {String} [conf.opts.jsdocp.menu.logo.inlineSvgPath] A path to an `svg` logo that will be inserted inline within the navigation menu display. Will
- * override the logo `src`, but if present will fall back on the `src` when the `svg` content cannot be extracted.
- * @param {String} [conf.opts.jsdocp.menu.logo.anchorclassName] The CSS class name assigned to the logo icon's anchor tag
- * @param {String} [conf.opts.jsdocp.menu.logo.className] The CSS class name assigned to the logo icon loaded from the `src`
- * @param {Object} [conf.opts.jsdocp.menu.icons] The options that apply to __all__ of the navigation menu icons (excluding the `logo`)
- * @param {String} [conf.opts.jsdocp.menu.icons.className] The CSS class name applied to __all__ of the icons in the navigation menu (excluding the `logo`)
- * @param {String} [conf.opts.jsdocp.menu.package] The options for the `npm` package icon that will appear in the navigation menu
- * @param {String} [conf.opts.jsdocp.menu.package.title] The `title` set on the `npm` package icon
- * @param {String} [conf.opts.jsdocp.menu.package.src] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
- * default icon)
- * @param {String} [conf.opts.jsdocp.menu.package.className] The CSS class name assigned to the `npm` package icon
- * @param {String} [conf.opts.jsdocp.menu.changelog] The options for the `CHANGELOG` icon that will appear in the navigation menu
- * @param {String} [conf.opts.jsdocp.menu.changelog.title] The `title` set on the `CHANGELOG` icon
- * @param {String} [conf.opts.jsdocp.menu.changelog.src] The `src` used on the `img` in the navigation menu that links to the `CHANGELOG` for the current
- * version (omit to use the default icon)
- * @param {String} [conf.opts.jsdocp.menu.changelog.className] The CSS class name assigned to the `CHANGELOG` icon
- * @param {String} [conf.opts.jsdocp.menu.sourceCode] The options for the source `code` icon that will appear in the navigation menu
- * @param {String} [conf.opts.jsdocp.menu.sourceCode.title] The `title` set on the source `code` icon
- * @param {String} [conf.opts.jsdocp.menu.sourceCode.src] The `src` used on the `img` in the navigation menu that links to the source `code` (omit to use the
- * default icon)
- * @param {String} [conf.opts.jsdocp.menu.sourceCode.className] The CSS class name assigned to the source `code` icon
- * @param {String} [conf.opts.jsdocp.menu.versions] The options for the documentation version selection icon that will appear in the navigation menu
- * @param {String} [conf.opts.jsdocp.menu.versions.title] The `title` set on the documentation version selection icon
- * @param {String} [conf.opts.jsdocp.menu.versions.src] The `src` used on the `img` in the navigation menu that links to the documentation version selection
- * (omit to use the default icon)
- * @param {String} [conf.opts.jsdocp.menu.versions.className] The CSS class name assigned to the documentation version selection icon
- * @param {Object[]} [conf.opts.jsdocp.links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
- * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.
- * @param {Object[]} [conf.opts.jsdocp.metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of
- * properties/values that will get translated to an attribute on the `meta` tag matching the property name and an attribute value for the value.
- * @param {Object[]} [conf.opts.jsdocp.scripts] The definitions used to generate `script` tags in the `head` element. Each object can have any number of
- * properties/values that will get translated to an attribute on the `script` tag matching the property name and an attribute value for the value.
- * @param {Object} [conf.opts.jsdocp.layoutFrags] The layout fragments used. __Typically, none of the fragment values will be overridden since they are handled
- * internally__
- * @param {String} [conf.opts.jsdocp.layoutFrags.head] The path to the template fragment that will be inserted at the __end__ of the `head` section
- * @param {String} [conf.opts.jsdocp.layoutFrags.nav] The path to the template fragment that will be inserted at the __beginning__ of the `body` section
- * @param {String} [conf.opts.jsdocp.layoutFrags.foot] The path to the template fragment that will be inserted at the __end__ of the `body` section
- * @param {String[]} [conf.opts.jsdocp.layoutFrags.layoutCheckTemplateDirs] The directories that the required `conf.templates.default.layoutFile` will be
- * searched for in the order they are defined. Unfortunately, template implementations may store the `conf.templates.default.layoutFile` in different
- * locations. By default, the most likley/typlical directories will be checked.
- * @param {Object} [conf.opts.jsdocp.deploy] The documentation deployment options
- * @param {Object} [conf.opts.jsdocp.deploy.message] The `commit` message used when deploying the documentation
- * @param {Object} [conf.opts.jsdocp.deploy.branch] The branch that where documentation will be _pushed_ during deployment
- * @param {Object} [conf.opts.jsdocp.deploy.path] The path where the `branch` will be _cloned_ to and _pushed_ from during deployment
- * @param {String} [conf.opts.jsdocp.deploy.host] The host name that will be used when _cloning_/_pushing_ during deployment (e.g. `github.com`)
- * @param {Object} [conf.opts.jsdocp.deploy.user] The user options that will be used when deploying the documentation pages
- * @param {Object} [conf.opts.jsdocp.deploy.user.name] The `git` user name that will be used when deploying the documentation pages
- * @param {Object} [conf.opts.jsdocp.deploy.user.email] The `git` email that will be used when deploying the documentation pages
+ * @param {(String|Conf)} conf Either the path to the JSDoc configuration file or the actual JSDoc configuration itself.
  * @param {Boolean} [deploy=false] `true` to deploy via `git` after generating documentation
  * @param {Integer} [timeout=30000] The number of milliseconds before timing out for each underlying execution
  * @returns {Boolean} `true` when completed successfully
@@ -146,7 +36,9 @@ async function publicize(conf, deploy = false, timeout = 30000) {
   const jsdocPath = Path.resolve(modulePath, 'node_modules/jsdoc');
   const jsdocCliPath = Path.resolve(modulePath, 'node_modules/.bin/jsdoc');
 
-  var moduleConf, jsdocpTmpdir = await Fs.mkdtemp(`${tmpdir}${Path.sep}`), tempConfPath = Path.resolve(jsdocpTmpdir, 'jsdoc.json');
+  /** @type {Conf} */
+  let moduleConf;
+  let jsdocpTmpdir = await Fs.mkdtemp(`${tmpdir}${Path.sep}`), tempConfPath = Path.resolve(jsdocpTmpdir, 'jsdoc.json');
   // publishing runs in a separate process and requires a path
   if (typeof conf === 'object') {
     moduleConf = conf;
@@ -202,7 +94,7 @@ async function publicize(conf, deploy = false, timeout = 30000) {
  * @private
  * @async
  * @param {Object} pkg The parsed `package.json`
- * @param {Object} conf The JSDoc configuration
+ * @param {Conf} conf The JSDoc configuration
  * @param {String} modulePath The path to the module that the configuration is for
  * @param {String} jsdocpPath The path to the `jsdocp` module
  * @param {String} jsdocpConfPath The path to the `jsdocp` JSON file that contains the default configuration options
@@ -219,6 +111,7 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
     throw error;
   }
 
+  /** @type {Conf} */
   const jpConf = JSON.parse((await Fs.readFile(jsdocpConfPath)).toString());
 
   // template needs to be set to the internal template so it can be proxied
@@ -226,9 +119,10 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
   conf.opts.template = Path.resolve(modulePath, sanitizePath(pkg, jpConf.opts.template));
 
   // make sure default plugins are included
+  const intersectionPluginPath = Path.resolve(jsdocpPath, 'plugins', 'intersection.js');
   conf.plugins = conf.plugins || [];
   if (!conf.plugins) conf.plugins = jpConf.plugins;
-  else if (jpConf.plugins) conf.plugins = [...new Set(jpConf.plugins.concat(...conf.plugins))];
+  else if (jpConf.plugins) conf.plugins = [...new Set(jpConf.plugins.concat(intersectionPluginPath, ...conf.plugins))];
 
   // need the following
   conf.templates = conf.templates || {};
@@ -301,7 +195,7 @@ async function writeConf(pkg, conf, modulePath, jsdocpPath, jsdocpConfPath, temp
  * @private
  * @async
  * @param {Object} pkg The parsed `package.json`
- * @param {Object} conf The module JSDoc configuration
+ * @param {Conf} conf The module JSDoc configuration
  * @param {Object} meta The meta where the `layout` will be stored
  * @param {String} modulePath The JSDoc configuration path
  * @param {String} jsdocpPath The path to the `jsdocp` module
@@ -411,7 +305,7 @@ async function getLayout(dirs, fileName, base) {
  * @ignore
  * @param {Function} resolve The promise resolver
  * @param {Function} reject The promise rejector
- * @param {Object} conf The `jsdoc` configuration
+ * @param {Conf} conf The `jsdoc` configuration
  * @param {Object} pkg The `package.json`
  * @param {String} modulePath The JSDoc configuration path
  * @param {String} jsdocpPath The path to the `jsdocp` module
@@ -568,3 +462,225 @@ function sanitizeArg(arg, spaces) {
   });
   return spaces ? sarg : sarg.replace(/\s/g, '');
 }
+
+/**
+ * The namespace used by {@link publicize} for the {@link Conf}
+ * @namespace jsdocp
+ */
+
+/**
+ * Section `grep` options
+ * @typedef {Object} ChangeLogSectionGrep
+ * @property {String} [regexp] The regular expression used as filter in the `git log -grep=`
+ * @property {String} [ignoreCase] `true` for case-insensitive `git log -i`
+ * @property {String} [extendedRegexp] `true` for _extended_ regular expressions `git log -E`
+ * @property {String} [allMatch] `true` to limit all regular expressions in the `grep`
+ * @memberof jsdocp
+ */
+
+/**
+ * Section options for breaking changes
+ * @typedef {Object} ChangeLogSectionBreak
+ * @property {String} [header] Markdown used as a _header_ when there are change log entries for breaking changes
+ * @property {ChangeLogSectionGrep} [grep] Section `grep` options for breaking changes
+ * @memberof jsdocp
+ */
+
+/**
+ * Section options for features
+ * @typedef {Object} ChangeLogSectionFeatures
+ * @property {String} [header] Markdown used as a _header_ when there are change log entries for features
+ * @property {ChangeLogSectionGrep} [grep] Section `grep` options for features
+ * @memberof jsdocp
+ */
+
+/**
+ * Section options for fixes
+ * @typedef {Object} ChangeLogSectionFixes
+ * @property {String} [header] Markdown used as a _header_ when there are change log entries for fixes
+ * @property {ChangeLogSectionGrep} [grep] Section `grep` options for fixes
+ * @memberof jsdocp
+ */
+
+/**
+ * Section options for merged/pull requests
+ * @typedef {Object} ChangeLogSectionMerges
+ * @property {String} [header] Markdown used as a _header_ when there are change log entries for merges
+ * @property {ChangeLogSectionGrep} [grep] Section `grep` options for merges
+ * @memberof jsdocp
+ */
+
+/**
+ * The sections within the change log which organize changes (omit output a list without sections)
+ * @typedef {Object} ChangeLogSections
+ * @property {ChangeLogSectionBreak} [breaks] Section options for breaking changes
+ * @property {ChangeLogSectionFeatures} [features] Section options for features
+ * @property {ChangeLogSectionFixes} [fixes] Section options for fixes
+ * @property {ChangeLogSectionMerges} [merges] Section options for merged/pull requests
+ * @memberof jsdocp
+ */
+
+/**
+ * The change log options used to generate the change log file and link
+ * @typedef {Object} ChangeLog
+ * @property {Object} [title] The change log page `title` of the generated HTML page
+ * @property {String} [line] The _format_ for individual commit lines produced in the change log markdown.
+ * @property {String} [header] The markdown that will be pre-pended to the change log.
+ * @property {ChangeLogSections} [sections] The sections within the change log which organize changes (omit output a list without sections)
+ * @memberof jsdocp
+ */
+
+/**
+ * The navigation menu options
+ * @typedef {Object} MenuOptions
+ * @property {String} [position] The navigation menu _position_ (`top`, `left`, `bottom`, `right`)
+ * @property {String} [matchMedia] The CSS segment that will be passed into `window.matchMedia` in the client's browser
+ * @property {String} [autoHide] `true` to auto hide while vertically scrolling _down_, show when scrolling _up_
+ * @memberof jsdocp
+ */
+
+/**
+ * The options for the logo displayed in the navigation menu
+ * @typedef {Object} MenuLogo
+ * @property {String} [src] The source URL for the logo icon dsiplayed in the navigation menu (if not overridden by `inlineSvgPath`)
+ * @property {String} [inlineSvgPath] A path to an `svg` logo that will be inserted inline within the navigation menu display. Will
+ * override the logo `src`, but if present will fall back on the `src` when the `svg` content cannot be extracted.
+ * @property {String} [anchorclassName] The CSS class name assigned to the logo icon's anchor tag
+ * @property {String} [className] The CSS class name assigned to the logo icon loaded from the `src`
+ * @memberof jsdocp
+ */
+
+/**
+ * The options that apply to __all__ of the navigation menu icons (excluding the `logo`)
+ * @typedef {Object} MenuIcons
+ * @property {String} [className] The CSS class name applied to __all__ of the icons in the navigation menu (excluding the `logo`)
+ * @memberof jsdocp
+ */
+
+/**
+ * The options for the `npm` package icon that will appear in the navigation menu
+ * @typedef {Object} MenuPackage
+ * @property {String} [title] The `title` set on the `npm` package icon
+ * @property {String} [src] The `src` used on the `img` in the navigation menu that links to the `npm` package (omit to use the
+ * default icon)
+ * @property {String} [className] The CSS class name assigned to the `npm` package icon
+ * @memberof jsdocp
+ */
+
+/**
+ * The options for an icon that will appear in the navigation menu
+ * @typedef {Object} MenuIcon
+ * @property {String} [title] The `title` set on the icon
+ * @property {String} [src] The `src` used on the `img` in the navigation menu that links to the icon (omit to use the default icon)
+ * @property {String} [className] The CSS class name assigned to the icon
+ * @memberof jsdocp
+ */
+
+/**
+ * The options for the generated pages naviagation menu
+ * @typedef {Object} Menu
+ * @property {MenuOptions} [SM] The navigation menu options for small displays
+ * @property {MenuOptions} [MD] The navigation menu options for medium displays
+ * @property {MenuOptions} [LG] The navigation menu options for large displays
+ * @property {String} [className] The CSS class applied to the main menu
+ * @property {MenuLogo} [logo] The options for the logo displayed in the navigation menu
+ * @property {MenuIcons} [icons] The options that apply to __all__ of the navigation menu icons (excluding the `logo`)
+ * @property {MenuPackage} [package] The options for the `npm` package icon that will appear in the navigation menu
+ * @property {MenuIcon} [changelog] The options for the `CHANGELOG` icon that will appear in the navigation menu
+ * @property {MenuIcon} [sourceCode] The options for the source `code` icon that will appear in the navigation menu
+ * @property {MenuIcon} [versions] The options for the documentation version selection icon that will appear in the navigation menu
+ * @memberof jsdocp
+ */
+
+/**
+ * The versions options used to generate links to previously published version docs
+ * @typedef {Object} Versions
+ * @property {String} [from] A Semantic Versioning compliant version that designates the first version to show
+ * in the version drop-down selection for different docs (omit to list all of them)
+ * @property {String} [type] A designation that inidcates what doc versions to show in the drop-down selection.
+ * A designation of `major` will only show versions that have been released for __major___ version tags (i.e. the _first_
+ * number in the version). A designation of `minor` will only show versions that have been released for __minor__ version
+ * tags (i.e. the _second_ number in the version). `undefined` will cause the default value to be used. Any other value, or blank value will cause
+ * all versions to be included.
+ * @memberof jsdocp
+ */
+
+/**
+ * The layout fragments used. __Typically, none of the fragment values will be overridden since they are handled internally__
+ * @typedef {Object} LayoutFrags
+ * @property {String} [head] The path to the template fragment that will be inserted at the __end__ of the `head` section
+ * @property {String} [nav] The path to the template fragment that will be inserted at the __beginning__ of the `body` section
+ * @property {String} [foot] The path to the template fragment that will be inserted at the __end__ of the `body` section
+ * @property {String[]} [layoutCheckTemplateDirs] The directories that the required `conf.templates.default.layoutFile` will be
+ * searched for in the order they are defined. Unfortunately, template implementations may store the `conf.templates.default.layoutFile` in different
+ * locations. By default, the most likley/typlical directories will be checked.
+ * @property {String} [head] The path to the `template`/`*.tmpl` file used for the header at the top of the documentation page
+ * @property {String} [nav] The path to the `template`/`*.tmpl` file used for the navigation bar
+ * @property {String} [footer] The path to the `template`/`*.tmpl` file used for the footer at the bottom of the documenation page
+ * @memberof jsdocp
+ */
+
+/**
+ * The user options
+ * @typedef {Object} User
+ * @property {String} [name] The `git` user name
+ * @property {String} [email] The `git` email
+ * @memberof jsdocp
+ */
+
+/**
+ * The documentation deployment options
+ * @typedef {Object} Deploy
+ * @property {Object} [message] The `commit` message used when deploying the documentation
+ * @property {Object} [branch] The branch that where documentation will be _pushed_ during deployment
+ * @property {Object} [path] The path where the `branch` will be _cloned_ to and _pushed_ from during deployment
+ * @property {String} [host] The host name that will be used when _cloning_/_pushing_ during deployment (e.g. `github.com`)
+ * @property {User} [user] The user options that will be used when deploying the documentation pages
+ * @memberof jsdocp
+ */
+
+/**
+ * The `jsdocp` options
+ * @typedef {Object} JSDocpOptions
+ * @property {ChangeLog} [changelog] The change log options used to generate the change log file and link
+ * @property {Menu} [menu] The options for the generated pages naviagation menu
+ * @property {Versions} [versions] The versions options used to generate links to previously published version docs
+ * @property {Boolean} [cleanDestination] `true` to remove the `jsdoc` assigned {@link Options} `destination` prior to publishing
+ * @property {Object[]} [links] The definitions used to generate `link` tags in the `head` element. Each object can have any number of
+ * properties/values that will get translated to an attribute on the `link` tag matching the property name and an attribute value for the value.
+ * @property {Object[]} [metas] The definitions used to generate `meta` tags in the `head` element. Each object can have any number of
+ * properties/values that will get translated to an attribute on the `meta` tag matching the property name and an attribute value for the value.
+ * @property {Object[]} [scripts] The definitions used to generate `script` tags in the `head` element. Each object can have any number of
+ * properties/values that will get translated to an attribute on the `script` tag matching the property name and an attribute value for the value.
+ * @property {LayoutFrags} [layoutFrags] The layout fragments used. __Typically, none of the fragment values will be overridden since they are handled
+ * internally__
+ * @property {Deploy} [deploy] The documentation deployment options
+ * @memberof jsdocp
+ */
+
+/**
+ * The configuration options
+ * @typedef {Object} Options
+ * @property {String} [destination=./docs] The destination directory where the documentation will be generated in
+ * @property {JSDocpOptions} [jsdocp] The `jsdocp` options
+ * @memberof jsdocp
+ */
+
+/**
+ * The configuration used by `jsdocp`
+ * @typedef {Object} JSDocpConf
+ * @property {Options} [opts] The configuration options
+ * @memberof jsdocp
+ */
+
+/**
+ * Placeholder for [JSDoc Configuration Options](https://jsdoc.app/about-configuring-jsdoc.html)
+ * @typedef {Object} JSDocConf
+ * @memberof jsdocp
+ */
+
+/**
+ * The configuration used by `jsdocp`
+ * @typedef {JSDocConf & JSDocpConf} Conf
+ * @memberof jsdocp
+ */

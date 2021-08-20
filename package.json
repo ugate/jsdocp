@@ -39,7 +39,7 @@
     "/index.js",
     "/cli.js",
     "/deploy/**/*",
-    "/jsdoc/**/*"
-  ],
-  "dependencies": {}
+    "/jsdoc/**/*",
+    "/plugins/**/*"
+  ]
 }

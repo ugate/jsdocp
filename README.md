@@ -19,7 +19,7 @@ The links to the Tutorials and API docs below are examples of what can be genera
 With `jsdocp` any number of [`jsdoc` templates](https://github.com/jsdoc3/jsdoc#templates) can be used for a personalized experience without the added complexities of setting up your own template extension.
 
 * [Tutorials](https://ugate.github.io/jsdocp/tutorial-1-start.html)
-* [API Docs](https://ugate.github.io/jsdocp/global.html)
+* [API Docs](https://ugate.github.io/jsdocp/jsdocp.html)
 
 ### Features:
 
